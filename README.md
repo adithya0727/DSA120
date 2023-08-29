@@ -1,2 +1,3 @@
 # DSA120
-120 days of consistent DSA problem solving from 29-AUG-2023
+120 days of consistent DSA problem solving from 29-AUG-2023 : by Andrei Neagoie.
+#This section will contain my code notes , intuition and solution to the GFG and LeetCode problems.

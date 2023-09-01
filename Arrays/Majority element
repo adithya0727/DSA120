@@ -1,0 +1,28 @@
+/*Approaches:
+1) o(n2) - two for loops and >(n/2) 
+2) nth_element() , return the mid position.
+*/
+
+1) void findMajority(int arr[], int n)
+{
+    
+    for (int i = 0; i < n; i++) {
+        int count = 0;
+        for (int j = i+1; j < n; j++) {
+            if (arr[i] == arr[j])
+                count++;
+        }
+
+        if (count > n/2) {
+            return arr[i]
+        }
+    return 0;
+}
+
+
+2) int majorityElement(vector<int>& nums) {
+        int n1=nums.size()/2;
+        nth_element(nums.begin(),nums.begin()+n1 ,nums.end());
+        return nums[n1];
+        
+    }

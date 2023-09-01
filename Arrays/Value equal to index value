@@ -1,0 +1,18 @@
+/* Approach
+N = 5
+Arr[] = {15, 2, 45, 12, 7}
+Output: 2
+1) loop and check if the value at its index is same and pushback it.
+Learnt about 1 Based indexing : so actually in memory the array is stored from 0 position only , so you have to adjust the code in accordance to match the output.
+*/
+
+1) vector<int> valueEqualToIndex(int arr[], int n) {
+	    vector<int> v;
+	    for(int i=0;i<=n;i++){
+	        if(arr[i] == i+1){
+	            v.push_back(i+1);
+	        }
+	        
+	    }
+	    return v;
+	}

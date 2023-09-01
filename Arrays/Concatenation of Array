@@ -1,0 +1,42 @@
+/* Approaches:
+ip: 1,2,3 , op:1,2,3,1,2,3. 
+1) if i < half insert normally , then insert otherwise insert at (i%n). 
+2) pushback on the same input vector again using loop 
+3) (n+i) = i , loop on the same vector.
+
+1)  vector<int> getConcatenation(vector<int>& nums) {
+        int n = nums.size();
+        vector<int>ans(2*n);
+        
+        for(int i=0;i<n*2;i++){
+            if(i < (n+1)/2){
+                ans[i] = nums[i];
+            }
+            else{
+                ans[i] = nums[i % n];
+            }
+        }
+        return ans;
+    }
+
+
+2) vector<int> getConcatenation(vector<int>& nums) {  //O(1) space , no extra space used.
+        int n=nums.size();
+        for(int i=0;i<n;i++)
+        {
+            nums.push_back(nums[i]);
+        }
+        return nums;
+    }
+
+
+3) vector<int> getConcatenation(vector<int>& nums) {  //O(1) space , no extra space used.
+        int n=nums.size();
+        for(int i=0;i<n;i++)
+        {
+            nums [n+i] = nums[i];
+        }
+        return nums;
+    }
+
+

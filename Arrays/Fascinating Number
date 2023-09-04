@@ -1,0 +1,22 @@
+/*approach 
+N = 192
+Output: Fascinating
+Explanation: After multiplication with 2 and 3, and concatenating with original number, number will become 192384576  which contains all digits from 1 to 9.
+1) first we convert the int to string and concat them all together , sort it , another string e from 1-9 and loop to compare each element.
+*/
+
+
+1) bool fascinating(int n) {
+	    bool ans = true;
+	    
+	    string y = to_string(n) + to_string(n*2) + to_string(n*3);
+	    sort(y.begin(),y.end());
+	    string e = "123456789";
+	    for(int i=0;i<y.length();i++){
+	        if(y[i]!=e[i]){
+	            ans = false;
+	        }
+	    }
+	    
+	   return ans; 
+	}

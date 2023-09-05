@@ -1,0 +1,45 @@
+/* Approaches
+
+arr[] = {10, 20, 30, 40, 50}
+Output: 10.00 15.00 20.00 25.00 30.00 
+Explanation: 
+10 / 1 = 10.00
+(10 + 20) / 2 = 15.00
+(10 + 20 + 30) / 3 = 20.00
+And so on.
+1) two loops : first outer loop to run n time and then inner loop to run until i<=j and add up sum , divide by i and pushback.
+2) one loop : sum is keep track of prev value anyways just add next element , instantly pushback in the same loop ,divide by(i+1).
+
+*/
+
+
+
+1) vector<float> streamAvg(int arr[], int n) {
+	    vector<float>f;
+	    float sum=0;
+	    for(int i=0;i<n;i++){
+	        for(int j=0;j<=i;j++){
+	            sum += arr[j];
+	        }
+	        sum /= (i+1);
+	        f.push_back(sum);
+	        sum=0;
+	    }
+	    return f;
+	}
+
+2) vector<float> streamAvg(int arr[], int n) {   // keyword : No need to clear sum , let it keep adding up all the prev values anyways duh.
+	    vector<float>f;
+	    float sum=0;
+	    for(int i=0;i<n;i++){
+	        sum += arr[i];
+	        f.push_back(sum/(i+1));
+	        
+	    }
+	    return f;
+	}
+
+
+
+
+

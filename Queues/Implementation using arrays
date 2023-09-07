@@ -1,0 +1,68 @@
+// Queue using array.
+#define max 10
+class Queue{
+    int *arr;
+    int front,back;
+    public:
+    Queue(){
+
+        arr = new int[max];
+        front=-1;
+        back=-1;
+    }
+
+    void enqueue(int data){
+        if((max-1) == back){
+            cout<<"Queue is full";
+            return;     //does not return any value but only prematurely exists the function when condition is met to be true.
+        }
+        arr[++back] = data;
+        if(front == -1){
+            front++;
+        }
+    }
+
+    void dequeue(){
+        if(front == -1 || front > back ){
+            cout<<"No elements to be deleted"<<endl;
+            return;
+        }
+        front++;
+
+    }
+
+    int peek(){
+        if(front == -1 || front > back ){
+            cout<<"No elements to be found"<<endl;
+            return -1;
+        }
+        return arr[front];
+    }
+
+    int empty(){
+        if(front == -1 || front > back ){
+            return true;
+        }
+        return false;
+    }
+
+
+
+};
+int main(){
+Queue q;
+   q.enqueue(1);
+   q.enqueue(2);
+   q.enqueue(3);
+   q.enqueue(4);
+   q.enqueue(5);
+   q.enqueue(6);
+   q.dequeue();
+   cout<<q.peek()<<endl;
+   cout<<q.empty()<<endl;
+
+
+
+
+    return 0;
+}

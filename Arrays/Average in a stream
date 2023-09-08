@@ -7,7 +7,7 @@ Explanation:
 (10 + 20) / 2 = 15.00
 (10 + 20 + 30) / 3 = 20.00
 And so on.
-1) two loops : first outer loop to run n time and then inner loop to run until i<=j and add up sum , divide by i and pushback.
+1) two loops : first outer loop to run n time and then inner loop to run until i<=j and add up sum , divide by i and pushback .
 2) one loop : sum is keep track of prev value anyways just add next element , instantly pushback in the same loop ,divide by(i+1).
 
 */

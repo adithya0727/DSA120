@@ -1,0 +1,24 @@
+/* Approaches : 
+1) using the tolower function its not to_lower and storing it in a string. time and space : o(N).
+2) using transform method , first two are range , third is from where the characters should be stored , so we say str.begin() indicating from the first position and last paramter is tolower.
+when functions are used a parameters , we dont have to call them using parenthesis , but just passing the name. 
+:: -> is used to indicate that the function is coming from the global standard library. time and space : o(1).
+
+
+
+*/
+
+
+1) string toLower(string S) {
+        string str = "";
+        for(int i=0;i<S.length();i++){
+            str += (char)tolower(S[i]);
+        }
+        return str;
+    }
+
+2)string toLower(string S) {
+        
+        transform(S.begin(),S.end(),S.begin(),::tolower);
+        return S;
+    }

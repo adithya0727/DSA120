@@ -1,0 +1,7 @@
+/* Approaches :
+1) using the .erase(str.begin()+i) method and decrementing i-- each time the condition comes true inside a Loop.
+2) using a loop , by using vectors and push_back() to push each element except when its a white space.
+3) using the replace method which comes in-built in cpp. which is like replace(str.begin(),str.end(),' ',{}).
+
+*/
+

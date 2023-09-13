@@ -1,0 +1,26 @@
+vector <int> count (string s)
+        {
+            int u=0,l=0,spec=0,n=0;
+            char str;
+            vector<int>v;
+            for(int i=0;i<s.length();i++){
+                str = s[i];
+                if(str >= 65 && str <= 90){
+                    u++;
+                }
+                else if(str >= 97 && str <= 122){
+                    l++;
+                }
+                else if(str >= 48 && str <= 57){
+                    n++;
+                }
+                else{
+                    spec++;
+                }
+            }
+            v.push_back(u);
+            v.push_back(l);
+            v.push_back(n);
+            v.push_back(spec);
+            return v;
+        }

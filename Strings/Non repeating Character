@@ -1,0 +1,18 @@
+/* Learning : while using an unordered map and auto iterating through it might display results which arent in the right order : to fix this ->
+we can iterate the string itself using m[KEY] to check if its equal to 1 and then return that particular KEY which contains the character.
+
+
+char nonrepeatingCharacter(string S)
+    {
+       unordered_map<char,int>m;
+       for(int i=0;i<S.length();i++){
+           m[S[i]]++;
+       }
+       for(auto &var : S){
+           if(m[var] == 1){
+               return var;
+           }
+       }
+       return '$';
+       
+    }

@@ -1,0 +1,29 @@
+/* Approach :
+1) I use a stack , to store elements seperated by a '.' and the use another loop to store them in a string with concatenation
+and keep popping until last element , which is added outside the loop. 
+*/
+
+
+
+1) string reverseWords(string S) 
+    { 
+        stack<string>st;
+        string str="",newstr="";
+        for(int i=0;i<S.length();i++){
+            if(S[i] == '.'){
+                st.push(str);
+                str = "";
+            }
+            else{
+                str += S[i];
+            }
+        }
+        st.push(str);
+    int n = st.size();
+    for(int i=0;i<n-1;i++){
+        newstr = newstr +  st.top() + '.';
+        st.pop();
+    }
+    newstr += st.top();
+    return newstr;
+    } 

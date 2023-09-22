@@ -1,0 +1,40 @@
+/* Approaches :
+1) brute force method : using two loops , if the element has to repeated , i will mark it as '0', then i check if the marking exists or not,
+based on that : i will add it to the string and return str.
+2) using an unordered map , inside a for loop , we insert and then check if the occurance is once , if so , INSTANTLY we concat it to the string and contonue on.
+
+*/
+
+
+1) string removeDups(string S) //O(N^2) O(1)
+	{
+	    string str = "";
+	    for(int i=0;i<S.length();i++){
+	        
+	        for(int j=i+1;j<S.length();j++){
+	            if(S[i] == S[j]){
+	                S[j] = '0';
+	            }
+	        }
+	        if( S[i] != '0'){
+	            str += S[i];
+	        }
+	    }
+	    return str;
+	}
+
+
+
+
+2) string removeDups(string S) 
+	{
+	   unordered_map<char,int> ans; // O(N) O(N)
+	   string ans1="";
+	   for(int i=0;i<S.length();i++){
+	       ans[S[i]]++;
+	       if(ans[S[i]]==1){
+	           ans1=ans1+S[i];
+	       }
+	   }
+	   return ans1;
+	}

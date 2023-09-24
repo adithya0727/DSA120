@@ -1,0 +1,21 @@
+/* Approach :
+
+1) using map : we use a for loop to store elements in the map , in the same loop we keep checking at every instance if at any point the frequency of any element reaches 
+beyond 1 , instantly we break the loop and return the value.
+
+*/
+
+
+1) string firstRepChar(string s)
+{
+    unordered_map<char,int>m;
+    string str = "-1";
+    for(int i=0;i<s.length();i++){
+        m[s[i]]++;
+        if(m[s[i]] > 1){
+            str = s[i];
+            break;
+        }
+    }
+    return str;
+}

@@ -3,6 +3,9 @@
 1) using map : we use a for loop to store elements in the map , in the same loop we keep checking at every instance if at any point the frequency of any element reaches 
 beyond 1 , instantly we break the loop and return the value.
 
+2) Similarly , we can use a vector/set : using a for loop -> we check if the element is present or not , if not we insert , if yes , we store and return the value using 
+if else. (.find) method.
+
 */
 
 
@@ -18,4 +21,26 @@ beyond 1 , instantly we break the loop and return the value.
         }
     }
     return str;
+}
+
+2) 
+
+string firstRepChar(string s)
+{
+    unordered_set<char>st;
+    for(int i=0 ; i<s.size() ; i++)
+    {
+        if(st.find(s[i])==st.end())
+        {
+            st.insert(s[i]);
+        }
+        else
+        {
+            string str;
+            str.push_back(s[i]);
+           return str;
+        }
+    }
+    
+    return "-1";
 }

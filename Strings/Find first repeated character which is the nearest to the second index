@@ -5,7 +5,7 @@ beyond 1 , instantly we break the loop and return the value.
 
 2) Similarly , we can use a vector/set : using a for loop -> we check if the element is present or not , if not we insert , if yes , we store and return the value using 
 if else. (.find) method.
-
+learning : .Find() method is a 0(1) constant time method which we used in a loop , for each iteration searches the whole string once and for all.
 */
 
 

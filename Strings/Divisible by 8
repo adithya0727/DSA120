@@ -1,0 +1,21 @@
+/* Approaches :
+check all permutations of a given string and see if anyone is divisible by 8.
+1) use the next_permuatation method , wherein it sorts each time accordingly to the next lexological order and keeps on going till the last permutation.
+
+*/
+
+
+1) int isDivisible8(string S) {
+        sort(S.begin(), S.end());
+    do {
+        long long x = 0;
+        for(int i=0;i<S.length();i++){
+            x = x*10 + S[i]- '0';
+        }
+        if (x% 8 == 0) {
+            return 1;
+        }
+    } while (next_permutation(S.begin(), S.end()));
+    
+    return 0;
+    }

@@ -1,0 +1,21 @@
+/* Approach :
+1) using fast and slow pointer method : slow ptr moves at a single pace while fast moves twice faster : as soon as twice reaches the end , its clear that the slow ptr is exactly in the Middle.
+learnings : start fast with head->next : because we might iterate one step further in the case when its even.
+*/
+
+
+1) Node* insertInMiddle(Node* head, int x) {
+  Node* slow = head;
+  Node* fast = head->next;
+  Node* ele = new Node(x);
+    
+  while (fast != NULL && fast->next != NULL) {
+    slow = slow->next;
+    fast = fast->next->next;
+  }
+
+  ele->next = slow->next;
+  slow->next = ele;
+
+  return head;
+}

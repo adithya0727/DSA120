@@ -1,0 +1,53 @@
+/* Approaches : 
+delete a specific node from a given position.
+1) there are three test cases to consider : 
+a) first node -> move head to next position and set head->prev to null whilst you free the first node
+b) middle element -> move till the middle element : two nodes prev= stores the curr->prev and next = curr->next.
+use these two new nodes and alter their next and prev values accordingly.
+c) last case  , if next is indeed equal to null , then just make prev->next = NULL and free p.
+
+*/
+
+1) 
+class Solution
+{
+    public:
+    Node* deleteNode(Node *head_ref, int x)
+    {
+        int count=1;
+        Node *prnode = head_ref;
+        Node *nxtnode = head_ref;
+        Node *p = head_ref;
+        if(x == 1){
+            head_ref = head_ref->next;
+            if(head_ref != NULL)
+                head_ref->prev = NULL;
+            free(p);
+            
+        }
+        else{
+        
+        while(count < x && p!=NULL){
+            p = p->next;
+            count++;
+       
+        }
+        if (p == NULL) {
+                return head_ref; // Node not found at position x
+            }
+            
+        prnode = p->prev;
+        nxtnode = p->next;
+        if(prnode != NULL)
+            prnode->next = p->next;
+        if(nxtnode != NULL)
+            nxtnode->prev = p->prev;
+        else{
+            prnode->next = NULL;
+        }
+        free(p);
+        }
+        
+      return head_ref;
+    }
+};

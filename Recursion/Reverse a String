@@ -1,0 +1,26 @@
+/*Approach :
+1) we use a start and end counter : like two pointers.
+base case : start >= end.
+swap(str[start],str[end])
+and then we return by incrementing start and decrementing end and so on till the mid point is reached.
+Learing : use reference to know that we are using the same string.
+*/
+
+
+1) 
+void fun(string& str, int start, int end) {
+    if (start >= end) {
+        return;
+    }
+    swap(str[start], str[end]);
+    fun(str, start + 1, end - 1);
+}
+
+int main() {
+    string str = "abcd";
+    int len = str.length() - 1;
+    fun(str, 0, len);
+    cout << str << endl;
+
+    return 0;
+}

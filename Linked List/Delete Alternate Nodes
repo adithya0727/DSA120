@@ -1,0 +1,42 @@
+/* Approach :
+1) first , i use a counter to check for the even or odd instance : if odd -> use increment i : else -> connect temp->next to the next->next and move the counter once.
+and move the temp to the next position.
+
+2) smart approach : two nodes : curr = head and temp =NULL , temp = curr->next and curr=temp->next and move curr to next position and delete temp and therefore deleting alternate elements.
+
+*/
+
+
+
+1) void deleteAlt(struct Node *head){
+    Node *temp = head;
+    int i=1;
+    while(temp!=NULL && temp->next!=NULL){
+        
+        if(i%2==0){
+            
+            temp->next = temp->next->next;
+            temp = temp->next;
+        i++;
+        }
+        
+        
+        i++;
+    }
+}
+
+
+2)  void deleteAlt(struct Node *head){
+    // Code here
+    if (head == NULL || head->next == NULL) {
+        return;
+    } 
+    Node *curr=head;
+    Node *temp = NULL;
+    while (curr != NULL && curr->next != NULL) {
+        temp = curr->next;
+        curr->next = temp->next;
+        delete temp; 
+        curr = curr->next;
+    }
+}

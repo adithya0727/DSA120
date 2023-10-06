@@ -1,0 +1,9 @@
+power : m^n;
+
+int power(int m,int n){
+
+if(n==1){
+return n;
+}
+return m*power(m,n-1);
+}

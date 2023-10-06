@@ -1,0 +1,18 @@
+/*Appraoch :
+until base case ==0 , keep adding x + nat(x-1)
+*/
+
+
+int natural(int x){
+    if(x==0){
+        return 0;
+    }
+    return x + nat(x-1);
+}
+
+int main(){
+   int y = 5;
+   cout<<nat(y);
+
+    return 0;
+}

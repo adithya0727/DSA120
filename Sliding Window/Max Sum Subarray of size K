@@ -1,0 +1,28 @@
+/* Approach :
+Aditya Verma :
+1) two pointer : i,j=0 -> we keep adding arr[j] until we reach the same window size k , once reached -> we operate only in the else if part :
+find maximum and store it , remove arr[i] and then increment to reach the next window of the same size.
+repeat , add next j -> check for maximum -> subtract arr[i] and repeat till j reaches N.
+
+
+*/
+
+
+
+1) long maximumSumSubarray(int K, vector<int> &Arr , int N){
+        int i=0,j=0;
+        long sum=0,mx=0;
+        while(j<N){
+            sum += Arr[j];
+            if(j - i + 1 < K){
+                j++;
+            }
+            else if(j-i+1 == K){
+                mx = max(mx,sum);
+                sum = sum - Arr[i];
+                i++;
+                j++;
+            }
+        }
+        return mx;
+    }

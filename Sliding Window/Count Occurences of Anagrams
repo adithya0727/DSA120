@@ -1,0 +1,59 @@
+/* Approach :
+Input:
+txt = forxxorfxdofr
+pat = for
+Output: 3
+Explanation: for, orf and ofr appears
+in the txt, hence answer is 3.
+
+
+1) Anagram : jumble a string in all ways possible using same aplhabet and frequency as given : n!
+two strings : pat(anagram) and txt -> all anagrams of pat that is present in txt ka int return karo.
+1) Map to store pat with frequencies , pat to get the window size , count to store on checking how many alpahbets are actually present in the map rn.
+2) store pat in map , start with j=0 , keep subtracting from the map as we encounter txt[j] if present and decrease count if that aplhabet becomes 0.
+3) j++ till window size is hit.
+4) once hit , if count is 0 , meaning all elements are deleted , then anagram sucessful.
+5) before we slide -> as we move i -> i++ , make sure to add back the element (if it was present in the original map) to the map and we can start counting again 
+with the i removed and new j added to the window.
+6) i++ and j++ to slide the window.
+
+*/
+
+
+1) int search(string pat, string txt) {
+	    int ans=0,i=0,j=0,k=pat.length();
+	    unordered_map<char,int>m;
+	    for(auto &it : pat){
+	        m[it]++;
+	    }
+	    int count = m.size();
+	    while(j<txt.length()){
+	        if(m.find(txt[j]) != m.end()){
+	            m[txt[j]]--;
+	        
+	        if(m[txt[j]] == 0){
+	            count--;
+	        }
+	        }
+	        if(j - i +1 < k){
+	            j++;
+	        }
+	        else if(j-i+1 == k){
+	            if(count == 0){
+	                ans++;
+	            }
+	            if(m.find(txt[i]) != m.end()){
+	                m[txt[i]]++;
+	           if(m[txt[i]] == 1){
+                    count++;
+                }
+	            }
+	            i++;
+	            j++;
+	        }
+	        
+	        
+	        
+	    }
+	    return ans;
+	}

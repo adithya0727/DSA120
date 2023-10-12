@@ -1,0 +1,20 @@
+/* Approach :
+store values 1-n in ascending order :
+base case : if zero , then return an empty vector , until then keep recursively calling.
+once base case hits , we start the DESCENDING recursion : Popping from the stack and moving to the next lines after call.
+firstly to keep track of existing vector we store it in the v , then we perform pushback and return the new version of v.
+as we move to the previous function -> first we store the vector until now => which comes from the function call , add current value of x and returnnew vector again until we reach N.
+
+
+*/
+
+vector<int> printNos(int x) {
+    vector<int> v;
+    
+    if(x==0){
+        return v;
+    }
+    v = printNos(x-1);
+    v.push_back(x);
+    return v;
+}

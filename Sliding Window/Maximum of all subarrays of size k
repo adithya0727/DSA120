@@ -1,0 +1,40 @@
+/* Approach :
+Given an array arr[] of size N and an integer K. Find the maximum for each and every contiguous subarray of size K.
+1) thinking : create a vector to store all maximums for each subarray/window of given size k and then return the vector finally.
+2) We use a Deque : logic -> j = 0 , as we iterate each Jth term : a) if we find an element which is greater than all previous elements , then we pop them all off
+b) Because , if in the window -> we find the maximum , then there is no need to store those previous elements as they can never become a candidate for maximum in that window.
+c) if all a lesser than arr[j] , we've used q.empty() as a stopping point for it.
+3) we check the deque from last as they are stored in descending order , as we've popped off all the smaller elements compared to the next arr[j] we are going to push and thus we perform push_back.
+4) until window size : k++ , once reached -> first element is maximum as they are in desc order and before we slide the window , we handle 'i' ka case.
+5) if arr[i] is going out of the window size , we better check if that was the current maximum element , if so -> we pop q.front() and slide the window.
+
+
+
+*/
+
+
+1) vector <int> max_of_subarrays(int *arr, int n, int k)
+    {
+        int i=0,j=0;
+        vector<int>v;
+        deque<int>q;
+        while(j<n){
+            while(!q.empty() && q.back() < arr[j]){
+                q.pop_back();
+            }
+            q.push_back(arr[j]);
+            
+            if(j-i+1 < k){
+                j++;
+            }
+            else if(j-i+1 == k){
+                v.push_back(q.front());
+                if(q.front() == arr[i]){
+                    q.pop_front();
+                }
+                i++;
+                j++;
+            }
+        }
+        return v;
+    }

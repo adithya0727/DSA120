@@ -1,0 +1,21 @@
+/* Approach :
+i/p : 3
+o/p : 3 2 1 
+we start iterating from N : we call the function recursively and store the value of the recursive function in a vector which is the return type of the function.
+and go on till we hit 0. [ASCENDING]
+once the base condition hits -> we start popping and performing the insert operation and then pop() store the next function call in v and insert and so on.
+[DESCENDING]
+learning : we can use v.insert to insert elements in the position that we desire as the problem demands.
+
+*/
+
+
+vector<int> printNos(int x) {
+    vector<int> v;
+    if (x >= 1) {
+        
+        v= printNos(x-1);
+        v.insert(v.begin(),x);
+    }
+    return v;
+}

@@ -1,0 +1,52 @@
+/* Approach :
+1) Using an unordered_map , to store node with the corresponding values.
+we iterate through first ll and store all those elements -> we use the head of second ll to check if the node is present also in the map. if yes, return that node.
+else return NULL.
+2) same hashmap , but we store the frequency itself and check the first instance where the frequency crosses past 1 and return that node.
+*/
+
+
+1) ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        ListNode *temp1 = headA;
+       
+        unordered_map<ListNode*,int>m1;
+        
+        while(temp1!= NULL){
+            m1[temp1] = temp1->val;
+            temp1 = temp1->next;
+        }
+        // while(temp2!= NULL){
+        //     m2[temp2->val] = temp2;
+        //     temp2 = temp2->next;
+        // }
+        while(headB != NULL){
+            if(m1.find(headB) != m1.end()){
+                return headB;
+            }
+            headB = headB->next;
+        }
+        return NULL;
+    }
+
+
+2) class Solution {
+public:
+	ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+		unordered_map<ListNode*, int> m;
+		while(headA != NULL){
+			m[headA]++;
+			headA = headA -> next;
+		}
+		while(headB != NULL){
+			if(m[headB] > 0){
+				return headB;
+			}
+			headB = headB -> next;
+		}
+		return NULL;
+	}
+};
+
+
+
+

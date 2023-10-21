@@ -1,0 +1,69 @@
+/* Approach :
+understanding : So , we have to find the max length sub array which is equal to sum K.
+
+1) Sliding window appraoch : 
+firstly -> keep sum to keep track of sum while j < N. we check if sum == k , then -> add that to mx(return max value).
+if sum > k -> then we start by reducing i value else if sum < k , we keep adding elements to it.
+PROBLEM : if we have negative numbers , we might miss some test cases ie,. if sum exceeds k then we subtract i-- , 
+but what if next number was negative and we couldve considered this subarray for largest and  miss it .
+
+2) Hash map approach : 
+To solve that -> we use a map and loop.
+if sum == k , then i+1 is the length 
+find remainder by removing k from current sum and now check the ap if it exists -> if yes , it means we can subtract that porton of the map and consider from next element till current value of I.
+then we add elements in the map as : sum and that particular index.
+find the max each time it hits the case we we find the remainder.
+
+
+*/
+
+
+
+
+1) int lenOfLongSubarr(int A[],  int N, int K) 
+    { 
+        int mx=0,i=0,j=0,sum=0;
+        while(j<N){
+             sum += A[j];
+            if(sum < K){
+               j++;
+            
+            }
+            
+            else if(sum == K){
+                mx = max(mx,j-i+1);
+              j++;
+            }
+            
+            else if(sum > K){
+                while(sum >= K){
+                    sum -= A[i];
+                    i++;
+                }
+                j++;
+            }
+            
+        }
+        return mx;
+    } 
+
+
+2) int lenOfLongSubarr(int A[],  int N, int K) 
+    { 
+        int rem=0,currsum=0,mx=0;
+        unordered_map<int,int>m;
+        for(int i=0;i<N;i++){
+            currsum += A[i];
+            if(currsum == K){
+                mx = i+1;
+            }
+            rem = currsum - K;
+            if(m.find(rem) != m.end()){
+                mx = max(mx,i - m[rem]);
+            }
+            if(m.find(currsum) == m.end()){
+                m[currsum] = i;
+            }
+        }
+        return mx;
+    } 

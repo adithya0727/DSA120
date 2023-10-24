@@ -1,0 +1,41 @@
+/* Approach :
+1) Given a string you need to print the size of the longest possible substring that has exactly K unique characters:
+This is a variable size K unique elements substring question , so we use the following format->
+first we create a map to store elements with their frequencies
+we check if the map.size() a) less than k unique still? -> j++ 
+b) equal to unique elements -> store the length of WINDOW in mx and continue on with j++ , until we hit c) which is size > k
+c) if greater , we use a while loop to remove elements from map until we get back to K unique elements and erase it to actaully remove the key and so on...
+
+
+*/
+
+
+
+1) int longestKSubstr(string s, int k) {
+    int i=0,j=0,mx=-1;
+    unordered_map<char,int>m;
+    while(j<s.length()){
+        m[s[j]]++;
+        if(m.size()<k){
+            j++;
+        }
+        else if(m.size()==k){
+            mx = max(mx,j-i+1);
+            j++;
+        }
+        else if(m.size() > k){
+            while(m.size() > k){
+                m[s[i]]--;
+                if(m[s[i]] == 0){
+                    m.erase(s[i]);
+                }
+                i++;
+            }
+            j++;
+        }
+        
+        
+    }
+    return mx;
+    
+    }

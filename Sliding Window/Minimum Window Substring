@@ -1,0 +1,54 @@
+/* Approach:
+Given two strings s and t of lengths m and n respectively, return the minimum window 
+substring
+ of s such that every character in t (including duplicates) is included in the window. If there is no such substring, return the empty string "".
+1) first -> we store t string inside a map , and count as the length of the map
+iterating till s.len() -> we start removing elements as found in map ie t. 
+if equal to 0 , then all criteria is being met and then we store the i and j values of that to finally find the substring.
+then we start sliding the window , i++ and keep moving to lesser and lesser window size until the condition is still satisfied. 
+once we move till the least window length , we return the substring.
+*/
+
+
+1)  string minWindow(string s, string t) {
+        
+        int i=0,j=0,count=0,len=INT_MAX,start=0;
+        unordered_map<char,int>m;
+        for(auto &var:t){
+            m[var]++;
+        }
+        count = m.size();
+        while(j<s.size()){
+            if(m.find(s[j]) != m.end()){
+                m[s[j]]--;
+                if(m[s[j]] == 0){
+                    count--;
+                }
+            }
+            if(count == 0){
+                while(count == 0){
+                    if(m.find(s[i]) != m.end()){
+                        m[s[i]]++;
+                    
+                    if(m[s[i]] == 1){
+                        count++;                      
+                    
+                    if(len > j-i+1){
+                        len = j-i+1;
+                        start=i;                 
+                }  
+                    }
+                    }
+
+             i++;
+        }
+        
+    }
+    j++;
+        }
+    if(len==INT_MAX){
+        return "";
+    }
+     return s.substr(start,len);
+    
+    }

@@ -3,7 +3,9 @@
 base case : start >= end.
 swap(str[start],str[end])
 and then we return by incrementing start and decrementing end and so on till the mid point is reached.
-Learing : use reference to know that we are using the same string.
+Learning : use reference to know that we are using the same string. It doesnt matter if you return anything or not because since we are using refernce we are altering
+the same string/array through each iteration , so we'll be returning that one copy of arr/str only , if we return each time also -> we are returning the same copy of
+arr/str each time : so its the same.
 */
 
 

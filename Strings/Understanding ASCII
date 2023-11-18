@@ -5,13 +5,13 @@ vector <int> count (string s)
             vector<int>v;
             for(int i=0;i<s.length();i++){
                 str = s[i];
-                if(str >= 65 && str <= 90){
+                if(str >= 65 && str <= 90){ //Uppercase
                     u++;
                 }
-                else if(str >= 97 && str <= 122){
+                else if(str >= 97 && str <= 122){ //Lowercase
                     l++;
                 }
-                else if(str >= 48 && str <= 57){
+                else if(str >= 48 && str <= 57){   //Numbers
                     n++;
                 }
                 else{

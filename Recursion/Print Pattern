@@ -1,0 +1,31 @@
+Print a sequence of numbers starting with N,
+without using loop, where replace N with N - 5, until N > 0. 
+After that replace N with N + 5 until N regains its initial value.
+/* Approach :
+1) we create a seperate function -> base condition : if n > 0 , we keep subtracting 5 , else base case hits and then we start DESCENDING and start pushing back
+previous versions of N back in the array until the first recursive call again. 
+Important Note : Use refernce to keep track of the updated arrat each time we recursively call to return the complete array finally.
+
+*/
+
+
+1) vector<int> pattern(int N){
+        vector<int> arr;
+        if(N==0){
+            arr.push_back(0);
+            return arr;
+            
+        }
+        pt(arr, N);
+        return arr;
+    }
+    
+    
+    void pt(vector<int>& arr,int N){
+        if(N>0)
+        {
+        arr.push_back(N);
+        pt(arr,N-5);
+        }
+            arr.push_back(N);
+    }

@@ -1,0 +1,26 @@
+/* Approach :
+1) longest same characters in each string of the vector.
+-> We can sort the vector lexologically.
+capture the first and last element and we check each char in these two strings.
+Even at the last string if we see that , the first and last are still same it tells us that its same throughout.
+if its anything different at all , it should reflect in the last string always. 
+we keep appending as long as they are equal and then we return.
+
+*/
+
+
+1) string longestCommonPrefix(vector<string>& strs) {
+        sort(strs.begin(),strs.end());
+        int n = strs.size();
+        string x = strs[0],y = strs[n-1],str="";
+        int sizes = min(x.length(),y.length());
+        for(int j=0;j<sizes;j++){
+            if(x[j] != y[j]){
+                return str;
+            }
+            else{
+                str += x[j];
+            }
+        }
+    return str; 
+    }

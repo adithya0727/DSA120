@@ -1,0 +1,29 @@
+/* Approach :
+1) Brute-Force : Use another stack and perform pop() and push() operations from one stack to another : time and space would be O(N).
+2) Recursion : time : O(N)^2 and space : O(N).
+first function : base case : until size hits one we keep calling and storing corresponding top values in their function stack.
+Once base condition hits => second function : used to go all the way till stack is empty and then push the first element there and return back.
+Similarly , while Descending in the first function : second function keeps going till the end : pasting the value each time and returning that stack.
+
+*/
+
+2) void Reverse(stack<int> &St){
+        if(St.size() == 1){
+            return;
+        }
+        int temp = St.top();
+        St.pop();
+        Reverse(St);
+        insert(St,temp);
+    }
+    
+    void insert(stack<int> &s,int val){
+        if(s.size() == 0){
+            s.push(val);
+            return;
+        }
+        int var = s.top();
+        s.pop();
+        insert(s,val);
+        s.push(var);
+    }

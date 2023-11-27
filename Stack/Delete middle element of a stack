@@ -1,0 +1,20 @@
+/* Approach :
+1) delete mid element and get back the regular stack.
+base condition : keep calling until we reach half the size of the stack , if reached : pop() that element and return from that stack Frame.
+until that : store the top somewhere at EACH STACK FRAME AND POP IT [Ascending] => NOW [Descending] : after base hits -> start pushing element from their 
+each respective stack frames
+
+*/
+
+
+1) void deleteMid(stack<int>&s, int sizeOfStack)
+    {
+        if(s.size() == floor((sizeOfStack+1)/2)){
+            s.pop();
+            return;
+        }
+        int element = s.top();
+        s.pop();
+        deleteMid(s,sizeOfStack);
+        s.push(element);
+    }

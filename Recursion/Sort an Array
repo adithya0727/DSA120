@@ -1,0 +1,36 @@
+/* Approach :
+1) base case : if v.size() == 1 , array cannot be sorted in "relativeness" with any other element so we end it there.
+store last element and then pop each time will we hit the base case [Ascending movement] , post ascending -> we start with the insert function.
+lets use an example : [0,1,5,2] : so now when Descending starts : vector has : 0 and temp : 1 , perform insert() and sorted array is returned ,
+Then we move to the next part of Descending : array : [0,1] temp : 5 -> same thing and then next Descending =>
+array = [0,1,5] , temp : 2
+insert () => we keep storing last element and poping back until base condition hits (last element or element being largest compared to last) : all this happens in the ascending
+of insert function and when pushback is performed , we return back the REFERENCED vector BACK. and then DESCENDING continues in sortArray function().
+
+
+
+*/
+
+
+1)  vector<int> sortArray(vector<int>& nums) {
+        if(nums.size() == 1){
+            return nums;
+        }
+        int temp = nums[nums.size()-1];
+        nums.pop_back();
+        sortArray(nums);
+        insert(nums,temp);
+        return nums;
+    }
+
+    void insert(vector<int> &v , int val){
+        if(v.size() == 0 || v[v.size()-1] <= val){
+            v.push_back(val);
+            return;
+        }
+        int var = v[v.size()-1];
+        v.pop_back();
+        insert(v,val);
+        v.push_back(var);
+        return;
+    }

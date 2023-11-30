@@ -1,0 +1,23 @@
+/* Approach :
+
+1) always solving using the example of three disks in three rods to get the recursive picture till the end.
+Hypothesis : First we reduce the input to N-1 and send that to the helper rod and then => move the final rod to the destination and finally move all (N-1) rods to 
+Destination. to perform this.
+base case : if one rod is remaining , then move it to the specified location.
+first we move all n-1 to helper and then base case rod to the destination , next call stack moves all of the n-1 to destination.
+
+
+*/
+
+
+1) long long toh(int N, int from, int to, int aux) {
+        long long count=1;
+        if(N == 1){
+            cout << "move disk " << "1" << " from rod " << from<<" to rod " << to<< endl;
+            return 1;
+        }
+        count += toh(N-1,from,aux,to);
+        cout << "move disk " << N << " from rod " << from<<" to rod " << to<< endl;
+        count += toh(N-1,aux,to,from);
+        return count;
+    }

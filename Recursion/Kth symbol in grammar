@@ -1,0 +1,25 @@
+/* Approach :
+1) n: rows , k: column position => replace 0-> 01 & 1-> 10.
+1st row : 0
+2nd row : 01
+3rd row : 0110
+// base case : if botha are one then return 0
+if not : find mid : by finding length increase pattern and dividing by 2.
+if k is lesser than it , we saw the pattern that we just need to keep decreasing n-1 else : reduce by k-mid and complement based on the patterns found.
+This can be recognised by observing as we reach the 4th row.
+return output each time to get the final result at the descending final call stack.
+*/
+
+
+1) int kthGrammar(int n, int k) {
+        if(n==1 && k==1){
+            return 0;
+        }
+        int mid = pow(2,n-1)/2;
+        if(k <= mid){
+            return kthGrammar(n-1,k);
+        }
+        else{
+            return !kthGrammar(n-1,k-mid);
+        }
+    }

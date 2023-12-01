@@ -1,0 +1,21 @@
+/* Approach :
+1) Firstly we start with drawing a recursive tree : Intuition => we observe that we have a choice + decision pattern here , which means we could draw a tree.
+Based on the tree , we can observe that the leaf nodes has all the outputs we want and thus thats the BASE case.
+Each time we go lower height of the tree , we Shorten the input and then perform a decision on that input (yes/no).
+Perform recursive calls on each of these inputs : output is copied each time top op12 and op2 , as we are carrying the outputs from the previous height of tree.
+
+*/
+
+
+1) void solve(string input , string output){
+    if(input.length() == 0){
+      cout<<output;
+      return;
+}
+    string op1 = output;
+    string op2 = output;
+    op2.push_back(input[0]);
+    input.erase(input.begin()+0);
+    solve(input,op1);
+    solve(input,op2);
+}

@@ -8,15 +8,32 @@ CALL STACK.
 */
 
 
-1) void solve(string input , string output){
-    if(input.length() == 0){
-      cout<<output;
-      return;
-}
+1) void solve(string input, string output, vector<string> &result) {
+    if (input.length() == 0) {
+       if(output == ""){
+           return;
+       }
+            result.push_back(output);
+       
+        return;
+    }
     string op1 = output;
     string op2 = output;
     op2.push_back(input[0]);
     input.erase(input.begin()+0);
-    solve(input,op1);
-    solve(input,op2);
+    solve(input,op1,result);
+    solve(input,op2,result);
+
+  
 }
+
+vector<string> AllPossibleStrings(string s) {
+    vector<string> result;
+    solve(s, "", result);
+
+    // Sort the result vector lexicographically
+    sort(result.begin(), result.end());
+
+    return result;
+}
+

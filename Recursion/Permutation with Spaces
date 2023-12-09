@@ -1,0 +1,42 @@
+/* Approach :
+S = "ABC"
+Output: (A B C)(A BC)(AB C)(ABC)
+1) firstly , we remove first element from input and place it in output and then start the recursive tree.
+Identification : We can see that we have a DECISION + CHOICE  option here , whether to use SPACES or NOT.
+therefore , INPUT-OUTPUT METHOD : Base condition : when leaf node hits all input is exhausted , thus we pushback the output.
+else: we keep storing the output each time in two string : in the first string we choose to insert with space and input[0] and in the 
+second string we only insert input[0] and then perform two recursive calls on both the different outputs we got whilst REDUCING THE INPUT.
+Finally , we SORT to get the correct order.
+
+*/
+
+
+1)  void solve(string input , string output , vector<string>& v){
+        if(input.length() == 0){
+            v.push_back(output);
+            return;
+        }
+        string str1 = output;
+        string str2 = output;
+        str2.push_back(' ');  
+        str2.push_back(input[0]);
+        str1.push_back(input[0]);
+        input.erase(input.begin() + 0);
+        solve(input,str1,v);
+        solve(input,str2,v);
+    }
+
+
+
+
+
+    vector<string> permutation(string S){
+        vector<string> vec;
+        string output = "";
+        output = S[0];
+        S.erase(S.begin() + 0);
+        solve(S,output,vec);
+        int n = vec.size();
+        sort(vec.begin(), vec.end());
+        return vec;
+    }

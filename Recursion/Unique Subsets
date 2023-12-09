@@ -1,0 +1,43 @@
+/* Approach :
+1) print subsets that are unique + they are sorted.
+firstly , we write a solve function : two vectors to store the output and then the recursive tree , whre one gets the input[0] and then we erase and perform so on 
+until the leaf and recursively descend back until all outputs are found and we use a set to keep things unique. Sorting is essential before inserting into set.
+NOTE : PASS OUTPUT BY REFERENCE : TLE GOES AWAY.
+*/
+
+
+
+1) void solve( vector<int>input , vector<int> &output , set<vector<int>> &result){
+        if(input.size() == 0){
+                sort(output.begin(),output.end());
+                result.insert({output});
+            
+            return;
+        }
+        vector<int> op1 = output;
+        vector<int> op2 = output;
+        op2.push_back(input[0]);
+        input.erase(input.begin()+0);
+        solve(input,op1,result);
+        solve(input,op2,result);
+    }
+    //Function to find all possible unique subsets.
+    vector<vector<int> > AllSubsets(vector<int> arr, int n)
+    {
+        vector<vector<int> >v;
+        vector<int>b;
+        set<vector<int>>sets;
+        solve(arr,b,sets);
+        for(auto &var : sets){
+            v.push_back({var});
+        }
+        return v;
+    }
+
+
+
+
+
+
+
+

@@ -1,0 +1,41 @@
+/* Approach :
+Input: s = "a1b2"
+Output: ["a1b2","a1B2","A1b2","A1B2"]
+1) firstly , we understand that this is an DECISION+CHOICE based question so we start with the recursive tree.
+base case : when the input hits 0 => we pushback the output elements into the vector.
+else:
+first we check if it is a number , if yes : we add it to the output and erase the input : no choice for this input => IF NOT , 
+then we perform the same : small caps in one str and capital in another , erase and then recursive calls for their specific new outputs.
+
+
+
+*/
+
+
+1) void solve(string input , string output , vector<string> &st){
+        if(input.length() == 0){
+            st.push_back(output);
+            return;
+        }
+        if(isdigit(input[0])){
+            output.push_back(input[0]);
+            input.erase(input.begin()+0);
+            solve(input,output,st);
+        }
+        else{
+        string str1 = output;
+        string str2 = output;
+        str1.push_back(tolower(input[0]));
+        str2.push_back(toupper(input[0]));
+        input.erase(input.begin()+0);
+        solve(input,str1,st);
+        solve(input,str2,st);
+        }
+    }
+
+    vector<string> letterCasePermutation(string s) {
+        vector<string> vec;
+        string output = "";
+        solve(s,output,vec);
+        return vec;
+    }

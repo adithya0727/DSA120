@@ -1,0 +1,38 @@
+/* Approach :
+Input: n = 3
+Output: ["((()))","(()())","(())()","()(())","()()()"]
+1) Identification : We either use a open braces or a close braces : therefore , its a choice + decision application.
+here , we use the extended ip-op method.
+base case: When open and close both are zero , we pushback the output into vector by reference.
+firstly => by recursive tree we can observe that -> open braces can be used at any times irrespective of anything , so thats the first condition with recursive call.
+for the second call , we observe that close can be used only when it is more than open : at those times we start moving recursively with that new output now and so on.
+OBSERVATION WAS THE KEY HERE : keenly observe the tree to recognise patterns.
+
+*/
+
+
+
+1) void solve(int open , int close , string &output , vector<string> &st){
+        if(open == 0 && close == 0){
+            st.push_back(output);
+            return;
+        }
+        if(open!= 0){
+            string op1 = output;
+            op1.push_back('(');
+            solve(open-1,close,op1,st);
+        }
+        if(close > open){
+            string op2 = output;
+            op2.push_back(')');
+            solve(open,close-1,op2,st);
+        }
+    }
+
+    vector<string> generateParenthesis(int n) {
+        vector<string> vec;
+        int open=n,close=n;
+        string output = "";
+        solve(open,close,output,vec);
+        return vec;
+    }

@@ -1,0 +1,42 @@
+/* Approach :
+Input:  N = 2
+Output: 11 10
+Explanation: 11 and 10 have more than 
+or equal 1's than 0's
+1) similar PATTERN compared to generate parenthesis.
+identification : use either 1 or 0 , with N blank spaces to fill. Therefore we follow input output method and draw the recursive tree.
+Based on observation : ones can be used as many times as required whereas zeros can be used if and only if they are LESSER than ones and apply recusion to each of 
+those following branches.
+
+*/
+
+
+1) void solve(int n,int zeros,int ones,string output,vector<string> &st){
+        if(zeros + ones == n){
+            st.push_back(output);
+            return;
+        }
+        if(ones <= n){
+            string op1 = output;
+            op1.push_back('1');
+            solve(n,zeros,ones+1,op1,st);
+        }
+        if(zeros < ones){
+            string op2 = output;
+            op2.push_back('0');
+            solve(n,zeros+1,ones,op2,st);
+        }
+    }
+
+
+
+
+
+	vector<string> NBitBinary(int N)
+	{
+        string output = "";
+        int ones=0,zeros=0;
+        vector<string> v;
+        solve(N,zeros,ones,output,v);
+        return v;
+	}

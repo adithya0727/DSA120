@@ -1,0 +1,31 @@
+/* Approach:
+1) firstly , we reduce the value of k to make it zero indexed.
+base case : until only one person is alive finally , we keep running the loop and eliminate one person during each iteration.
+we use index + k to find the position of the next one to be killed and erase him , mod is used to get back continuing in the array (considering its linear).
+
+
+
+*/
+
+
+
+1) void solve(int k,int index,int &ans,vector<int> &st){
+    if(st.size() == 1){
+        ans = st[0];
+        return;
+    }
+    index = (index + k) % st.size();
+    st.erase(st.begin() + index);
+    solve(k,index,ans,st);
+       
+}
+  
+    int safePos(int n, int k) {
+        if(n==1 || k==1) return n;
+        k--;
+        int ans=0,index=0;
+        vector<int>v;
+        for(int i=1;i<=n;i++) v.push_back(i);
+        solve(k,index,ans,v);
+        return ans;
+    }

@@ -5,9 +5,15 @@ Notice that the solution set must not contain duplicate triplets.
 2) Hashmap Solution : 
 map : store all elements with their respective frequencies , set to store all unique pairs when they are in sorted order each time you insert and pairs of vector to return values.
 two loops : outer loop and then remove x from map so that you dont use SAME X , 2nd loop => remove m[j]-- to not use the SAME j and then check for Z if it is present other than using x and y in the map , if ya:
-sort them and store them in set , if not add back those x and y and move on so on.. finally convert set to vector to return values.
-3) 
-
+sort them and store them in set , if not add back those x and y and move on so on.. finally convert set to vector to return values. O(N^2)
+3) Two Pointer approach :
+1) Sort the vector.
+2) outer loop : runs only till (n-2 , not including) , becuase we need triplets : so going until last but three will suffice as x being the constant.
+3) inner condition : to remove duplicates we check if the prev and curr element are the same or not , then we enter and start using two pointers : 
+firstly , we keep nums[i] as a constant and we start low with (i+1) and high uptil (n-1).
+4) While low is lesser than high , if theyre equal , we push_back and then move low and high until a point where theyre beyond duplicates and finally increment
+them both once to find unique duplicates.
+5) If sum (calculated using x+y+z=0 , y+z = 0-x;) is higher than low+high then i++ else , high-- 
 */
 
 2) vector<vector<int>> threeSum(vector<int>& nums) {
@@ -44,4 +50,25 @@ sort them and store them in set , if not add back those x and y and move on so o
 
 
 
-    3) 
+    3) vector<vector<int>> threeSum(vector<int>& nums) {
+        int n = nums.size();
+        vector<vector<int>> v;
+        sort(nums.begin(),nums.end());
+        for(int i=0;i<n-2;i++){
+            if(i==0 || i > 0 && nums[i] != nums[i-1]){
+                int low = i+1,high = n-1,sum = 0 - nums[i];
+                while(low < high){
+                    if(nums[low] + nums[high] == sum){
+                        v.push_back({nums[i],nums[low],nums[high]});
+                        while(low < high && nums[low] == nums[low+1]){ low++;}
+                        while(low < high && nums[high] == nums[high-1]){ high--;}
+                        low++;
+                        high--;
+                    }
+                    else if(nums[low] + nums[high] > sum) high--;
+                    else{low++;}
+                }
+            }
+        }
+        return v;
+    }

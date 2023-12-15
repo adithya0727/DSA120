@@ -1,0 +1,25 @@
+/* Approach:
+You are given an integer array height of length n. There are n vertical lines drawn such that the two endpoints of the ith line are (i, 0) and (i, height[i]).
+Find two lines that together with the x-axis form a container, such that the container contains the most water.
+Return the maximum amount of water a container can store.
+1) recognition : Observe that , one condition which is the BREADTH => is in the sorted order already , so we can apply two pointers , now onr only concern is the 
+minimum height we have to deak with : therefore we use a condition where to try to move towards the maximum height we can get on both ends as quickly as possible 
+wile the breadth keeps decreasing.
+
+
+*/
+
+1) int maxArea(vector<int>& height) {
+        int i=0,j=height.size()-1,mx=0;
+        while(i<j){
+            int total = min(height[i],height[j])*(j-i);
+            mx = max(mx,total);
+            if(height[i] < height[j]){
+                i++;
+            }
+            else{
+                j--;
+            }
+        }
+        return mx;
+    }

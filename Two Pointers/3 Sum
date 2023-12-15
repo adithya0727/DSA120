@@ -1,0 +1,47 @@
+/* Approach:
+Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] such that i != j, i != k, and j != k, and nums[i] + nums[j] + nums[k] == 0.
+Notice that the solution set must not contain duplicate triplets.
+1) Brute force : three loop and each time in the inner loop , check if x+y+z ==0 , if yes , add them to a vector<vector<int>>v and return it. O(N^3)
+2) Hashmap Solution : 
+map : store all elements with their respective frequencies , set to store all unique pairs when they are in sorted order each time you insert and pairs of vector to return values.
+two loops : outer loop and then remove x from map so that you dont use SAME X , 2nd loop => remove m[j]-- to not use the SAME j and then check for Z if it is present other than using x and y in the map , if ya:
+sort them and store them in set , if not add back those x and y and move on so on.. finally convert set to vector to return values.
+3) 
+
+*/
+
+2) vector<vector<int>> threeSum(vector<int>& nums) {
+        unordered_map<int,int>m;
+        vector<vector<int>> v;
+        set<vector<int>>st;
+        int n = nums.size();
+         if(n==0||n<3)
+            return v;
+      
+        for(auto &var: nums){
+            m[var]++;
+        }
+        for(int i=0;i<n;i++){
+            int x = nums[i];
+            m[nums[i]]--;
+            for(int j=i+1;j<n;j++){
+                int y = nums[j];
+                m[nums[j]]--;
+                int z = -(x+y);
+                if(m.find(z)!= m.end() && m[z] > 0){
+                    vector<int>temp{x,y,z};
+                    sort(temp.begin(),temp.end());
+                    st.insert(temp);
+                    temp.clear();
+                }
+                m[nums[j]]++;
+            }
+            m[nums[i]]++;
+        }
+        v.assign(st.begin(),st.end());
+        return v;
+    }
+
+
+
+    3) 

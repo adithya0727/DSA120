@@ -1,0 +1,20 @@
+/* Approach :
+two pointers : 'i' keeps track of updating/overwriting the unique elements , 'j' is used to iterate over to find unique elements
+1) while j is lesser than n, we start j =1 and check with previous elements and compare , if they are found equal , we move j++ else , we overwrite with the position 
+of i and i++.
+*/
+
+1) int remove_duplicate(int a[],int n){
+        int i=1,j=1;
+        if(n==0 || n==1) return n;
+        
+        while(j<n){
+            if(a[j] != a[j-1]){
+                a[i] = a[j];
+                i++;
+            }
+            j++;
+        }
+        
+        return i;
+    }

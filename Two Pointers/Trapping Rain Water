@@ -1,0 +1,29 @@
+/* Approach:
+Given n non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it can trap after raining.
+1) Two Pointers : so the understanding is , for each block we caluculate the maxleft height we got until that block from i=0 and the maximum right side block that we've
+got from the right side j=n-1 and for each block we take the min(maxleft,maxright) and subtract it with the given height of that particular block.
+then we get , how much water we can store at each position of the block and then we sum up all of those elements that are greater than 0.
+
+*/
+
+1) int trap(vector<int>& height) {
+        int n = height.size();
+        int i=0,j=n-1,sum=0;
+        int maxleft = height[i];
+        int maxright = height[j];
+        while(i < j){
+            
+            if(maxleft > maxright){
+                j--;
+                maxright = max(maxright,height[j]);
+                sum += maxright - height[j];
+            }
+            else{
+                i++;
+                maxleft = max(maxleft,height[i]);
+                sum += maxleft - height[i];
+            }
+            
+        }
+        return sum;
+    }

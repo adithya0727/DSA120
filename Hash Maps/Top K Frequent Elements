@@ -1,0 +1,37 @@
+/* Approach:
+Given an integer array nums and an integer k, return the k most frequent elements. You may return the answer in any order.
+Example 1:
+Input: nums = [1,1,1,2,2,3], k = 2
+Output: [1,2]
+1) first , we take a map to store elements with their frequencies.
+second , using bucket sort : We initialise 2d vector with size of vector : {1,2,3,4,5,6} : so basically these are the frequencies we'll use as.
+we iterate through each frequency of map(values in map) : treated indexes in the above vector.
+and accordingly store their values (keys in map) : based on indeces/frequencies : we lookup on map and store their values.
+third , create a result vector : which starts from the end of 2d vector , SINCE WE NEED TOP K ELEMENT : MAXIMUM FREQUENCY ELEMENTS FIRST 
+We keep inserting until we hit k value.
+
+*/
+
+
+
+1) vector<int> topKFrequent(vector<int>& nums, int k) {
+        unordered_map<int,int>m;
+        int n =nums.size();
+        for(auto &v : nums){
+            m[v]++;
+        }
+        vector<vector<int>>v1(n+1);
+        for(auto &var : m){
+            v1[var.second].push_back(var.first);
+        }
+        vector<int>res;
+        for(int i=n;i>=0;i--){
+            if(res.size() >= k){
+                break;
+            }
+            if(!v1[i].empty()){
+                res.insert(res.end(),v1[i].begin(),v1[i].end());
+            }
+        }
+        return res;
+    }

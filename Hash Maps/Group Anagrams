@@ -1,0 +1,22 @@
+/* Approach :
+Input: strs = ["eat","tea","tan","ate","nat","bat"]
+Output: [["bat"],["nat","tan"],["ate","eat","tea"]]
+1) INTUITION : Use an unordered_map to group the strings by their sorted counterparts. Use the sorted string as the key and all anagram strings as the value.
+to group these anagrams (keep in mind , same letters and frequencies with different order) : so we take each string in the vector and sort it first and then push_back values. 
+everytime we sort , we know that if that KEY ALREADY EXISTS : it'll just append to the existing key [POWER OF SORTING] , else it'll create a new key:which indicates a new group of anagrams coming ahead.
+*/
+
+
+1) vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        unordered_map<string,vector<string>>m;
+        vector<vector<string>>v;
+        for(auto &word : strs){
+            string sortedstrs = word;
+            sort(sortedstrs.begin(),sortedstrs.end());
+            m[sortedstrs].push_back(word);
+        }
+        for(auto &var : m){
+            v.push_back({var.second});
+        }
+        return v;
+    }

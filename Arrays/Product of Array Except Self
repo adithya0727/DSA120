@@ -1,0 +1,70 @@
+/* Approach: PREFIX-ARRAY
+Given an integer array nums, return an array answer such that answer[i] is equal to the product of all the elements of nums except nums[i].
+Input: nums = [1,2,3,4]
+Output: [24,12,8,6]
+1) Firstly three vectors : prefix : which will keep storing the prefix values until the last by multiplying each other through each iteration.
+post vector : which starts from the last and starts storing all postfix vlues by multiplying till j=0;
+formula : pre[i-1] * post[i+1] gives us the value wherein : we exactly get all numbers From the LEFT CONSIDERING THE LEFTMOST OF INDEX(pre vector) and 
+then the RIGHTMOST of index (post vector) gives us the maximum value after the index. SO we end up multiplying all numbers except arr[i] or number itself.
+2) saves SPACE : O(1) => first loop : prefix: we first store all prefixes in their own places , as in : in-place we write the prefix of that number in positon : also
+in other words : we write the prefix until arr[i-1] excluding itself.
+Second vector : we iterate from the end : multiple prefix which is already in place in vector with postfix in its place now. and then update postfix and multiply 
+again.
+*/
+
+1) vector<int> productExceptSelf(vector<int>& nums) {
+        int n = nums.size();
+        vector<int>pre;
+        vector<int>post(n);
+        vector<int>res;
+       
+        int sum=1,var=1,ans=0;
+        for(int i=0;i<n;i++){
+            sum = sum*nums[i];
+            pre.push_back(sum);
+        }
+        
+        for(int j=(n-1);j>=0;j--){
+            var = var*nums[j];
+            post[j] = var;
+        }
+        
+        for(int k=0;k<n;k++){
+            if(k==0){
+                int x=post[k+1];
+                res.push_back(x);
+            }
+            else if(k==(n-1)){
+                int y = pre[k-1];
+                res.push_back(y);
+            }
+            else{
+            ans = pre[k-1]*post[k+1];
+            res.push_back(ans);
+            }
+        }
+        return res;
+    }
+
+
+2) vector<int> productExceptSelf(vector<int>& nums) {
+        int n = nums.size();
+        vector<int>res(n);
+       
+        int sum=1,var=1;
+        for(int i=0;i<n;i++){
+            res[i] = sum;
+            sum *= nums[i];
+        }
+        for(int j=n-1;j>=0;j--){
+            if(j==(n-1)){
+                res[j] = res[j]*var;
+                var *= nums[j];
+            }
+            else{
+                res[j] = res[j]*var;
+                var *= nums[j];
+            }
+        }
+        return res;
+    }

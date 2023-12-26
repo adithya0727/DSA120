@@ -1,0 +1,39 @@
+/* Approach:
+Determine if a 9 x 9 Sudoku board is valid. Only the filled cells need to be validated according to the following rules:
+Each row must contain the digits 1-9 without repetition.
+Each column must contain the digits 1-9 without repetition.
+Each of the nine 3 x 3 sub-boxes of the grid must contain the digits 1-9 without repetition.
+1) create 3 2d arrays of bool type and initialize them all to false.
+row and col : nested loops to iterate over each element in the 2d array. Index = converts to integer.
+calculate area to check for repetition within same same box (3x3).
+if row or coloum or box has the same integer ticked off as true before , we return false for repetitiveness.
+if not , we go ahead and check that element in that particular : row,column and box for the future checking.   time: O(N^2) and space : O(N)
+
+*/
+
+1) bool isValidSudoku(vector<vector<char>>& board) {
+        const int cnt = 9;
+        bool row[cnt][cnt] = {false};
+        bool col[cnt][cnt] = {false};
+        bool sub[cnt][cnt] = {false};
+        
+        for(int r = 0; r < cnt; ++r){
+            for(int c = 0; c < cnt; ++c){
+                if(board[r][c] == '.')
+                    continue; // if not number pass
+                
+                int idx = board[r][c] - '0' - 1; //char to num idx
+                int area = (r/3) * 3 + (c/3);
+                
+                //if number already exists
+                if(row[r][idx] || col[c][idx] || sub[area][idx]){
+                    return false;
+                }
+                
+                row[r][idx] = true;
+                col[c][idx] = true;
+                sub[area][idx] = true;
+            }
+        }
+        return true;
+    }

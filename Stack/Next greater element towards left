@@ -34,6 +34,6 @@ greater value or stack becomes empty. Finally push the arr[i] element into the s
             }
             st.push(arr[i]);
         }
-        reverse(v.begin(),v.end());
+        
         return v;
     }

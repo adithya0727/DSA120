@@ -3,9 +3,9 @@ Given n non-negative integers representing an elevation map where the width of e
 1) Two Pointers : so the understanding is , for each block we caluculate the maxleft height we got until that block from i=0 and the maximum right side block that we've
 got from the right side j=n-1 and for each block we take the min(maxleft,maxright) and subtract it with the given height of that particular block.
 then we get , how much water we can store at each position of the block and then we sum up all of those elements that are greater than 0.
-
+2) EASIER UNDERSTANDING.
 */
-
+//time : O(NLOGN) space : O(1)
 1) int trap(vector<int>& height) {
         int n = height.size();
         int i=0,j=n-1,sum=0;
@@ -27,3 +27,25 @@ then we get , how much water we can store at each position of the block and then
         }
         return sum;
     }
+
+// time : O(N)  space : O(N)
+2) int trap(vector<int>& arr) {
+        int n = arr.size();
+        int sum=0;
+        vector<int>mgl;        //to store maximum from the left
+        vector<int>mgr;        //to store maximum from the right
+        vector<int>min;        //to store min of two maxes
+        mgl[0] = arr[0];
+        mgr[n-1] = arr[n-1];
+        for(int i=1;i<n;i++){
+        mgl[i] = max(mgl[i-1],arr[i]);        //compare for max
+        }
+        for(int i=n-2;i>=0;i--){        
+        mgr[i] = max(mgr[i+1],arr[i]);               //compaer for amx
+        }
+        for(int i=0;i<n;i++){
+        min[i] = min(mgl[i],mgr[i]) - arr[i];         //find min and subtract that position to get water trapped in that block discounting the preoccupied block.
+        sum += min[i];        //return sum of all blocks of water.
+        }
+        return sum;
+}

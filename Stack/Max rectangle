@@ -9,6 +9,8 @@ next => use perform a MxN across all elements from the second vector : if we enc
 THEREFORE , WE MUST CONSIDER IT COMPLETELY AS A 0. After each vector is being modified and updated we perform mah and check for maximum.
 2) Mah on each of the histograms that we construct (or we keep adding on).
 3) maximum of the mah's of each histograms is the final output.
+
+2) NO TLE APPROACH
 */
 
 1) vector<int> nsl1(vector<int>&arr , int n){              //Nearest smaller Left
@@ -100,4 +102,68 @@ THEREFORE , WE MUST CONSIDER IT COMPLETELY AS A 0. After each vector is being mo
             ans = max(mx,ans);
         }
         return ans;            //Return maximum
+    }
+2) NO TLE APPROACH :                             // to remove TLE prefer "VOID" over "INT" , TERNARY OVER IF-ELSE.
+void nsl1(vector<int>& arr, int n, vector<int>& nsl) {
+        stack<pair<int, int>> st1;
+        for (int i = 0; i < n; i++) {
+            while (!st1.empty() && st1.top().first >= arr[i]) {
+                st1.pop();
+            }
+            nsl[i] = (st1.empty()) ? -1 : st1.top().second;
+            st1.push({arr[i], i});
+        }
+    }
+
+    void nsr1(vector<int>& arr, int n, vector<int>& nsr) {
+        stack<pair<int, int>> st2;
+        for (int j = n - 1; j >= 0; j--) {
+            while (!st2.empty() && st2.top().first >= arr[j]) {
+                st2.pop();
+            }
+            nsr[j] = (st2.empty()) ? n : st2.top().second;
+            st2.push({arr[j], j});
+        }
+    }
+
+    int mah(vector<int>& v, int n, vector<int>& nsl, vector<int>& nsr) {
+        int ans = 0;
+        for (int a = 0; a < n; a++) {
+            int width = nsr[a] - nsl[a] - 1;
+            ans = max(ans, width * v[a]);
+        }
+        return ans;
+    }
+
+    int maxArea(int M[MAX][MAX], int n, int m) {
+        vector<int> v(m, 0);
+        vector<int> nsl(m);
+        vector<int> nsr(m);
+        int mx = 0, ans = 0;
+
+        for (int j = 0; j < m; j++) {
+            v[j] = M[0][j];
+        }
+
+        nsl1(v, m, nsl);
+        nsr1(v, m, nsr);
+        mx = mah(v, m, nsl, nsr);
+        ans = mx;
+
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (M[i][j] == 1) {
+                    v[j] = v[j] + 1;
+                } else {
+                    v[j] = 0;
+                }
+            }
+
+            nsl1(v, m, nsl);
+            nsr1(v, m, nsr);
+            mx = mah(v, m, nsl, nsr);
+            ans = max(mx, ans);
+        }
+
+        return ans;
     }

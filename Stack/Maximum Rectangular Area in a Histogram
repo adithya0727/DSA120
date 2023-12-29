@@ -5,7 +5,7 @@ side : then subtract those two indices to get the width until which we can stret
 finally , see which has the maximum area and return that.
 it is a combination of NSR AND NSL with indeces(so that if we pop , we still have the indeces to rely on).
 Leetcode : HARD.
-2) NO TLE APPROACH.
+2) NO TLE APPROACH.         //JUST USE ONE STACK
 */
 
 1) long long getMaxArea(long long arr[], int n)
@@ -15,7 +15,7 @@ Leetcode : HARD.
         vector<long long>nsr;
         vector<long long>width;
         stack<pair<long long,int>>st1;
-        stack<pair<long long,int>>st2;
+        stack<pair<long long,int>>st2;   
         //Nearest Smaller Left
         for(int i=0;i<n;i++){
             if(st1.empty()){
@@ -68,64 +68,64 @@ Leetcode : HARD.
         return ans;
     }
 
-2) long long getMaxArea(long long arr[], int n){             //TO AVOID TLE : 
-    vector<long long> left(n), right(n);
-    stack<long long> s; 
-    //nsl
-    
-    for(int i=0;i<n;i++){
-        if(s.empty()){
-            left[i] = -1;
-        }else{
-            while(!s.empty() && arr[s.top()] >= arr[i]){
-                s.pop();
+2) long long getMaxArea(long long arr[], int n)    /use only 1 stack
+    {
+        long long ans=0;
+        vector<long long>nsl;
+        vector<long long>nsr;
+        vector<long long>width;
+        stack<pair<long long,int>>st;
+        //Nearest Smaller Left
+        for(int i=0;i<n;i++){
+            if(st.empty()){
+                nsl.push_back(-1);
             }
-            if(s.empty()){
-                left[i] = -1;
-            }else{
-                left[i] = s.top();
+            else if(st.size() > 0 && st.top().first < arr[i]){
+                nsl.push_back(st.top().second);
             }
+            else if(st.size() > 0 && st.top().first >= arr[i]){
+                while(st.size() > 0 && st.top().first >= arr[i]){
+                    st.pop();
+                }
+                if(st.size() == 0){
+                    nsl.push_back(-1);
+                }
+                else{
+                    nsl.push_back(st.top().second);
+                }
+            }
+            st.push({arr[i],i});
         }
-        s.push(i);
-    }
-    
-    //empty stack 
-    while(!s.empty()){
-        s.pop();
-    }
-    
-    //nsr 
-    int j = 0 ; 
-    for(int i=n-1;i>=0;i--){
-        if(s.empty()){
-            right[j++] = n;
-        }else{
-            while(!s.empty() && arr[s.top()] >= arr[i]){
-                s.pop();
-            }
-            if(s.empty()){
-                right[j++] = n;
-            }else{
-                right[j++] = s.top();
-            }
+        while(!st.empty()){
+            st.pop();                               //emoty stack for reusing
         }
-        s.push(i);
-    }
-    
-    reverse(right.begin(),right.end());
-    
-    //calculation of width 
-    for(int i=0;i<n;i++){
-        left[i] = right[i] - left[i] -1;
-    }
-    
-    long long ans = INT_MIN;
-    //calculate getMaxArea
-    for(int i=0;i<n;i++){
-        long x = left[i] * arr[i];
-        if(x>ans){
-            ans = x;
+        //Nearest Smaller Right
+        for(int j=(n-1);j>=0;j--){
+            if(st.empty()){
+                nsr.push_back(n);
+            }
+            else if(st.size() > 0 && st.top().first < arr[j]){
+                nsr.push_back(st.top().second);
+            }
+            else if(st.size() > 0 && st.top().first >= arr[j]){
+                while(st.size() > 0 && st.top().first >= arr[j]){
+                    st.pop();
+                }
+                if(st.size() == 0){
+                    nsr.push_back(n);
+                }
+                else{
+                    nsr.push_back(st.top().second);
+                }
+            }
+            st.push({arr[j],j});
         }
-     }
-     return ans;
-}
+        reverse(nsr.begin(),nsr.end());
+        //Calculate Width
+        for(int a=0;a<n;a++){
+            width.push_back((nsr[a] - nsl[a] - 1) * arr[a]);
+        }
+        //Final answer
+        ans = *max_element(width.begin(), width.end());
+        return ans;
+    }

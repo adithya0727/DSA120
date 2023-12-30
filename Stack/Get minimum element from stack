@@ -100,3 +100,10 @@ if this placeholder occurs , that means we have encountered the min element. the
            }
            
        }
+
+if(s.top()>=minElement){                    //while returning top , check incase if its the decoded value if yes : then return miEle which contains the original
+                return s.top();               //value of the s.top() and return that.
+            }
+            else{
+                return minElement;
+            }

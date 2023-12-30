@@ -1,0 +1,102 @@
+/* Approach:
+You are given N elements and your task is to Implement a Stack in which you can get a minimum element.
+space : O[N]
+1) so ,we are given a stack , and at any given point in time we have to return the element which is the minimum in the stack.
+So we use another stack , which will keep track of all the elements minimum.
+space : O[1]
+2) so , since its O(1) : we use a variable minEle instead of an extra stack. now , a variable cannot hold series of values together : in our case when we pop()
+we need the minimum to roll back to the previous smallest value which is not contained in a variable . so for this , we use an ENCODING AND DECODING APPROACH.
+if a smaller value is encountered in arr , we perform : sum = [2*minEle-X] : minEle is currminimum and X is the element to be pushed. The encoded value is pushed onto stack
+and X is updated as min value. So why do we use this? Because whne we start popping we can check if there is an element in the stack that is LESSER THAN THE MINELE,
+THAT MEANS THERE'S AN ANAMOLY. If there there is a min element in stack , minEle variable should hold that right ? So , "SUM" acts as a placeholder to indicate that
+if this placeholder occurs , that means we have encountered the min element. then we perform decoding. [2*X-minEle] , so that we get back prev smaller value for minEle.
+
+*/
+
+1) int minEle;
+    stack<int> s;
+    stack<int> ss;
+    public:
+    
+       /*returns min element from stack*/
+       int getMin(){
+           if(ss.empty()){        //edge cases
+               return -1;
+           }
+           int top = ss.top();        //return the top which contains the smallest element
+           return top;
+       }
+       
+       /*returns poped element from stack*/
+       int pop(){
+           if(s.empty()){
+               return -1;        //edge case
+           }
+           int x = s.top();
+           if(x == ss.top()){        //first CHECK IF THE ELEMENT TO BE POPPED IS MINIMUM ELEMENT BY COMPARING WITH THE TOP OF SS , IF YES => THEN REMOVE IN SS.
+               ss.pop();
+           }
+           s.pop();
+           return x;          //return top
+       }
+       
+       /*push element x into the stack*/
+       void push(int x){
+           s.push(x);                  //push into normal stack
+           if(ss.empty()){              // if empty , then first element is the smallest element
+               ss.push(x);
+           }
+           else{
+               if(ss.top() >= x){        //if not empty , then we compare if top is greater and current x , then we've found an element smaller than curr ss.top()
+                   ss.push(x);            //and we replace bu pushing upon it.
+               }
+           }
+           
+       }
+
+
+2) int minEle;                    //O(1):space
+    stack<int> s;
+    public:
+    
+       /*returns min element from stack*/
+       int getMin(){
+           if(s.empty()){
+               return -1;
+           }
+           return minEle;
+       }
+       
+       /*returns poped element from stack*/
+       int pop(){
+           if(s.empty()){            //base case
+               return -1;
+           }
+           int x = s.top();
+           if(x < minEle){                //if the top element is lesser than minEle , then we know that there is an ANAMOLY.
+               int popped = minEle;        // if anamoly occurs , we have touched the element which is the currmin in : minELe.
+               minEle = 2*minEle - x;      //we decode the value : before that , current minEle is stored somewhere as it has the element which is to be returned.
+               x = popped;                //decode to get the : rollback /prev value of minEle using x and finally update x with popped indirectly which will be returned.
+           }
+           s.pop();
+           return x;
+       }
+       
+       /*push element x into the stack*/
+       void push(int x){                    //If stack is empty , its the first element so it is minimum and normally pushed on.
+           if(s.empty()){
+               s.push(x);
+               minEle = x;
+           }
+           else{
+               if(minEle >= x){              //if x is smaller than MinEle , we encode the value and create a placeholder which is smaller than the minEle,
+                   int sum = 2*x-minEle;      //it acts as a flag during pop() operation. and we update the minEle with current min : x.
+                   s.push(sum);
+                   minEle = x;
+               }
+               else{
+                   s.push(x);              //if not smaller , then we normally push onto the stack.
+               }
+           }
+           
+       }

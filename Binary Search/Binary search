@@ -1,0 +1,21 @@
+/* Approach:
+
+1) we perform start + (end-start) , to avoid INTEGER OVERFLOW WHICH COULD BE CAUSED ON MID : AS START AND END BOTH CAN BE HUGE VALUES.
+*/
+
+1) int binarysearch(int arr[], int n, int k) {
+        int start=0,end=n-1;
+        while(start <= end){
+            int mid = start + (end-start)/2;
+            if(arr[mid] == k){
+                return mid;
+            }
+            else if(arr[mid] > k){
+                end = mid - 1;
+            }
+            else{
+                start = mid + 1;
+            }
+        }
+        return -1;
+    }

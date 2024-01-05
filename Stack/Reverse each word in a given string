@@ -1,0 +1,32 @@
+/* Approach:
+Input:
+S = "i.like.this.program.very.much"
+Output: 
+i.ekil.siht.margorp.yrev.hcum
+1) time and space : O(N)
+using a stack we reverse all elements within but not the order of words.
+SELF-EXPLANATORY.
+*/
+
+1) string reverseWords (string s)
+    {
+        stack<char>st;
+        string str="";
+        for(int i=0;i<s.length();i++){
+            if(s[i] == '.'){
+                while(!st.empty()){
+                    str += st.top();
+                    st.pop();
+                }
+                str += '.';
+            }
+            else{
+                st.push(s[i]);
+            }
+        }
+        while(!st.empty()){
+            str += st.top();
+            st.pop();
+        }
+        return str;
+    }

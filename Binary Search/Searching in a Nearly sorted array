@@ -1,0 +1,31 @@
+/* Approach:
+sorted: {1,2,3,4,5} : here => {1,2,4,3,5} target:3
+elements can be in at most : same position i or in i+1 or in i-1.
+1) we perform normal Binary Search: we check for mid and their neighbours with edge cases and verify if neighbours are equal if not:
+USUAL BINARY SEARCH BECAUSE , OBVIOUSLY : ELEMENTS OF I+1 OR I-1 CAN BE MISARRANGED BUT PAST THAT THEY ARE SORTED. SO WE CAN SAFETLY CHECK LEFT SIDE OR RIGHT SIDE
+DEPENDING ON ARR[MID] VALUE FURTHER.
+
+*/
+
+1) int findele(int arr[] , int target,int n){
+        int start=0,end=n-1;
+        while(start <= end){
+            int mid = start + (end-start)/2;
+            if(arr[mid] == target){
+                return mid;
+            }
+            if(mid-1 >= start && arr[mid-1] == target){
+                return mid-1;
+            }
+            if(mid+1 <= end && arr[mid+1] == target){
+                return mid+1;
+            }
+            if(arr[mid] > target){
+                end = mid-1;
+            }
+            else{
+                start = mid+1;
+            }
+        }
+        return -1;
+    }

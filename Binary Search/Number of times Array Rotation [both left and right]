@@ -1,0 +1,33 @@
+/*Approach:
+N = 5
+Arr[] = {5, 1, 2, 3, 4}
+Output: 1
+sorted index has : {1,2,3,4,5} with indeces : {0,1,2,3,4} while this rotated array has indeces : {0,1,2,3,4} : clearly we can observe that : BASED ON MINIMUM VLAUE
+INDEX POSITION , WE CAN TELL HOW MANY TIMES THE ARRAY HAS BEEN ROATATED. [Right rotation]
+[LEFT ROTATION] : return (length - idx of min. element) based on observation : {2,3,4,5,1}. (5-4=1)
+1) Binary search: first : what makes minimum element so UNIQUE : left and right side => both are smaller : if we encounter that - then definitely we found the min element.
+else : base case : if its already sorted return 0.
+else: start is less than mid , we move towards the UNSORTED PART : cause thats where the min. element will be and similarly
+else: if mid is smaller than end : we move towards the other end of UNSORTED PART : where min. element exists!
+*/
+
+1) int findKRotation(int arr[], int n) {
+	    int start=0,end=n-1;
+	    while(start <= end){
+	        int mid = start + (end-start)/2;
+	        int next = (mid+1)%n;
+	        int prev = (mid+n-1)%n;
+	        if(arr[mid] <= arr[prev] && arr[mid] <= arr[next]){
+	            return mid;
+	        }
+	        else if(arr[start] <= arr[end]){
+	            return start;
+	        }
+	        else if(arr[start] <= arr[mid]){
+	            start = mid+1;
+	        }
+	        else if(arr[mid] <= arr[end]){
+	            end = mid-1;
+	        }
+	    }
+	}

@@ -1,0 +1,29 @@
+/*Approach:
+N = 7, x = 5 
+arr[] = {1,2,8,10,11,12,19}
+Output: 1
+1) firstly we check if the element is already present by v[mid] == target , then we return index , if not : we then check the current element (mid) and the next element
+(mid+1) to see if x is lesser than (mid+1) , if yes : IT MEANS WE'VE FOUND AN ELEMENT RANGE BTW X AND THE LOWER VALUE IS RETURNED.
+*/
+1) int findFloor(vector<long long> v, long long n, long long x){
+        long long start=0,end=n-1;
+        if(v[end] <= x){
+            return end;
+        }
+        while(start <= end){
+            long long mid = start + (end-start)/2;
+            if(v[mid] == x){
+                return mid;
+            }
+            if((mid+1) < n && v[mid]<x && v[mid+1] > x){
+                return mid;
+            }
+            else if(v[mid] > x){
+                end = mid-1;
+            }
+            else{
+                start = mid+1;
+            }
+        }
+        return -1;
+    }

@@ -1,0 +1,10 @@
+/*Approach:
+Problem statement : arr[] = {1,3,5,8}    KEY: 7
+So , we should return the element which has the minimum absolute (mod : convert negative to positive)difference value For Example in array=> 
+{1-7=6,3-7=4,5-7=2,8-7=1} :: so we return element 8 as the ANSWER as it has the min value post subtraction.
+1) so , Lets apply normal BS : if element is already present then we get SUBTRACTED VALUE AS 0. so we return right then.
+This problem is bascially broken down in CEIL AND FLOOR , since the minimum value if not equal to mid : it is definitely going to be either 
+5 or 8 in the above Example. see which is smaller and return that.
+*/
+
+1) 

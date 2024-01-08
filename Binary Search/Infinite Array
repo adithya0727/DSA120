@@ -1,0 +1,13 @@
+/* Approach:
+Basically , array has infinite elements and we have to apply BS and find the index of key.
+1) Problem : We can't assign END properly as it is infinite , to solve this : 
+firstly, start=0,end=1 , we compare if end < key , then we double it until condition goes false and then oncw we get a VALID range : we can apply BS.
+*/
+
+1) algo:
+while(arr[end] <= key){
+    start = end;          //start is updated to END : since if key is lesser than the current END Value : clearly start should be our new range to find KEY.
+    end = end*2;         // Increase by 2 positions each time till condition fails
+}
+
+binarysearch(arr,start,end,key);

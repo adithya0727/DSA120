@@ -4,7 +4,9 @@ arr[] = {1,2,8,10,11,12,19}
 Output: 1
 1) firstly we check if the element is already present by v[mid] == target , then we return index , if not : we then check the current element (mid) and the next element
 (mid+1) to see if x is lesser than (mid+1) , if yes : IT MEANS WE'VE FOUND AN ELEMENT RANGE BTW X AND THE LOWER VALUE IS RETURNED.
-2) Same as floor but change formula accordingly.
+2) aditya verma floor.
+3) Same as floor but change formula accordingly.
+4) Aditya verma CEIL.
 */
 1) int findFloor(vector<long long> v, long long n, long long x){
         long long start=0,end=n-1;
@@ -28,7 +30,27 @@ Output: 1
         }
         return -1;
     }
-2)  int findCeil(vector<long long> v, long long n, long long x){
+2) int findFloor(vector<long long> v, long long n, long long x){
+        long long start=0,end=n-1,res=0;
+        if(v[end] <= x){                 //edge case if element is greater than last element then return last element.
+            return end;
+        }
+        while(start <= end){                        //applying normal BS : if ele is equal to mid return mid index.
+            long long mid = start + (end-start)/2;
+            if(v[mid] == x){
+                return mid;
+            }
+            else if(v[mid] <  x){         //IMP: so we continue performing normal BS , and we STORE THE VARIOUS CANDIDATES BASED ON THE CRITERIA: 
+                res = mid;        // floor: Largest element that is lesser than or equal to X. (equal is handled beforehand).
+                start = mid+1;        // so we capture all elements that are smaller than X as candidates and keep moving until start<=end: the start and end should
+            }                        //be pointing to the floor.
+            else{
+                end = mid-1;
+            }
+        }
+        return res;
+    }
+3)  int findCeil(vector<long long> v, long long n, long long x){
         long long start=0,end=n-1;
         if(v[end] <= x){
             return end;
@@ -49,4 +71,24 @@ Output: 1
             }
         }
         return -1;
+    }
+4)   int findCeil(vector<long long> v, long long n, long long x){  //similar to aditya verma's FLOOR SOLUTION : ONE CHANGE ONLY.
+        long long start=0,end=n-1,res=0;
+        if(v[end] <= x){                                        //edge case
+            return end;
+        }
+        while(start <= end){
+            long long mid = start + (end-start)/2;
+            if(v[mid] == x){                        //if mid exists return.
+                return mid;
+            }
+            else if(v[mid] > x){
+                res = mid;                        //CEIL : LARGEST NUMBER THAN IS GREATER THAN OR EQUAL TO X. (equal to is already handled above).
+                end = mid-1;                        // all candidates that are greater than x become candidates and we start moving towards LEFT.
+            }
+            else{
+                start = mid+1;                        //if lesser move right.
+            }
+        }
+        return res;
     }

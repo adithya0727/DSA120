@@ -1,0 +1,49 @@
+/* Approach:
+Input: nums = [1,2,3,1]
+Output: 2
+Explanation: 3 is a peak element and your function should return the index number 2.
+1) So basically , although the array is UNSORTED : WE CAN APPLY BS.
+UNDERSTANDING : WE KEEP MOVING TOWARDS THE DIRECTION WHERE THE ELEMENT IS RISING AND INCREASING : POSSIBILITIES 
+1) WE REACH THE END AND THATS THE LARGEST.
+2) WE GET A SMALLER ELEMENT , BUT STILL THAT WILL BE THE LARGEST AS WE KEEP MOVING TOWARDS THE RISING TREND.
+
+*/
+
+1) int findPeakElement(vector<int>& nums) {
+        int n = nums.size();
+        int start=0,end=n-1;
+        if(n == 1){
+            return 0;
+        }
+        while(start <= end){
+            int mid = start + (end-start)/2;
+            if(mid >0 && mid<n-1){
+                if(nums[mid] > nums[mid-1] && nums[mid] > nums[mid+1]){        //greater than neighbours return mid
+                    return mid;
+                }
+                else if(nums[mid+1] > nums[mid-1]){                  //move towards rising TREND
+                    start = mid+1;
+                }
+                else{
+                    end = mid-1;
+                }
+            }
+            else if(mid == 0){                                  //edge case of reaching first element
+                if(nums[0] > nums[1]){
+                    return 0;
+                }
+                else{
+                    return 1;
+                }
+            }    
+            else if(mid==(n-1)){                                    //edge case of reaching last element
+                if(nums[n-1] > nums[n-2]){
+                    return n-1;
+                }
+                else{
+                    return n-2;
+                }
+            }
+        }
+        return -1;
+    }

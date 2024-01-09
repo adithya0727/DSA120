@@ -1,0 +1,34 @@
+/* Approach:
+the rows and columns are in sorted order
+Input:
+n = 3, m = 3, x = 40
+matrix[][] = {{ 3, 30, 38},
+              {36, 43, 60},
+              {40, 51, 69}}
+Output: 1
+Explanation:
+40 is  present in the matrix, 
+so output is 1.
+1) visualise this 2D MATRIX : we start the the TOP RIGHTMOST ELEMENT : 38 => logic: J = COLUMN MOVEMENT : I = ROW MOVEMENT
+compare this element with target : if it is lesser we move next column j-- : the whole column (38,60,69) is discarded since if target is smaller than 38 itself :
+there's no point in going downwards.
+and next : 30 is SMALLER THAN target : 40 , so we move downwards now I++ , since the value is higher this time and check with 43 > 40 : so j-- and then 36 < 40
+so I++ and we end up with 40==40 and return true.
+*/
+
+1) bool searchMatrix(vector<vector<int>>& matrix, int target) {       //O(M+N) : time complexity.
+        int n=matrix.size() , m=matrix[0].size();
+        int i=0,j=matrix[0].size()-1;
+        while(i >=0 && i<n && j>=0 && j<m){
+            if(matrix[i][j] == target){
+                return true;
+            }
+            else if(matrix[i][j] > target){
+                j--;
+            }
+            else{
+                i++;
+            }
+        }
+        return false;
+    }

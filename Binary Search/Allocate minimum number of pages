@@ -1,0 +1,67 @@
+/* Approach:
+THREE CRITERIAS :
+1) no sharing books 
+2) contious blocks of book for each persom / movement
+3) one person has to get one book minimum.
+Input:
+N = 4
+A[] = {12,34,67,90}
+M = 2
+Output:113
+Explanation:Allocation can be done in 
+following ways:
+{12} and {34, 67, 90} Maximum Pages = 191
+{12, 34} and {67, 90} Maximum Pages = 157
+{12, 34, 67} and {90} Maximum Pages =113.
+Therefore, the minimum of these cases is 113,
+which is selected as the output.
+1) So , TO FIND THE MOST MIMIMUM NUMBER OF PAGES AMONGST THE MAXIMUM PAGES BTW STUDENTS CAN BE FOUND OUT IN THE FOLLOWING WAY:
+1) START : we choose the maximum VALUE for start because : THAT IS THE MAXIMUM NO. OF PAGES AND ANY ONE STUDENT HAS TO GET IT AT ALL COSTS. SO WE WONT GET A MINIMUM
+VALUE BELOW THAT , EVEN IF WE GIVE THAT ONE BOOK ONLY TO THE STUDENT.(it is the bare minimum window size being the maximum) : base case.
+END : sum of all values of pages , to get a proper number line and the maximum one can study.
+if n < m : each person will not a book so return -1;
+2) find mid and if isvalue() true : it means for the current MID VALUE , WE WERE ABLE TO ALLOCATE THE PAGES WITHIN THAT RANGE OF MID AND FOR THOSE NUMBER OF STUDENTS.
+3) isvalue() : we start count of students with 1 and sum =0. keep adding to sum until it hits the mid value , if it goes past that and increase count and start sum afresh again.
+IF COUNT BECOMES GREATER THAN NUMBER OF GIVEN STUDENTS RETURN FALSE : WHICH MEANS WE COULDNT ALLOCATE THE PAGES FOR THE GIVEN RANGE. ELSE RETURN TRUE.
+4) IF RANGE IS SUFFICIENT : WE CHECK IF WE CAN GO ANY LOWER TO FIND A MINIMUM MID VALUE : END = MID-1; ELSE : START = MID+1 : INCREASE THE RANGE.
+*/
+
+1) bool isvalid(int arr[] , int &n , int &stud , int &midele){
+        int no_of_students=1;              //initially we have one student to start with
+        int sum=0;
+        for(int i=0;i<n;i++){
+            sum += arr[i];
+            if(sum > midele){        //if sum is greater than mid range then increment to next student 
+                no_of_students++;
+                sum = arr[i];          //and start sum afresh for the new student and carry on.
+            }
+            if(no_of_students > stud){    //if no.of student increase than given students : RANGE IS TOO SMALL , INCREASE IT.
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    int findPages(int A[], int N, int M) 
+    {
+        int start = *max_element(A,A+N);          //minimum of maximum no. of pages
+        int end=0;
+        for(int i=0;i<N;i++){
+            end += A[i];
+        }                //maximum range 
+        int result=-1;
+        if(N < M){
+            return -1;                //edge case
+        }
+        while(start <= end){
+            int mid = start + (end-start)/2;
+            if(isvalid(A,N,M,mid) == true){              //if range is good enough 
+                result = mid;
+                end = mid-1;                            //lets go lower and check for further minimum values
+            }  
+            else{
+                start = mid+1;                              //range is too small , please increase.
+            }
+        }
+        return result;
+    }

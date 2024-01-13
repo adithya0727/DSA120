@@ -1,0 +1,36 @@
+/* Approach:
+Example 1:
+Input: piles = [3,6,7,11], h = 8
+Output: 4
+
+1) so , to find the mimimum amount of bananas to eat so that koko and finsh all before the gaurds arrive is:
+start =1 and end is equal to the maximum piles[i] as thats the maximum koko can eat at once : visualise a number line from 1 to maxelement.
+find the mid and pass it to isvalid() : for each element in the PILE we are going to perform CEIL divison and see how long kokos takes to finish all piles.
+if its before H (gaurds arrive) : then its a possible answer and we check for lower ones : end = mid-1; if she takes longer : we do start = end+1 to increase the 
+amount of bananas she has to eat per hour.
+*/
+
+1) bool isvalid(vector<int>&arr, int &n, int &h, int &midele) {
+    long each_hr = 0;
+    for (int i = 0; i < n; i++) {
+        each_hr += (arr[i] + midele - 1) / midele;  
+    }
+    return each_hr <= h;
+}
+
+
+    int minEatingSpeed(vector<int>& piles, int h) {
+        int n = piles.size();
+        int start=1,end=*max_element(piles.begin(),piles.end()),res=-1;
+        while(start <= end){
+            int mid = start + (end-start)/2;
+            if(isvalid(piles,n,h,mid) == true){
+                res = mid;
+                end = mid-1;
+            }
+            else{
+                start = mid+1;
+            }
+        }
+        return res;
+    }

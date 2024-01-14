@@ -1,0 +1,34 @@
+/* Approach:
+You are given a string s and an integer k.
+You can choose any character of the string and change it to any other uppercase English character. You can perform this operation at most k times.
+Return the length of the longest substring containing the same letter you can get after performing the above operations.
+Example 1:
+Input: s = "ABAB", k = 2
+Output: 4
+Explanation: Replace the two 'A's with two 'B's or vice versa.
+1) Intuition : use a map to store elements with frequncies : MAIN FORMULA =>CURRENT WINDOW_SIZE - THE MAXIMUM FREQUENCY OF ANY ELEMENT IN MAP <= K.
+so , we take the current window size and subtract with the element of max frequency because then we see : how much elements are tp be replaced ?
+if we have k elements that we can replace : we check if the difference is under or equal to k : if yes : its A VALID SUBSTRING WITH ALL SAME ELEMENT POST REPLACEMENT.
+if not , we move i and remove that from the map.
+*/
+
+1) int characterReplacement(string s, int k) {
+        unordered_map<char,int>m;                  //char and frequencies
+        int i=0,j=0,n=s.length(),res=0,mx=0;
+        while(j<n){
+            m[s[j]]++;                        //irrespectively add to map
+            int len = j-i+1;                  //current window length
+            if(m[s[j]] > mx){                  // maximum frequncy of element : if updated we'll check in this if. 
+                mx = m[s[j]];
+            }
+            if(len-mx <= k){                    //see if we can replace elements with the given value K to get a valid substring
+                res = max(res,len);                //return the length of the maximum window
+            }
+            else{                                //if not , replacement goes beyond K : then we remove i from map and i++.
+                m[s[i]]--;
+                i++;
+            }
+            j++;                      //window size increase
+        }
+        return res;
+    }

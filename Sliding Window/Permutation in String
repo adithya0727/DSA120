@@ -1,0 +1,49 @@
+/* Approach :
+Given two strings s1 and s2, return true if s2 contains a permutation of s1, or false otherwise.
+In other words, return true if one of s1's permutations is the substring of s2.
+Example 1:
+Input: s1 = "ab", s2 = "eidbaooo"
+Output: true
+Explanation: s2 contains one permutation of s1 ("ba").
+1) IDENTIFICATION : string => substring => valid? => VARIABLE LENGTH substring.
+Store all element of s1 in map. if s2 elements are present then we subtract that from m(which contains s1) and if that element is 0 : that means one element is checked off
+count stores the size of all elements. if window size hasnt being hit : keep moving j pointer.
+The VALID ANSWER IS POSSIBLE ONLY WHEN THE SUBSTRING IS OF THE SAME LENGTH AS THE STRNG S1 AND IF SIZE==0 , ONLY THEN ALL ELEMENTS ARE PRESENT IN THE EXACT FREQUENCIES.
+*/
+
+1) bool checkInclusion(string s1, string s2) {
+        int i=0,j=0,n=s2.length(),k=s1.size();
+        unordered_map<char,int>m;
+        if(s1.length() > s2.length()){          //edge case : if s1 is greater than s2 : there can be no valid permutations possible as it will have lesser elements.
+            return false;
+        }
+        for(auto &v : s1){
+            m[v]++;
+        }
+        int size = m.size();              //to maintain how many elements are present.
+        while(j<n){
+            if(m.find(s2[j]) != m.end()){      //if found , remove and if ==0 : size--;(one element lesser)
+                m[s2[j]]--;
+                if(m[s2[j]] == 0){
+                    size--;
+                }
+            }    
+            if(j-i+1 < k){              //no substring can be valid until it hits the same length as s1
+                j++;
+            }
+            else if(j-i+1 == k){        //once it hits : frequencies are taken care of
+                if(size==0){                //if size if also 0 , all elements are checked off
+                return true;  
+            }
+                if(m.find(s2[i]) != m.end()){
+                    m[s2[i]]++;
+                    if(m[s2[i]] == 1){          //before sliding window : check if it was checked off before and return that else just i++
+                        size++;
+                    }
+                }
+                i++;
+                j++;
+            }
+        }
+        return false;
+    }

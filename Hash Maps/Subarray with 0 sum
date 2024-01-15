@@ -1,0 +1,26 @@
+/* Approach:
+Input:
+n = 5
+arr = {4,2,-3,1,6}
+Output: 
+Yes
+Explanation: 
+2, -3, 1 is the subarray with sum 0.
+1) so basically , we use a HASHMAP TO STORE ALL SUM VALUES : REASONING IS => IN CASE SUM == 0 || AS WE KEEP ADDING VARIOUS INSTANCES OF SUBARRAY SUM IN MAP.
+IF IT REPEATS ITSELF , WE KNOW THAT A SUBARRAY EXISTS.
+
+*/
+
+1) bool subArrayExists(int arr[], int n)
+    {
+        long long sum=0;
+        unordered_map<int,int>m;
+        for(int i=0;i<n;i++){
+            sum += arr[i];
+            if(sum == 0 || m.find(sum) != m.end()){
+                return true;
+            }
+            m[sum]++;
+        }
+        return false;
+    }

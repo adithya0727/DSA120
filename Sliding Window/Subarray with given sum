@@ -1,0 +1,38 @@
+/* Approach:
+N = 5, S = 12
+A[] = {1,2,3,7,5}
+Output: 2 4
+Explanation: The sum of elements 
+from 2nd position to 4th position 
+is 12.
+1)case : 
+start is the first pointer and i is the second pointer.
+we start the loop from i=1 : FIRST WE CHECK IF THE ELEMENT AFTER INSERTION IS IN ANY CASE EQUAL TO SUM : IF YES , WE THEN CHECK IF THEY ARE EQUAL AND FIANALLY WE ADD
+THEM IF ALL CASES FAIL.
+*/
+(1 based indexing)
+1) vector<int> subarraySum(vector<int>arr, int n, long long s)
+    {
+        long long sum = arr[0];
+        int start =0,i;
+        vector<int> result;
+        for(i=1;i<=n;i++) {
+        while (sum > s && start < i-1) {              
+            sum = sum - arr[start];
+            start++;
+        }
+
+        if (sum == s) {
+            result.push_back(start + 1); // 1-based indexing for left index
+            result.push_back(i); // 1-based indexing for right index
+            return result;
+        }
+
+        if(i < n){
+            sum += arr[i];
+        }
+    }
+
+    result.push_back(-1);
+    return result;
+}

@@ -1,0 +1,38 @@
+/* Approach:
+Input : "AABBBCBBAC"
+Output : 3
+Explanation : Sub-string -> "BAC"
+1) first we recognise the total amount of distinct elements in the string using a m.size(). We use this as a benchmark value (k) to determine the movement of window.
+*/
+
+1) int findSubString(string str)
+{
+    int i = 0, j = 0, res = INT_MAX;
+    unordered_map<char, int> m;
+
+    for (auto &v : str) {        //add all elements
+        m[v]++;
+    }
+
+    int k = m.size();        //recognise the distinct elements count.
+    m.clear();              //empty the map
+
+    while (j < str.length()) {
+        m[str[j]]++;                    //start filling the map.
+
+        while (m.size() == k) {          //if current map size == k , all elements are present in it.
+            res = min(res, j - i + 1);    //we determine the MINIMUM VALUE FIRST ONLY AS WE ENTER THE WHILE LOOP.
+
+            m[str[i]]--;                  //subtract and move i
+            if (m[str[i]] == 0) {        //if ==0 , remove it , to maintain the size of map for count
+                m.erase(str[i]);
+            }                          //once this happens : size will decrease : WHILE LOOP WILL TERMINATE. THEREFORE FIND RES BEFORE FINAL SUBTRACTION.
+
+            i++;                        //MOVE WINDOW
+        }  
+
+        j++;                  //MOVE WINDOW  
+    }
+
+    return res == INT_MAX ? 0 : res;
+}

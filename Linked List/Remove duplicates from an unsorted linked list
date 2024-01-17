@@ -1,0 +1,28 @@
+/* Approach:
+N = 4
+value[] = {5,2,2,4}
+Output: 5 2 4
+1) keep track of prev and curr=head.
+using a set : we use .find() to check if it is already present : if not we insert and update prev , if it is present : we make prev point to cur->next and and delete
+curr to prevent memory leakage. 
+*/
+
+
+1) Node * removeDuplicates( Node *head) 
+    {
+        unordered_set<int>st;
+        Node* curr = head;
+        Node* prev = NULL;
+        while(curr !=NULL){
+            if(st.find(curr->data) != st.end()){
+                prev->next = curr->next;
+                delete (curr);
+            }
+            else{
+                st.insert(curr->data);
+                prev = curr;
+            }
+            curr = prev->next;          //prev is updated in both the cases.
+        }
+        return head;
+    }

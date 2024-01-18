@@ -1,0 +1,36 @@
+/* Approach:
+1) if loop exists : print the length of the loop , if not return 0;
+so we perform the same floyds algorithm to check for loop using slow and fast pointers. if at any point they meet : we start a counter from that till it reaches 
+again back to the same position and therefore we get the length.
+*/
+
+1) int counter(Node *p){
+    int count =1;
+    Node* temp = p;
+    while(temp->next!=p){              //Floyds algo doesnt guarentee that the slow and fast pointers meet at the exact point of where TAIL MEETS THE NEXT NODE.
+        count++;
+        temp = temp->next;            //therefore we loop from the element to back to itself to get the length.
+    }
+    return count;
+}
+
+//Function to find the length of a loop in the linked list.
+int countNodesinLoop(struct Node *head)
+{
+    int count=0;
+    Node *fast = head;
+    Node *slow = head;
+    Node* ptr = NULL;
+    while(fast!=NULL && fast->next!=NULL){          //slow fast pointer approach
+        fast = fast->next->next;  
+        slow = slow->next;
+        if(slow == fast){
+            return counter(slow);
+        }
+    }
+   
+    return 0;
+
+
+    
+}

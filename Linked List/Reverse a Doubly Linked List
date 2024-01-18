@@ -1,0 +1,24 @@
+/*Approach:
+Input:
+LinkedList: 3 <--> 4 <--> 5
+Output: 5 4 3
+1) temp : which stores the prev value before updation.
+once that happens : we change prev to the next value and assign that prev to the next (vice-versa).
+we iterate towards in the loop backwards as we are reversing.
+*/
+
+1) Node* reverseDLL(Node * head)
+    {
+        Node *curr =head;
+        Node *temp = NULL;
+        while(curr!=NULL){
+            temp = curr->prev;
+            curr->prev = curr->next;
+            curr->next = temp;
+            curr = curr->prev;
+        }
+        if (temp != NULL){
+         head = temp->prev;
+        }
+        return head;
+    }

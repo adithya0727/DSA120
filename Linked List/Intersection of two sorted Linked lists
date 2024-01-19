@@ -1,0 +1,44 @@
+/* Approach:
+Given two linked lists sorted in increasing order, create a new linked list representing the intersection of the two linked lists.
+The new linked list should be made with without changing the original lists.
+Note: The elements of the linked list are not necessarily distinct. // To tackle this case , WE USE A MAP TO STORE EXACT FREQUENCIES AND SUBTRACT EACH TIME WE ENCOUNTER IT.
+Example 1:
+Input:
+LinkedList1 = 1->2->3->4->6
+LinkedList2 = 2->4->6->8
+Output: 2 4 6
+Explanation: For the given two
+linked list, 2, 4 and 6 are the elements
+in the intersection.
+1) READ LINES.
+*/
+
+1) Node* findIntersection(Node* head1, Node* head2)
+    {
+        Node *head = NULL;            //head of third LL to return it 
+        Node *tail = NULL;            //helps to iterate forward since we need head pointing to head for return value.
+        unordered_map<int,int>m;        //store elements with frequencies so that we return the exact copy of elements that are present in both LLs
+        while(head1!=NULL){        //insert in MAP
+            m[head1->data]++;
+            head1 = head1->next;
+        }
+        while(head2!=NULL){
+            if(m.find(head2->data) != m.end()){      //if present : create a new node : subtract that from the map to handle same elements repeated multiple times.
+                Node *newnode = new Node(head2->data);
+                m[head2->data]--;
+                if(m[head2->data] == 0){        //exit if 0.
+                    m.erase(head2->data);
+                }
+                if(head == NULL){      //if first element make it head and and tail
+                    head = newnode;
+                    tail = newnode;
+                }
+                else{
+                    tail->next = newnode;      // if not : update current tail->next to newnode and then move tail forward.
+                    tail = newnode;
+                }
+            }
+            head2 = head2->next;        
+        }
+        return head;
+    }

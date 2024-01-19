@@ -1,0 +1,28 @@
+/* Approach:
+check for palindrome
+1) time and space : O(N)
+vector to store all ll elements and then we move through the loop to check if there's any instance where they arent equal : if yes return false or true.
+2) space : O(1)
+algo : 1) find mid point in linkedlist. 
+2) start from mid point to the last element and reverse it.
+3) write a compare function which at each instance compares the data in first part(start->mid) and (mid->end) : if at any point it's not equal : Not a palindrome.
+else a palindrome.
+*/
+
+1) bool isPalindrome(Node *head)
+    {
+        vector<int>v;
+        if(head==NULL || head->next == NULL){
+            return true;
+        }
+        while(head!=NULL){
+            v.push_back(head->data);
+            head = head->next;
+        }
+        for(int i=0;i<v.size();i++){
+            if(v[i] != v[v.size()-i-1]){
+                return false;
+            }
+        }
+        return true;
+    }

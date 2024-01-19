@@ -1,0 +1,47 @@
+/* Approach:
+
+1) So we use floyds algorithm to find out where where we get slow==fast. when that happens we break out of the loop.
+we move one of the pointers back to the head and the other will continue. we start both at the same rate now and if you visualise you will see that we can choose to stop
+right after slow->next != fast->next. and then we free fast->next = NULL.
+*/
+
+
+1) //Function to remove a loop in the linked list.
+    void removeLoop(Node* head)
+{
+    if (head == NULL || head->next == NULL)        //base  case
+        return;
+
+    Node *slow = head;            //floyds
+    Node *fast = head;
+
+    // Detect the loop
+    while (fast && fast->next) {          //break when equal
+        slow = slow->next;
+        fast = fast->next->next;
+        if (slow == fast)
+            break;
+    }
+
+    // No loop found
+    if (slow != fast)              //no loop
+        return;
+
+    // Move one pointer to the head
+    slow = head;            //back to head
+
+    // If the loop starts from the head itself
+    if (slow == fast) {              //in case both are equal to head even after slow is updated to head.
+        while (fast->next != slow)
+            fast = fast->next;
+    } else {
+        // Move both pointers at the same pace
+        while (slow->next != fast->next) {    //move at the same rate and ultimately we reach first pointing to last.
+            slow = slow->next;
+            fast = fast->next;
+        }
+    }
+
+    // Remove the loop
+    fast->next = NULL;                    //free the last
+}

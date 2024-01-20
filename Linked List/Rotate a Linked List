@@ -1,0 +1,38 @@
+/* Approach:
+N = 5
+value[] = {2, 4, 7, 8, 9}
+k = 3
+Output: 8 9 2 4 7
+1) Algorithm :
+find newtail : which is equal to the k number of rotation times , if k=2 , the second element is the one that will be the tail.
+find newhead : new head will be right after the newtail->next. That will be our newhead.
+[CUTTING] : free our tail->next = NULL.
+[ATTACH] : iterate from newhead and when its equal to NULL : RE-ATTACH IT BACK TO OUR OLD PROVIDED HEAD NODE.
+*/
+
+1) Node* rotate(Node* head, int k)
+    {
+        Node *temp = head;
+        int length=0;
+        while(temp!=NULL){
+            length++;
+            temp = temp->next;
+        }
+        if(length==k || k==0 || head == NULL || head->next == NULL){
+            return head;
+        }
+        Node *newtail=head;
+        Node *newhead=NULL;
+        Node *ref = NULL;
+        for(int i=1;i<k;i++){
+            newtail = newtail->next;
+        }
+        newhead = newtail->next;
+        ref = newtail->next;
+        newtail->next = NULL;
+        while(newhead->next!=NULL){
+            newhead = newhead->next;
+        }
+        newhead->next = head;
+        return ref;
+    }

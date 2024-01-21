@@ -1,0 +1,39 @@
+/*Approach:
+Input:
+LinkedList: 1->2->2->4->5->6->7->8
+K = 4
+Output: 4 2 2 1 8 7 6 5 
+Explanation: 
+The first 4 elements 1,2,2,4 are reversed first 
+and then the next 4 elements 5,6,7,8. Hence, the 
+resultant linked list is 4->2->2->1->8->7->6->5.
+1) Recursive solution : O(N) => time and space.
+base case : if head == NULL : we've reached the end and we have to start with stack unwinding. 
+Perform the usual reverse function with extra count< k (until we k window subsize). 
+next and prev pointers to keep track of movement : next = k+1th element : if reaches null , we end the call else : we attach head->next = function call.
+return prev is the final iteration : after each return prev : we end up back at the first prev value we had set : which in this case is 4.
+
+*/
+
+1) struct node *reverseIt (struct node *head, int k)
+    { 
+        if(!head){
+            return NULL;        //base case if head is already empty.
+        }
+        //reverse function.
+        node *curr = head;
+        node *prev= NULL;
+        node *next = NULL;
+        int count=0;
+        while(curr!=NULL && count<k){
+            next = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = next;
+            count++;
+        }
+        if(next!=NULL){
+            head->next = reverseIt(next,k);
+        }
+        return prev;            //post stack unwinding we get first value of prev.
+    }

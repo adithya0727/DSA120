@@ -1,0 +1,38 @@
+/* Approach:
+N = 4, M = 3 
+valueN[] = {5,10,15,40}
+valueM[] = {2,3,20}
+Output: 2 3 5 10 15 20 40
+Explanation: After merging the two linked
+lists, we have merged list as 2, 3, 5,
+10, 15, 20, 40.
+
+1) So it is common practice to create a DUMMY NODE : which is just a placeholder so that we can return that next value as the next.
+when both head1 and head2 are in range we move through checking by comparing each other just both the pointers and place the one which is lesser.
+and update temp.
+Finally if one goes out of bounds : we make sure to link it to the on which still has ll elements as the rest of the part will be in the sorted order anyway.
+*/
+
+1) Node* sortedMerge(Node* head1, Node* head2)  
+{  
+    Node *dummy = new Node(0);
+    Node *temp = dummy;
+    while(head1 && head2){
+        if(head1->data < head2->data){
+            temp->next = head1;
+            head1 = head1->next;
+        }
+        else{
+            temp->next = head2;
+            head2 = head2->next;
+        }
+        temp = temp->next;
+    }
+    if(head1){
+        temp->next = head1;
+        }
+    else if(head2){
+        temp->next = head2;
+        }
+    return dummy->next;
+}  

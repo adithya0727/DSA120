@@ -1,0 +1,58 @@
+/* Approach:
+Input:
+K = 4
+value = {{1,2,3},{4 5},{5 6},{7,8}}
+Output: 1 2 3 4 5 5 6 7 8
+Explanation:
+The test case has 4 sorted linked 
+list of size 3, 2, 2, 2
+1st    list     1 -> 2-> 3
+2nd   list      4->5
+3rd    list      5->6
+4th    list      7->8
+The merged list will be
+1->2->3->4->5->5->6->7->8.
+1) mergeKLists function : so we use last as a variable which will help us as a OUTER LOOP and in the inner loop we have start and end variables.
+Simple logic is : we choose TWO PAIRS / HEADS of LL (first and last to begin with) and we perform merge on them and return the resultant HEAD recursively.
+and move the two pointers till they meet. This IS ONE ITERATION , we update the value of last : this time last will have HALVED (K/2). we update start and end accordingly.
+and then so on : list keeps getting halved and till it reaches start=0 and end =1.
+Finally we merge them and store them in arr[0] and thus return that as a HEAD of the Finally sorted List.
+
+*/
+
+1) Node *merge(Node *a , Node *b){
+        Node *result = NULL;
+        if(a == NULL){
+            return b;
+        }
+        else if(b == NULL){
+            return a;
+        }
+        if(a->data <= b->data){
+            result = a;
+            result->next = merge(a->next,b);
+        }
+        else{
+            result = b;
+            result->next = merge(a,b->next);
+        }
+        return result;
+    }
+  
+    //Function to merge K sorted linked list.
+    Node * mergeKLists(Node *arr[], int K)
+    {
+        int last = K-1;
+        while(last!=0){
+            int start=0,end=last;
+            while(start < end){
+                arr[start] = merge(arr[start],arr[end]);
+                start++;
+                end--;
+                if(start >= end){
+                    last = end;
+                }
+            }
+        }
+        return arr[0];
+    }

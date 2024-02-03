@@ -21,38 +21,38 @@ Finally we merge them and store them in arr[0] and thus return that as a HEAD of
 */
 
 1) Node *merge(Node *a , Node *b){
-        Node *result = NULL;
-        if(a == NULL){
+        Node *result = NULL;      //acts as the head of the newly merged LL
+        if(a == NULL){                //if elements of a are NULL : attach the remaining b elements to the LL
             return b;
         }
-        else if(b == NULL){
+        else if(b == NULL){        //if elements of a are NULL : attach the remaining b elements to the LL
             return a;
         }
-        if(a->data <= b->data){
+        if(a->data <= b->data){        //check which is smaller and insert and sort them accordingly
             result = a;
             result->next = merge(a->next,b);
         }
         else{
-            result = b;
+            result = b;                //recursively calls helps us trace back adn attach everything correctly.
             result->next = merge(a,b->next);
         }
-        return result;
+        return result;            //due the the final recursive call stack , we are back at the head of the result which is what we want to return.
     }
   
     //Function to merge K sorted linked list.
     Node * mergeKLists(Node *arr[], int K)
     {
-        int last = K-1;
-        while(last!=0){
+        int last = K-1;         //we use K-1 as we start from 0 in an array of LLs.
+        while(last!=0){            //our outer loop which keeps getting HALVED.
             int start=0,end=last;
-            while(start < end){
+            while(start < end){        //until base case hits , keep choosing pairs and merging them.
                 arr[start] = merge(arr[start],arr[end]);
-                start++;
+                start++;                //move pointers
                 end--;
-                if(start >= end){
+                if(start >= end){           //updating each time base case hits and start again with the process BUT with a lesser range than before.
                     last = end;
                 }
             }
         }
-        return arr[0];
+        return arr[0];        //finally has the main head post all mergings.
     }

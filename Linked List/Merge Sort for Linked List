@@ -1,0 +1,53 @@
+/* Approach:
+
+1) Basically the same approach as merge sort on arrays : Find mid : store the next of mid as the new head and then break the LL there and go on further RECURSIVELY
+till We HIT a single element and then we do the same for the RIGHTPART OF THE SUBARRAY : two recursive trees.
+as stack unwinding happens we=hen we hit single element case : we perform merge().
+*/
+
+1) Node *Mid(Node *head){       //finds the middle element using tortise hare method when is slow is pointing to mid.
+      if (!head || !head->next)
+            return head;
+
+      Node *slow = head;
+      Node *fast = head->next;
+      while(fast!=NULL && fast->next!= NULL){    //move accordingly
+          slow = slow->next;
+          fast = fast->next->next;
+      }
+      return slow;        //return mid position
+  }
+  Node *merge(Node *left , Node *right){
+      Node *dummy = new Node(0);      //dummy node to begin with and finally to return to.
+      Node *result = dummy;              //node used for iterations.
+      if(left == NULL || right == NULL){        //edge case
+          return (left==NULL) ? right : left;
+      }    
+      while(left!=NULL && right!=NULL){      //while both aren't NULL
+      if(left->data <= right->data){        //smaller elements get sorted accordingly 
+          result->next = left;
+          left = left->next;
+      }
+      else{
+          result->next = right;
+          right = right->next;
+      }
+      result = result->next;      //moving next.
+      }
+      if(left!= NULL || right!=NULL){        //if there are still any remaining element ATTACH THEM BACK TO THE LINKED LIST, AS THEY ARE SORTED PARTS OF LL.
+          result->next = (left!=NULL) ? left : right;
+      }
+      return dummy->next;
+  }
+    //Function to sort the given linked list using Merge Sort.
+    Node* mergeSort(Node* head) {
+        if(head == NULL || head->next == NULL){        //base case
+            return head;
+        }
+        Node *mid = Mid(head);      //mid is found
+        Node *newhead = mid->next;      //next of mid is new head.
+        mid->next = NULL;                  //ll is broken down SMALLER THE INPUT DURING RECURSION.
+        Node *leftpart = mergeSort(head);    //first part of the ll head is passed.
+        Node *rightpart = mergeSort(newhead);    //second recursive tree part of the LL is passed.
+        return merge(leftpart,rightpart);        //merge them togehter during unwinding.
+    }

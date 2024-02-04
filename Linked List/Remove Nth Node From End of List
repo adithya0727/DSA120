@@ -4,6 +4,10 @@ Input: head = [1,2,3,4,5], n = 2
 Output: [1,2,3,5]
 1) Naive Approach : find the overall LENGTH of the LL - Nth position (given) + 1 : run a for loop till the position and then just attach prev to the temp->next and 
 delete it to avoid memory leakage.
+2) INTUITION : move the fast pointer n times ahead of the slow pointer. then start moving both of them at a single pace till fast->next == NULL.
+now visualise this : both pointers have a gap of n : once fast reaches the end : clearly slow is N TIMES BEHIND FAST : WHICH IS EXACTLY THE POINT WHERE THE NODE WE
+WANT TO DELETE EXISTS.
+we stop one step ahead , so that we can unlink using prev to next->next.
 */
 
 1) ListNode* removeNthFromEnd(ListNode* head, int n) {
@@ -35,4 +39,21 @@ delete it to avoid memory leakage.
         delete temp;      //avoid memory leakage.
         return head;
         }
+    }
+
+2) ListNode* removeNthFromEnd(ListNode* head, int n) {
+        ListNode *slow = head;
+        ListNode *fast = head;
+        for(int i=0;i<n;i++){                //fast moves N times ahead of slow.
+            fast = fast->next;
+        }
+        if(!fast){                      //edge case if head node is the one we have to remove
+            return head->next;
+        }
+        while(fast->next){                //we move till slow reaches one step before the node we want to delete
+            fast = fast->next;
+            slow = slow->next;
+        }
+        slow->next = slow->next->next;                //perform removal and reattachment
+        return head;
     }

@@ -1,0 +1,38 @@
+/* Approach:
+Given the head of a linked list, remove the nth node from the end of the list and return its head.
+Input: head = [1,2,3,4,5], n = 2
+Output: [1,2,3,5]
+1) Naive Approach : find the overall LENGTH of the LL - Nth position (given) + 1 : run a for loop till the position and then just attach prev to the temp->next and 
+delete it to avoid memory leakage.
+*/
+
+1) ListNode* removeNthFromEnd(ListNode* head, int n) {
+        ListNode *prev = NULL;
+        int count=0;
+        if(head==NULL){      //edge case
+            return head;
+        }
+        ListNode *temp = head;
+        while(temp!=NULL){    //find overall length
+            count++;
+            temp = temp->next;
+        }
+        if(n > count){      //edge case
+            return head;
+        }
+        temp = head;
+        for(int i=1;i<count-n+1;i++){    //move pointer until one position before element to be removed.
+            prev = temp;
+            temp = temp->next;
+        }
+        if(prev == NULL){        //check if the element to be removed is the head , if so move head and delete it and return newhead
+            ListNode *newhead = head->next;
+            delete head;
+            return newhead;
+        }
+        else{        //if not head , reattach accordingly
+        prev->next = temp->next;
+        delete temp;      //avoid memory leakage.
+        return head;
+        }
+    }

@@ -1,0 +1,49 @@
+/* Approach:
+Given a singly linked list: A0→A1→...→An-2→An-1, reorder it to: A0→An-1→A1→An-2→A2→An-3→...
+For example: Given 1->2->3->4->5 its reorder is 1->5->2->4->3.
+1) INTUITION : we keep the original list as is and then we find the MIDPOINT and reverse the second half of the LL. 
+REVERSING IS REQUIRED AS WE NEED TO MOVE PREV EACH TIME : (N-1) , (N-2). to perform this reversing is the best choice in place.
+once that is done : then we just have to perform MERGING OPERATION : first element from first part and then first element from the second half(post reversal).
+*/
+
+1) Node *Mid(Node *head){  //finding the midpoint
+        Node *slow = head;
+        Node *fast = head->next;
+        while(fast!=NULL && fast->next!=NULL){
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        return slow;
+    }
+    Node *reverse(Node *newhead){    //revsering the second part of the LL
+        Node*curr = newhead;
+        Node *prev = NULL;
+        Node *next = NULL;
+        while(curr!=NULL){
+            next = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = next;
+        }
+        return prev;
+    }
+
+
+    void reorderList(Node* head) {
+        if(head == NULL || head->next == NULL){    //edge case
+            return;
+        }
+        Node *mid = Mid(head);
+        Node *newhead = mid->next;
+        mid->next = NULL;    //cutting out post midpoint
+        Node *ptr1 = head;
+        Node *ptr2 = reverse(newhead);    //using newhead for reversal and returning that head.
+        while(ptr2){
+            Node *temp1 = ptr1->next;      //storing next element before we break the chain.
+            Node *temp2 = ptr2->next;
+            ptr1->next = ptr2;    //store second element : first element in second half
+            ptr2->next = temp1;    //then store the 2nd element from the first half
+            ptr1 = temp1;        //update to move pointer rightly
+            ptr2 = temp2;  
+        }
+    }

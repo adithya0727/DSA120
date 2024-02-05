@@ -4,28 +4,34 @@ N = 5
 arr[] = { 4, 1, 3, 9, 7}
 Output:
 1 3 4 7 9
-1) 
+1) how it works ? :
+partition() : we choose the first index as the PIVOT element : now we have two pointers i=high and k=high : we move i through the loop -> if we find an element
+greater than pivot then swap(i,k) and decrement k . THE MAIN IDEA IS : ALL ELEMENTS TO THE LEFT OF PIVOT MUST BE SMALLER THAN PIVOT AND ALL ELEMENTS TO THE RIGHT OF PIVOT
+SHOULD BE GREATER THAN PIVOT AND IT SHOULD BE IN A SORTED PLACE.
+finally we swap pivot to its rightful place at k where it is rightly sorted.
+Now using this index K : we get a left subarray and right subarray and recursively perform quciksort by partitioning them FURTHER UNTIL THEY BECOME A SINGLE ELEMENT 
+AND KEEP SORTING THEM RECURSIVELY.
 */
 
 1) void quickSort(int arr[], int low, int high)
     {
-        if(low < high){
-            int index = partition(arr,low,high);
-            quickSort(arr,low,index-1);
-            quickSort(arr,index+1,high);
+        if(low < high){            //base case for termination
+            int index = partition(arr,low,high);        //find index where the pivot is properly sorted in place and we get two distinct subarrays to sort further.
+            quickSort(arr,low,index-1);        //first part of the subarray
+            quickSort(arr,index+1,high);        //second part of the subarray
         }
     }
     
     public:
     int partition (int arr[], int low, int high)
     {
-       int k = high;
-       int pivot = arr[low];
-       for(int i=high;i>low;i--){
-           if(arr[i] > pivot){
+       int k = high;        //pointer which helps us to replace pivot to : visualise this -> k moves each time a greater element is present and we move i=> high till low
+       int pivot = arr[low];    //so , we check every element and thus k will move the amount of times we encounter larger elements than pivot.
+       for(int i=high;i>low;i--){    //first element is picked as pivot for quicksort
+           if(arr[i] > pivot){        //if greater : then we swap i with k and decrement k
                swap(arr[i],arr[k--]);
            }
        }
-       swap(arr[low],arr[k]);
+       swap(arr[low],arr[k]);        //finally put pivot element in its rightful place where both sides are sorted to its according.
        return k;
     }

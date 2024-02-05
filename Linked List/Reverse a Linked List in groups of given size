@@ -37,3 +37,35 @@ return prev is the final iteration : after each return prev : we end up back at 
         }
         return prev;            //post stack unwinding we get first value of prev.
     }
+2) to keep element at the end with size lesser than K as is :
+ListNode* reverseKGroup(ListNode* head, int k) {
+        if(head == NULL){
+            return NULL;
+        }
+        ListNode *curr = head;
+        ListNode *prev = NULL;
+        ListNode *next = NULL;
+        int count=0;
+
+        ListNode *temp = head;
+        while(temp!=NULL && count <k){
+            count++;
+            temp = temp->next;
+        }
+        if(count < k){
+            return head;
+        }
+        count=0;
+        while(curr!=NULL && count<k){
+            next = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = next;
+            count++;
+        }
+
+        if(next){
+            head->next = reverseKGroup(next,k);
+        }
+        return prev;
+    }

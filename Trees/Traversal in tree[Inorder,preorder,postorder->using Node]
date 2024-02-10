@@ -1,0 +1,90 @@
+/* Approach :
+
+1) Inorder : recursively traverse root->left till the end , then print the last one and then previous stack frame print the middle element and recusrively move towards the
+right.   left->mid->right printing order / movement order in inorder.
+Time : O(N) : to traverse through all nodes once in a tree : so it is directly propotional to the number of nodes.
+Space : O(H) : Height of the tree -> maximum length from the root to the leaf node : depending on the level - those many recursive calls are going to be done.
+so height is the worst case scenario of no. of stack calls being made.
+2) Preorder : mid->left->right : we go through all nodes in the tree by printing the mid element first followed by left subtree and then the right subtree.
+slight variation in the code , same time and space logic and complexity.
+3) Postorder : left->right->mid : we traverse through all the nodes in the order left , right and mid for each partof the subtree all the way back to the root. 
+Bottom up approach with left to right movement. same time and space.
+*/
+1) struct Node {
+    int data;
+    struct Node *left, *right;
+};
+ 
+// Utility function to create a new tree node
+Node* newNode(int data)
+{
+    Node* temp = new Node;
+    temp->data = data;
+    temp->left = temp->right = NULL;
+    return temp;
+}
+ 
+// Given a binary tree, print its nodes in inorder
+void printInorder(struct Node* node)
+{
+    if (node == NULL)
+        return;
+ 
+    // First recur on left child
+    printInorder(node->left);
+ 
+    // Then print the data of node
+    cout << node->data << " ";
+ 
+    // Now recur on right child
+    printInorder(node->right);
+}
+ 
+// Driver code
+int main()
+{
+    struct Node* root = newNode(1);
+    root->left = newNode(2);
+    root->right = newNode(3);
+    root->left->left = newNode(4);
+    root->left->right = newNode(5);
+ 
+    // Function call
+    cout << "Inorder traversal of binary tree is \n";
+    printInorder(root);
+ 
+    return 0;
+}
+
+2) // Given a binary tree, print its nodes in preorder
+void printPreorder(struct Node* node)
+{
+    if (node == NULL)
+        return;
+ 
+    // First print data of node
+    cout << node->data << " ";
+ 
+    // Then recur on left subtree
+    printPreorder(node->left);
+ 
+    // Now recur on right subtree
+    printPreorder(node->right);
+}
+
+3) // Given a binary tree, print its nodes according to the
+// "bottom-up" postorder traversal.
+void printPostorder(struct Node* node)
+{
+    if (node == NULL)
+        return;
+ 
+    // First recur on left subtree
+    printPostorder(node->left);
+ 
+    // Then recur on right subtree
+    printPostorder(node->right);
+ 
+    // Now deal with the node
+    cout << node->data << " ";
+}

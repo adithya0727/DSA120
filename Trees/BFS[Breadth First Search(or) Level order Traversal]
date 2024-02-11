@@ -7,8 +7,10 @@ Time analysis : Printlevelorder will call printcurrentlevel 'h' times which is t
 therefore : O(N*H) , where h is negligible in most cases : O(N) => worst CASE : O(N^2) : skewed tree - height = n (since aat each level we have only one child)and nodes = n 
 Space : O(N) stack space. printcurrentlevel
 
-2) Using Queue : 
-
+2) Using Queue : Using Queue to store Node *  type pointer in it. first we start by inserting the root element. 
+Store the front() element in a node print and pop() it. then we move towards the left and right child if not NULL and insert them in queue. we perform this operation 
+till the queue becomes null (thereby check for each node the left and right values and until they both become NULL).
+Time : O(N) since we are traversing each node once and space : O(N) for using queue to store all n nodes in it. Linear time and space.
 */
 
 1) class node {
@@ -96,4 +98,31 @@ int main()
 }
 
 
-2) 
+2) void printLevelOrder(Node* root)
+{
+    // Base Case
+    if (root == NULL)
+        return;
+ 
+    // Create an empty queue for level order traversal
+    queue<Node*> q;
+ 
+    // Enqueue Root and initialize height
+    q.push(root);
+ 
+    while (q.empty() == false) {
+         
+        // Print front of queue and remove it from queue
+        Node* node = q.front();
+        cout << node->data << " ";
+        q.pop();
+ 
+        // Enqueue left child
+        if (node->left != NULL)
+            q.push(node->left);
+ 
+        // Enqueue right child
+        if (node->right != NULL)
+            q.push(node->right);
+    }
+}

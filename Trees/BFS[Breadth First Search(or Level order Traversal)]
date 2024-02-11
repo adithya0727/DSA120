@@ -1,0 +1,99 @@
+/* Approach :
+
+1) Brute-Force : Firstly we find the overall Height of the tree : No. of nodes from and including the root to the farthest Node.
+Run a for loop from level 1(root) -> till height of the tree(n).
+Then for each level : we will print out all nodes from left->right level by level.  
+Time analysis : Printlevelorder will call printcurrentlevel 'h' times which is the height of the tree and then we go through all 'n' nodes in the tree level by level
+therefore : O(N*H) , where h is negligible in most cases : O(N) => worst CASE : O(N^2) : skewed tree - height = n (since aat each level we have only one child)and nodes = n 
+Space : O(N) stack space. printcurrentlevel
+
+2) Using Queue : 
+
+*/
+
+1) class node {
+public:
+    int data;
+    node *left, *right;
+};
+ 
+// Function prototypes
+void printCurrentLevel(node* root, int level);
+int height(node* node);
+node* newNode(int data);
+ 
+// Function to print level order traversal a tree
+void printLevelOrder(node* root)
+{
+    int h = height(root);
+    int i;
+    for (i = 1; i <= h; i++)
+        printCurrentLevel(root, i);
+}
+ 
+// Print nodes at a current level
+void printCurrentLevel(node* root, int level)
+{
+    if (root == NULL)
+        return;
+    if (level == 1)
+        cout << root->data << " ";
+    else if (level > 1) {
+        printCurrentLevel(root->left, level - 1);
+        printCurrentLevel(root->right, level - 1);
+    }
+}
+ 
+// Compute the "height" of a tree -- the number of
+// nodes along the longest path from the root node
+// down to the farthest leaf node.
+int height(node* node)
+{
+    if (node == NULL)
+        return 0;
+    else {
+         
+        // Compute the height of each subtree
+        int lheight = height(node->left);
+        int rheight = height(node->right);
+ 
+        // Use the larger one
+        if (lheight > rheight) {
+            return (lheight + 1);
+        }
+        else {
+            return (rheight + 1);
+        }
+    }
+}
+ 
+// Helper function that allocates
+// a new node with the given data and
+// NULL left and right pointers.
+node* newNode(int data)
+{
+    node* Node = new node();
+    Node->data = data;
+    Node->left = NULL;
+    Node->right = NULL;
+ 
+    return (Node);
+}
+ 
+// Driver code
+int main()
+{
+    node* root = newNode(1);
+    root->left = newNode(2);
+    root->right = newNode(3);
+    root->left->left = newNode(4);
+    root->left->right = newNode(5);
+ 
+    cout << "Level Order traversal of binary tree is \n";
+    printLevelOrder(root);
+ 
+    return 0;
+}
+
+
+2) 

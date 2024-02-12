@@ -1,6 +1,20 @@
 /* Approach:
 
-1)
+1) Base case : if root == NUll , previous stack frame.
+move to the left subtree and hit base case and check for right existence and move towards the end. If at any point both left and right subtree is equal to NULL ,
+that is a leaf node : print that.
 */
 
-1) 
+1) void printLeaves(Node* root)
+{
+    if (root == nullptr)
+        return;
+ 
+    printLeaves(root->left);
+ 
+    // Print it if it is a leaf node
+    if (!(root->left) && !(root->right))
+        cout << root->data << " ";
+ 
+    printLeaves(root->right);
+}

@@ -15,7 +15,9 @@ and we keep adding 1 until the root finally unwinds.
 We start with dist=-1 because the we want the number of edges NOT the number of nodes.
 Time and Space : O(N).
 
-2) Height of a Tree : 
+2) Height of a Node : Number of edges from the given node till the FARTHEST LEAF NODE is the height of that node.
+
+Time and Space : 
 */
 
 1) int findDepth(Node* root, int x)

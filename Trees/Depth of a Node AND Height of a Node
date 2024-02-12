@@ -1,0 +1,48 @@
+/* Aprroach:
+
+1) Depth of a tree : Number of edges from the root node till the mentioned node.
+           1
+          / \
+         2   3
+        / \ / \
+       4  5 6  7
+Depth of a tree for the node 6 here would be : 2 (number of edges from root to 6 : 1-3-6).
+first condition : base case : return -1 if node==NUll , dist is initialised with -1 (it acts as a placeholder as a negative integer)
+second step : if condition : firstly check root->data and then recursively traverse left and right subtree until the find the element we are looking for.
+third step (element FOUND & THUS stack UNWINDING) : once the required element is found => root->data will be true. Once that happens : if statement will become true
+Once if statement becomes TRUE , we started adding +1 each time to dist and after every stack unwind after one success : all if statements start becoming TRUE 
+and we keep adding 1 until the root finally unwinds. 
+We start with dist=-1 because the we want the number of edges NOT the number of nodes.
+Time and Space : O(N).
+
+2) Height of a Tree : 
+*/
+
+1) int findDepth(Node* root, int x)
+{
+    // Base case
+    if (root == NULL)
+        return -1;
+ 
+    // Initialize distance as -1
+    int dist = -1;
+ 
+    // Check if x is current node=
+    if ((root->data == x)
+ 
+        // Otherwise, check if x is
+        // present in the left subtree
+        || (dist = findDepth(root->left, x)) >= 0
+ 
+        // Otherwise, check if x is
+        // present in the right subtree
+        || (dist = findDepth(root->right, x)) >= 0)
+ 
+        // Return depth of the node
+        return dist + 1;
+ 
+    return dist;
+}
+
+
+2) 

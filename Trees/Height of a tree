@@ -1,0 +1,75 @@
+/* Approach:
+Definition : Maximum number of nodes from and including the root till the farthest leaf node is the Height of the tree.
+The height of an empty tree is 0 and the height of a tree with single node is 1.
+
+1) Recursive Approach : Root node is passed as the parameter. base case when node ==NUll.
+Move recursively towards the left and then move recursively to the right : until we reach a node where there are no more left and right subtrees. From there,
+for each recursive call STACK UNWINDING , we add one element to the subtree which has more number of height and so on back to the tree and we finally get the overall height.
+time and space : O(N)
+2) BFS approach : 
+Depth integer is created to keep track of the tree height.
+first we push root and then push NULL : Algorithm=>
+1) first we insert first level node and then push null since we know root has only one node : NULL will act as a placeholder to depict that the current level as ended
+and we are moving to the next level therefore depth++ and push null again as a placeholder for more elements exist in the queue.
+2) if null hasnt encountered , we are at the same level and keep iterating and finding the children for nodes at this level and when we encounter null , repeat cycle 
+till the queue becomes empty.
+time and space : O(N)
+*/
+
+1) int maxDepth(node* node)
+{
+    if (node == NULL)
+        return 0;
+    else {
+        /* compute the depth of each subtree */
+        int lDepth = maxDepth(node->left);
+        int rDepth = maxDepth(node->right);
+ 
+        /* use the larger one */
+        if (lDepth > rDepth)
+            return (lDepth + 1);
+        else
+            return (rDepth + 1);
+    }
+}
+
+
+2) int height(struct Node* root)
+{
+ 
+    // Initialising a variable to count the
+    // height of tree
+    int depth = 0;
+ 
+    queue<Node*> q;
+ 
+    // Pushing first level element along with NULL
+    q.push(root);
+    q.push(NULL);
+    while (!q.empty()) {
+        Node* temp = q.front();
+        q.pop();
+ 
+        // When NULL encountered, increment the value
+        if (temp == NULL) {
+            depth++;
+        }
+ 
+        // If NULL not encountered, keep moving
+        if (temp != NULL) {
+            if (temp->left) {
+                q.push(temp->left);
+            }
+            if (temp->right) {
+                q.push(temp->right);
+            }
+        }
+ 
+        // If queue still have elements left,
+        // push NULL again to the queue.
+        else if (!q.empty()) {
+            q.push(NULL);
+        }
+    }
+    return depth;
+}

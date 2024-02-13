@@ -10,7 +10,7 @@ slight variation in the code , same time and space logic and complexity.
 3) Postorder : left->right->mid : we traverse through all the nodes in the order left , right and mid for each partof the subtree all the way back to the root. 
 Bottom up approach with left to right movement. same time and space.
 */
-1) struct Node {
+1) struct Node { 
     int data;
     struct Node *left, *right;
 };

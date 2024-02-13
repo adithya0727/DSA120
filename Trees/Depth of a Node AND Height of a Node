@@ -1,6 +1,6 @@
 /* Aprroach:
 
-1) Depth of a tree : Number of edges from the root node till the mentioned node.
+1) Depth of a Node : Number of edges from the root node till the mentioned node.
            1
           / \
          2   3
@@ -16,8 +16,10 @@ We start with dist=-1 because the we want the number of edges NOT the number of 
 Time and Space : O(N).
 
 2) Height of a Node : Number of edges from the given node till the FARTHEST LEAF NODE is the height of that node.
-
-Time and Space : 
+Same function as the height of a tree , but only one change , we have the paramter Height which is passed by reference. It is updated only when the node->val == key.
+and normal height stack unwinding happens. Post function , we return the height variable which is now changed.
+We start with -1 as we need the maximum no. of edges and not nodes.
+Time and Space : O(N).
 */
 
 1) int findDepth(Node* root, int x)
@@ -47,4 +49,46 @@ Time and Space :
 }
 
 
-2) 
+2) // Helper function to find the height
+// of a given node in the binary tree
+int findHeightUtil(Node* root, int x,
+                   int& height)
+{
+    // Base Case
+    if (root == NULL) {
+        return -1;
+    }
+ 
+    // Store the maximum height of
+    // the left and right subtree
+    int leftHeight = findHeightUtil(
+        root->left, x, height);
+ 
+    int rightHeight
+        = findHeightUtil(
+            root->right, x, height);
+ 
+    // Update height of the current node
+    int ans = max(leftHeight, rightHeight) + 1;
+ 
+    // If current node is the required node
+    if (root->data == x)                      //only one if statement that differs from height of a tree => we update only when node value matches and it is
+        height = ans;                                //passed by reference.
+ 
+    return ans;
+}
+ 
+// Function to find the height of
+// a given node in a Binary Tree
+int findHeight(Node* root, int x)
+{
+    // Store the height of
+    // the given node
+    int h = -1;
+ 
+    // Stores height of the Tree
+    int maxHeight = findHeightUtil(root, x, h);
+ 
+    // Return the height
+    return h;                      // we return that changed value.
+}

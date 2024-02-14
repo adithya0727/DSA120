@@ -11,8 +11,12 @@ then we print root->val (like step 2) and then we move to the right element and 
 Pattern is very similar : we store the elements in stack , like stack unwinding : we pop the top element and return to the previous node and again print and perform right.
 It is the same as recursion literally. time and space : O(N).
 
-2) Pre-order : 
+2) Pre-order : Only one variation in the code : the print statement is called within the second while loop itself as for each subtree the order of printing would be
+mid -> left -> right : so it would make sense to print the mid element for each subtree first , move towards the left and then print the left ones and finally move towards
+the right and follow so.  time and space : O(N).
 
+3) Post-order : 
+time and space : O(N).
 */
 
 1) //Iterative function for inorder tree traversal
@@ -48,4 +52,22 @@ void inOrder(struct Node* root)
     }
 }
 
-2) 
+2) void PreOrder(struct Node* root)
+{
+    stack<Node*> s;
+    Node* curr = root;
+ 
+    while (curr != NULL || s.empty() == false) {
+         
+        while (curr != NULL) {
+             cout << curr->data << " ";
+            s.push(curr);
+            curr = curr->left;
+        }
+        curr = s.top();
+        s.pop();
+        curr = curr->right;
+    }
+}
+
+3) 

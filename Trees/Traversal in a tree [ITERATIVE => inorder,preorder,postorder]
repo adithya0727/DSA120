@@ -15,7 +15,12 @@ It is the same as recursion literally. time and space : O(N).
 mid -> left -> right : so it would make sense to print the mid element for each subtree first , move towards the left and then print the left ones and finally move towards
 the right and follow so.  time and space : O(N).
 
-3) Post-order : 
+3) Post-order : This follows a slightly different approach using stack: left->right->middle appraoch. So in each subtree , this must be followed through.
+INTUITION : first : run through the left subtree till we reach Null , second : two paths => if right subtree doesn't EXIST , its a leftside leaf so we print it , 
+update it as latest node and pop() from stack.
+Root is still pointing to Null , therefore we curr is s.top() now , which is the middle element : now we have to print right before middle. 
+second path => if curr->right EXISTS and It is the not LATEST node : then we havent traversed it yet , so we move the root->right and print that and then come back
+to parent once it reaches Null and print the middle Finally . Follow this for all the subtrees.
 time and space : O(N).
 */
 
@@ -70,4 +75,26 @@ void inOrder(struct Node* root)
     }
 }
 
-3) 
+3) void postorderTraversal(TreeNode* root) {
+    if (root == nullptr) return;
+
+    stack<TreeNode*> nodeStack;
+    TreeNode* lastVisitedNode = nullptr;
+
+    while (root != nullptr || !nodeStack.empty()) {
+        if (root != nullptr) {
+            nodeStack.push(root);
+            root = root->left;
+        } else {
+            TreeNode* peekNode = nodeStack.top();
+            if (peekNode->right != nullptr && lastVisitedNode != peekNode->right) {
+                root = peekNode->right;
+            } else {
+                cout << peekNode->val << " ";
+                lastVisitedNode = peekNode;
+                nodeStack.pop();
+            }
+        }
+    }
+}
+

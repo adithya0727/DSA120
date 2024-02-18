@@ -1,0 +1,49 @@
+/* Approach:
+Given a Binary Tree, print the diagonal traversal of the binary tree.
+Consider lines of slope -1 passing between nodes. Given a Binary Tree, print all diagonal elements in a binary tree belonging to same line.
+If the diagonal element are present in two different subtress then left subtree diagonal element should be taken first and then right subtree.
+Input :
+            8
+         /     \
+        3      10
+      /   \      \
+     1     6     14
+         /   \   /
+        4     7 13
+Output : 8 10 14 3 6 7 13 1 4
+Diagonal Distance(dd) : distance from the root to any particular node is defined as dd. 
+1) Main PATTERN : root->right = dd remains the same and doesn't change : dd => because we are in the same slope and we haven't gone down to the lower slope.
+root->left = dd increments by 1 = dd + 1 => because if we move left , we are going one step down and away from the diagonal slope and hence we go one level below.
+We use a ordered map to store : KEY => dd values (1,2,3) : which is in order so that we iterate the keys in order while performing pushback.
+values => all the nodes data that are in CORRESPONDENCE with the dd values in RELATIVE to the root. 
+HASH-MAP : 
+KEY  |  VALUES
+0    | 8,10,14
+1    | 3,6,7,13
+2    | 1,4
+Recursion is self explanatory : first we push root->data and if root->left exists then dd+1 , if root->right exists : JUST dd.
+*/
+
+1) void storeinmap(Node *root,int dd,map<int,vector<int>>&m){
+    if(root==NULL){
+        return;
+    }
+    m[dd].push_back(root->data);
+    storeinmap(root->left,dd+1,m);
+    storeinmap(root->right,dd,m);
+    return;
+}
+
+vector<int> diagonal(Node *root)
+{
+   vector<int>v;
+   if(root==NULL){
+       return v;
+   }
+   map<int,vector<int>>m;
+   storeinmap(root,0,m);
+   for(auto &var : m){
+       v.insert(v.end(),var.second.begin(),var.second.end());
+   }
+   return v;
+}

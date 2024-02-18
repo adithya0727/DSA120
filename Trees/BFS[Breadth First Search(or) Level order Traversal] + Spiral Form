@@ -11,6 +11,18 @@ Space : O(N) stack space. printcurrentlevel
 Store the front() element in a node print and pop() it. then we move towards the left and right child if not NULL and insert them in queue. we perform this operation 
 till the queue becomes null (thereby check for each node the left and right values and until they both become NULL).
 Time : O(N) since we are traversing each node once and space : O(N) for using queue to store all n nodes in it. Linear time and space.
+
+3) Spiral Form : (Like first Problem)
+Spiral order Traversal mean: Starting from level 0 from root node, for all the even levels we print the node's value from right to left and for all the 
+odd levels we print the node's value from left to right. 
+For below tree, function should return 1, 2, 3, 7,6,5,4.
+        1
+       / \
+      2   3
+     / \ / \
+    4  5 6  7
+approach : find overall height of tree => for loop from 1->=height and at each level we perform recursion . FLAG = true : we move left to right otherwise rightot left
+and we alternate that.
 */
 
 1) class node {
@@ -125,4 +137,51 @@ int main()
         if (node->right != NULL)
             q.push(node->right);
     }
+}
+
+
+3) int Height(Node *root){        //height of a tree
+    if(root==NULL){
+        return 0;
+    }
+    int leftheight = Height(root->left);
+    int rightheight = Height(root->right);
+    
+    int x = max(leftheight,rightheight) + 1;
+    return x;
+}
+
+void printeachlevel(Node *root,int level,int flag,vector<int>&v){
+    if(root==NULL){        //base case
+        return;
+    }
+    if(level==1){        //when we have reached the required level
+        v.push_back(root->data);
+    }
+    else{
+        if(flag){
+            printeachlevel(root->left,level-1,flag,v);        //if true : print from left to right using recursion
+            printeachlevel(root->right,level-1,flag,v);
+        }
+        else{
+            printeachlevel(root->right,level-1,flag,v);        //if false : print from right to left using recursion
+            printeachlevel(root->left,level-1,flag,v);
+        }
+    }
+    return;
+}
+//Function to return a list containing the level order traversal in spiral form.
+vector<int> findSpiral(Node *root)
+{
+    vector<int>v;
+    if(root==NULL){        //base case
+        return v;
+    }
+    int height = Height(root);
+    bool flag = false;        //first root is moving from right to left to we set it as false
+    for(int i=1;i<=height;i++){        //for each level we push using bfs
+        printeachlevel(root,i,flag,v);
+        flag = !flag;        //alternate it each time.
+    }
+    return v;
 }

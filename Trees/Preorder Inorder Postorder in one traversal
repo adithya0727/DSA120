@@ -1,0 +1,57 @@
+/* Approach;
+Problem : Given a tree , in ONE traversal return 3 vectors in,pre and post with their respective values.
+        1
+      /   \
+     2     3
+    / \   / \
+   4   5 6   7
+pre: 1,2,4,5,3,6,7
+in: 4,2,5,1,6,3,7
+post: 4,5,2,6,7,3,1
+
+1) INTUITION (EVERYTHING) : preorder - node is printed at the first visit it self , like 1 : printed first time only(cause middle is printed first).
+Similarly , observe that in inorder - node is always printed at the second visit(ie. after left node has been visited).
+and , in postorder - node is always printed at the last or third visit (ie . after middle and left have been visited).
+AS we are moving from Root, then left and then right => so this is the order of visited as listed above.
+*/
+
+1) void allTraversal(node * root, vector < int > & pre, vector < int > & in , vector < int > & post) {
+  stack < pair < node * , int >> st;    //to store the node itself (for iterating further) & num which is the number(Nth) of time that node is being visited in the stack
+  st.push({root,1});    //initialise with root being visited first time
+  if (root == NULL) return;    //base case
+
+  while (!st.empty()) {    //end case
+    auto it = st.top();    //stores a pair of node* type and int
+    st.pop();  
+
+    // this is part of pre
+    // increment 1 to 2 
+    // push the left side of the tree
+    if (it.second == 1) {      //if its being visited the first time , then push in pre
+      pre.push_back(it.first -> data);
+      it.second++;    //add one to say its being visited once now and next time u see it'll be twice.
+      st.push(it);    //again pushback the same node with diff num
+
+      if (it.first -> left != NULL) {    //move left if exists
+        st.push({it.first -> left,1});
+      }
+    }
+
+    // this is a part of in 
+    // increment 2 to 3 
+    // push right 
+    else if (it.second == 2) {    //if that node has num ==2 , its being visited the second time now : thus push into inorder
+      in .push_back(it.first -> data);
+      it.second++;    //now say , its being visited twice , next time will be 3.
+      st.push(it);
+
+      if (it.first -> right != NULL) {    //add right if exists
+        st.push({it.first -> right,1});
+      }
+    }
+    // don't push it back again 
+    else {
+      post.push_back(it.first -> data);    //if its the last third time , just push it into post and end it. that node has been added to all three vectors by now.
+    }
+  }
+}

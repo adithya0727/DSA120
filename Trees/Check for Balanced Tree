@@ -1,0 +1,51 @@
+/* Approach:
+-The height of the left and right tree for any node does not differ by more than 1.
+-The left subtree of that node is also balanced.
+-The right subtree of that node is also balanced.
+1) Using BFS : write the usual bfs code , as we store nodes in the queue , for each node if left exists we move to the left subtree and find the height
+and , for each node if right exists we move the right and find the height.
+abs(left-right) > 1 : then it cannot be a balanced subtree and thus return false else true.
+*/
+
+1) int Height(Node *root){    //find height of the node for right and left subtree using this function.
+        if(root==NULL){
+            return 0;
+        }
+        int leftside = Height(root->left);
+        int rightside = Height(root->right);
+        return max(leftside,rightside) + 1;
+    }
+    
+    //Function to check whether a binary tree is balanced or not.
+    bool isBalanced(Node *root)
+    {
+        queue<Node*>q;
+        if(root==NULL || !root->left && !root->right){    //base case
+            return true;
+        }
+        q.push(root);
+        int leftside=INT_MIN,rightside=INT_MIN;    //initialise
+        while(!q.empty()){
+            Node *temp = q.front();    
+            q.pop();
+            if(temp->left){    //if left exists : find the left subtree height and push into queue.
+                leftside = Height(temp->left);
+                q.push(temp->left);
+            }  
+            else{      //if left subtree doesn't exist , then make it NULL (we dont want it pointing to previous leftside value)
+                leftside=0;
+            }
+            
+            if(temp->right){      //if exists : find the height of right subtree and push into queue
+                rightside = Height(temp->right);
+                q.push(temp->right);
+            }
+            else{
+                rightside=0;    //else make it 0.
+            }
+            if(abs(leftside - rightside) > 1){      //abs because we dont know which subtree is greater left or right , so we perform MOD to find the difference : it will be positive.
+                return false;
+            }
+        }
+        return true;
+    }

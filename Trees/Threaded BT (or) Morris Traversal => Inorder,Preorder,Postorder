@@ -1,0 +1,112 @@
+/* Approach:
+time : O(N) space : O(1) without recursion or stack.
+-left-root-right
+1) In-order : Works on the concept of threaded binary tree : where we use the rightmost subtree end to connect back to the root. no recursion or stack.
+first if else breakdown : 
+1a) if() - if curr has reached null , it means we are at the last left subtree and this is how we start to print the values for inorder.
+in that case we perform two operations : store it and then move towards the right(which is storing either the parent or right node actually exists , it wont be NULL)
+1b) else() - move one step left(not current but prev to handle this because we need to attach right->end to curr(root for that tree)) and then go extreme right till NULL
+NEXT:
+if else 
+2a) if() - if right has reached NULL , that means its time for us to attach it to its parent which is at curr (we finished traversing the left subtree for that curr)
+so now we attach it to the root so we can move there next. Check if there is any curr->left if exists for that node.
+2b) else() - at this point , it means the attachment has been done already and we moved to the ROOT part after left subtree , thats why the right is not null.
+In this case we print curr->data , which is root right now and then we move towards the right subtree now that left and root part are already printed.
+Middle-left-right
+2) Preorder : Just once change in the order of where we push_back the values : [Mostly same as Inorder]
+So , just before we move current when curr->left is not equal to NULL in 2a) => we firstly push off the middle value by doing this , then push the left value accordingly
+and then the right.
+
+left-right-middle
+3) Postorder :  Since 
+preorder : middle-left-right, for postorder we swap left and right nodes and write code for : middle-right-left which is exactly the reverse of postorder , thus we 
+reverse it in the end.
+SWAP(LEFT,RIGHT). Rest code is the same.
+*/
+
+1) vector<int> inorder(Node *root){
+        vector<int>v;
+        Node *curr = root;
+        if(curr==NULL){
+            return v;
+        }
+        while(curr!=NULL){
+            if(curr->left == NULL){
+                v.push_back(curr->data);
+                curr = curr->right;
+            }
+            else{
+                Node *prev = curr->left;
+                while(prev->right!=NULL && prev->right!=curr){
+                    prev = prev->right;
+                }
+            }
+            
+            if(prev->right == NULL){
+                prev->right = curr;
+                curr = curr->left;
+            }
+            else{
+                prev->right = NULL;
+                v.push_back(curr->data);
+                curr = curr->right;
+            }
+        }
+        return v;
+    }
+
+
+2) vector < int > preorderTraversal(node * root) {
+  vector < int > preorder;
+
+  node * cur = root;
+  while (cur != NULL) {
+    if (cur -> left == NULL) {
+      preorder.push_back(cur -> data);
+      cur = cur -> right;
+    } else {
+      node * prev = cur -> left;
+      while (prev -> right != NULL && prev -> right != cur) {
+        prev = prev -> right;
+      }
+
+      if (prev -> right == NULL) {
+        prev -> right = cur;
+        preorder.push_back(cur -> data);
+        cur = cur -> left;
+      } else {
+        prev -> right = NULL;
+        cur = cur -> right;
+      }
+    }
+  }
+  return preorder;
+}
+
+3) vector < int > postorderTraversal(node * root) {
+  vector < int > postorder;
+
+  node * cur = root;
+  while (cur != NULL) {
+    if (cur -> right == NULL) {
+      preorder.push_back(cur -> data);
+      cur = cur -> left;
+    } else {
+      node * prev = cur -> right;
+      while (prev -> left != NULL && prev -> left != cur) {
+        prev = prev -> left;
+      }
+
+      if (prev -> left == NULL) {
+        prev -> left = cur;
+        preorder.push_back(cur -> data);
+        cur = cur -> right;
+      } else {
+        prev -> left = NULL;
+        cur = cur -> left;
+      }
+    }
+  }
+reverse(v.begin(),v.end());
+  return postorder;
+}

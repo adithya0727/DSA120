@@ -22,12 +22,20 @@ Tree 2 : Longest Path Not Through Root = >
      / \
     10 11   
 ans : In this tree, the longest path does not pass through the root (node 1). Instead, it passes through the left subtree and consists of the nodes: 10 - 8 - 4 - 2 - 1 - 3 - 6 - 9. The diameter of this tree is 8.
-
-1) 
-
+[Consider each node as a CURVING POINT , if you observe curving point = max(left) + max(right) + 1 subtree]
+1) So im using BFS to traverse through the tree regularly , for each node : we pass the node->left and the node->right and determine the HEIGHTS of a node's left 
+and right subtree and then we add them +1(root is not considered as we are passing node->left and node->right).
+we are going to return the maximum value that we can get for any particular node this way.
+time -O(N)*O(H) space - O(H) worst case.
+[RECURSION] : SAME PATTERN AS CHECK BALANCED BT. 
+Whenever we are GIVEN the parent and we have to perform certain calculations for the children : post order should come to your mind as we move with the 
+child nodes firstly and we can perform the required operations on them.
+2) Write the Height Function : one modification : by reference : using if loop calculate the maximum value we can get for both subtree left and right for every given node
+and it returns the maximum.
+time - O(N) space - O(H)
 */
 
-1) int Height(Node *root){
+1) int Height(Node *root){  //find the height of a tree
       if(root==NULL){
           return 0;
       }
@@ -37,30 +45,53 @@ ans : In this tree, the longest path does not pass through the root (node 1). In
   }
     // Function to return the diameter of a Binary Tree.
     int diameter(Node* root) {
-        if(root==NULL){
+        if(root==NULL){                           //base case
             return 0;
         }
-        queue<Node*>q;
+        queue<Node*>q;                  //regular BFS
         q.push(root);
-        int leftheight=0,rightheight=0,ans=0;
+        int leftheight=0,rightheight=0,ans=0;      //to store the left and right for each node in a tree.
         while(!q.empty()){
             Node *temp = q.front();
             q.pop();
-            if(temp->left){
+            if(temp->left){                  //if left exists , pass left part and find height
                 leftheight = Height(temp->left);
                 q.push(temp->left);
             }
             else{
-                leftheight=0;
+                leftheight=0;                  //else keep it 0 for calculation if it ends
             }
-            if(temp->right){
+            if(temp->right){                  //find the right subtree height
                 rightheight = Height(temp->right);
                 q.push(temp->right);
             }
             else{
                 rightheight = 0;
             }
-            ans = max(ans,(leftheight+rightheight+1));
+            ans = max(ans,(leftheight+rightheight+1));     //determine the max that we can get through for each node 
         }
         return ans;
+    }
+
+
+2) int Height(Node *root,int &mx){
+      if(root==NULL){
+          return 0;
+      }
+      int leftheight = Height(root->left,mx);
+      int rightheight = Height(root->right,mx);
+      int curr = (leftheight+rightheight+1);         //calculate the overall diameter for the curvature point by adding left and right counterparts.
+      if(curr > mx){                  //only when satisfies it runs the check , the last time it'll run will be the maximum element and we'll just store it in mx.
+          mx = curr;         
+      }
+      return max(leftheight,rightheight)+1;
+  }
+    // Function to return the diameter of a Binary Tree.
+    int diameter(Node* root) {
+        if(root==NULL){
+            return 0;
+        }
+        int mx=0;
+        Height(root,mx);
+        return mx;                  //finally return the mx which stores the required value of maximum
     }

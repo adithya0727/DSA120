@@ -2,9 +2,18 @@
 -The height of the left and right tree for any node does not differ by more than 1.
 -The left subtree of that node is also balanced.
 -The right subtree of that node is also balanced.
+Naive solution : time - O(N*H) space = O(N)
 1) Using BFS : write the usual bfs code , as we store nodes in the queue , for each node if left exists we move to the left subtree and find the height
 and , for each node if right exists we move the right and find the height.
 abs(left-right) > 1 : then it cannot be a balanced subtree and thus return false else true.
+
+2) Optimised : [POST ORDER TRAVERSAL + HEIGHT]
+Logic : why we think of post order is that , for each node we need the left and the right subtree's height to determine if it is balanced or not.
+So using the same foundation of recursive function to find the height of a tree , we include two if checks :
+1) if at any point we got -1 as return value of leftheight or rightheight : at some node position the height diffrence is/was greater than 1 , so we'll continue returning -1 till completely the stack unwinds.
+2) if in the current stack frame lh - rh is greater than -1 , we return -1 and this is where the unwinding starts and continues till the end.
+else : normally we'll return the height of the tree at those stack calls.
+time - space - 
 */
 
 1) int Height(Node *root){    //find height of the node for right and left subtree using this function.
@@ -48,4 +57,30 @@ abs(left-right) > 1 : then it cannot be a balanced subtree and thus return false
             }
         }
         return true;
+    }
+
+
+2) int postheight(Node *root){                //same function as height of a tree with two new if checks
+        if(root == NULL){
+            return 0;
+        }
+        int leftheight = postheight(root->left);
+        int rightheight = postheight(root->right);
+        if(leftheight == -1 || rightheight == -1){  //if at any previous point we returned and stored the value of lh or rh as -1 due to that node being unbalanced 
+            return -1;                             //we continue returning -1 in that case.                           
+        }
+        if(abs(leftheight-rightheight) > 1){                //check the abs diff to determine if that node is balanced in the tree.
+            return -1;        
+        }
+        return max(leftheight,rightheight)+1;                //if balanced , then normally return the height of the tree.
+    }
+    
+    bool balanced(Node *root){
+        int x = postheight(root);
+        if(x==-1){
+            return false;
+        }
+        else{
+            return true;
+        }
     }

@@ -13,7 +13,8 @@ So using the same foundation of recursive function to find the height of a tree 
 1) if at any point we got -1 as return value of leftheight or rightheight : at some node position the height diffrence is/was greater than 1 , so we'll continue returning -1 till completely the stack unwinds.
 2) if in the current stack frame lh - rh is greater than -1 , we return -1 and this is where the unwinding starts and continues till the end.
 else : normally we'll return the height of the tree at those stack calls.
-time - space - 
+time - O(N) space - stack space : O(H). worst case : skewed tree O(N) for both.
+
 */
 
 1) int Height(Node *root){    //find height of the node for right and left subtree using this function.

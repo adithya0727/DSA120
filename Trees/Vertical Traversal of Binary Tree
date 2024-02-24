@@ -1,0 +1,65 @@
+/* Approach: refer : https://takeuforward.org/data-structure/vertical-order-traversal-of-binary-tree/
+Vertical Order Traversal :  as the name suggests is a traversal in which we divide the binary tree in verticals from left to right, 
+and in every vertical, we print the nodes from top to bottom.
+1) Intuition: First of all, we need to assign a vertical and a level to every node. Once we assign them, we store them in a map.
+This data structure should give us the nodes with left-side vertical first and in every vertical, top-level node should appear first.
+Approach : we can perform any bfs or dfs traversal , here ive used BFS. Going to visit each node level by level using a queue.
+Queue => 3 values : Node* - which stores the current node info , vertical : which stores the corresponding vertical line the nodes is at and 
+Level : which tells us which level the node is stored at. to get these values , initially we start with root,0,0. lets start with root at 0th vertical and 0th level.
+we pop() and store the value in map : vertical : this is top priority and our KEY here based on which we start to ITERATE (since left to right) and the 
+SECOND map within : int- stores the level in correct order so that we maintain (top to bottom fluency while Iterating) and vector<int> : stores all corresponding root->data.
+        1
+       / \
+      /   \
+     2     3
+    / \
+   /   \
+  4     5
+
+MAP : 
+Vertices || Levels   || root->data
+ -2           2            4
+ -1           1            2
+  0           0            1
+  0           2            5
+  1           1            3
+so we iterate based on vertices first , then correct order of levels in those : ex: 2 elements (1,5) exist in vertical 0 : based on level first is 1 and then 5.
+time - space - 
+*/
+
+1) vector<int> verticalOrder(Node *root)
+    {
+        vector<int>v;        //answer
+        if(root==NULL){      //base case
+            return v;
+        }
+        queue<pair<Node*,pair<int,int>>>q;    //root,vertical,level
+        map<int,map<int,vector<int>>>m;      //vertical,level,value
+        q.push({root,{0,0}});
+        while(!q.empty()){            //performing ordinary BFS
+            auto p = q.front();
+            q.pop();
+            Node *temp = p.first;    //capture the Node* part
+            int x=p.second.first,y=p.second.second;    //x=vertical y =level
+            m[x][y].push_back(temp->data);      //push accordingly the value
+            if(temp->left){      //check for left
+                q.push({temp->left,{x-1,y+1}});    //as we move left : vertical is coming nearer to the start , thereby its on a level lesser than root(0)
+            }                                      //as we perform bfs , we go one level under/below always.
+            
+            if(temp->right){          //as we move right : moving farther away and towards right end : so +1
+                q.push({temp->right,{x+1,y+1}});      //level goes under same
+            }
+        }
+        vector<vector<int>>ans;
+        for(auto &var :m){      //converting map to 2d vector first : pick the vertical first
+            vector<int>a;
+            for(auto &va : var.second){    //in that vertical for all levels copy and paste into the a vector each time
+                a.insert(a.end(),va.second.begin(),va.second.end());
+            }
+            ans.push_back(a);    //push a vector in 2d vector
+        }
+        for(auto &e : ans){      //flatten the 2d vector into a 1d vector and return the result finally.
+            v.insert(v.end(),e.begin(),e.end());
+        }
+        return v;
+    }

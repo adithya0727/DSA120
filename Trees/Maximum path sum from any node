@@ -1,0 +1,51 @@
+/* Approach: [V. Important TREE Problem] Refer Striver : https://takeuforward.org/data-structure/maximum-sum-path-in-binary-tree/
+[Highly Recommend understand Maximum Height of A Tree && Maximum Width of a tree]
+Follows a COMBINATION OF MAX HEIGHT AND WIDTH of a tree.
+Lets understand the Question properly FIRST : 
+Given a binary tree, the task is to find the maximum path SUM. The path may start and end at any node in the tree.
+A path in a binary tree is a sequence of nodes where every adjacent pair of nodes are connected by an edge. A node can only appear in the sequence at most once.
+A path need not pass from the root. We need to find the path with the maximum sum in the binary tree.
+So ,we can take the following example : (With or without passing through root, both can be counted)
+        -10
+       /   \
+      9     20
+          /   \
+         15    7    output : 42.
+EACH NODE : Max((MAXLEFTSUM + MAXRIGHTSUM + ROOT->DATA)).
+Brute-Force : for each node we have to try all combinations with every other node to find all various different paths to get maximum, which is difficult and O(N^2).
+1) So how it is Related :
+*) Width : Just as we did in the width problem : we are going to conisder EACH NODE AS A CURVATURE POINT (a node through which we could get a path).
+Formula remains the same : Find the leftpath and rightpath and then (leftpath+rightpath+root->data) this will give us the whole path.
+So , we Basically are performing like the Post order dfs : once we get the left and right paths : MAXI : helps to keep track of the maximum path sum we've encountered
+so far. So for each node(curvature point/to get path) , we check if we get a new maxi : update if yes or don't. So after this , we have completed the path for one node.
+what we return is : for the previous node : we will send the current node->data + maximum btw both the (left,right) paths which have been formed until now down below.
+Similar to the *) Height of a tree : we used to return (max(left,right)+1) to return the maximum height , here instead we return the maximum value , left subtree or right subtree
+So we use height of a tree , to return the maximum sum value by comparing left and right || width of a tree to move along the paths for each node/curvature.
+SPECIAL CASE : if we encounter a path where value goes Negative : thats we perform max(0,func()) : 0 will be replaced instead indicating start adding sum from here
+and let go of the below values as they are negative anyways.
+Each time we do stack unwinding : we go a node higher : we can't choose both left and right subtree : therefore we return one path back : whichever is the maximum.
+Let's Perform a dry-run to understand this deeper : refer book.
+time - O(N) space - O(N)
+*/
+
+1) //Function to return maximum path sum from any node in a tree.
+    int HeightWidthsum(Node *root,int &maxi){
+        if(root==NULL){
+            return 0;
+        }
+        int maxleftpath = max(0,HeightWidthsum(root->left,maxi));
+        int maxrightpath = max(0,HeightWidthsum(root->right,maxi));
+        maxi = max(maxi,(maxleftpath+maxrightpath+root->data));
+        return (root->data+max(maxleftpath,maxrightpath));
+    }
+
+
+    int findMaxSum(Node* root)
+    {
+        if(root==NULL){
+            return 0;
+        }
+        int maxi = INT_MIN;
+        HeightWidthsum(root,maxi);
+        return maxi;
+    }

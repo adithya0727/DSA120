@@ -24,7 +24,8 @@ Vertices || Levels   || root->data
   0           2            5
   1           1            3
 so we iterate based on vertices first , then correct order of levels in those : ex: 2 elements (1,5) exist in vertical 0 : based on level first is 1 and then 5.
-time - space - 
+time - N*logN*logN*logN : N - iterating through all nodes , 3 logN : sort in map acc to x , sort in map acc to y and inserting nodes in map in their positions logn
+space - O(N) : queue 'n' nodes storage.
 */
 
 1) vector<int> verticalOrder(Node *root)

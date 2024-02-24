@@ -1,0 +1,71 @@
+/* Approach:
+Given two binary trees, the task is to find if both of them are identical or not. 
+1) Brute force : perform bfs => using two queues and for each element in queue , if it is not equal at any point : return false.
+same can be solved using DFS , but edge cases shall exist.
+time - O(N) space - O(N)
+
+2) constant space actually : 
+1st base case : if both reach null at the same time and all val is same , then we return true.
+if one reaches and the other doesn't : tree structure is definitely unbalanced.
+return condition breakdown : (r1->data == r2->data) => firstly we check if the data is same , only then we move forward
+move both the r1 and r2 to left next and do the same and then check for right and do the same.
+if the structure is wrong or the data is different at any point : even if any time once during recursion : the false condition hits => we will recursively unwind
+as false ultimately : because all three conditions must be true for us to return true finally. ((r1->data == r2->data) && (check(r1->left,r2->left)) && (check(r1->right , r2->right)))
+time - O(N) space - O(H)
+*/
+
+1) bool isIdentical(Node *r1, Node *r2)
+    {
+        queue<Node*>q1;  //root1
+        queue<Node*>q2;  //root2
+        q1.push(r1);
+        q2.push(r2);
+        while(!q1.empty() && !q2.empty()){    //whille both are still not empty() , otherwise buffer overflow
+            Node *temp1 = q1.front();
+            Node *temp2 = q2.front();
+            q1.pop();
+            q2.pop();
+            if(temp1->data !=temp2->data){
+                return false;
+            }
+            if(temp1->left && !temp2->left || temp1->right && !temp2->right || !temp1->left && temp2->left || !temp1->right && temp2->right){    //edge case
+                return false;
+            }
+            if(temp1->left){  //push left of both
+                q1.push(temp1->left);
+            }
+            if(temp2->left){
+                q2.push(temp2->left);
+            }
+            if(temp1->right){    //push right of both
+                q1.push(temp1->right);
+            }
+            if(temp2->right){
+                q2.push(temp2->right);
+            }
+        }
+        if(!q1.empty() || !q2.empty()){    //if still some exist
+            return false;
+        }
+        return true;
+    }
+
+
+2) bool check(Node* r1 , Node * r2){
+        if(r1==NULL && r2==NULL){
+            return true;
+        }
+        else if(r1==NULL || r2==NULL){
+            return false;
+        }
+        return ((r1->data == r2->data) && (check(r1->left,r2->left)) && (check(r1->right , r2->right)));
+    }
+    
+    
+    
+    //Function to check if two trees are identical.
+    bool isIdentical(Node *r1, Node *r2)
+    {
+        bool ans = check(r1,r2);
+        return ans;
+    }

@@ -25,7 +25,7 @@ SPECIAL CASE : if we encounter a path where value goes Negative : thats we perfo
 and let go of the below values as they are negative anyways.
 Each time we do stack unwinding : we go a node higher : we can't choose both left and right subtree : therefore we return one path back : whichever is the maximum.
 Let's Perform a dry-run to understand this deeper : refer book.
-time - O(N) space - O(N)
+time - O(N) space - O(H)
 */
 
 1) //Function to return maximum path sum from any node in a tree.

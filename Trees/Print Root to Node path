@@ -1,0 +1,37 @@
+/* Approach:
+Question : print the path from the root Node to A particular given node(x).
+No node has same values and the x value is definitely present in the tree.
+1) basically we can perform any dfs traversal , as we HIT the required node : in our recusrive stack we actually have the path right there.
+we perform push and pop operations on vector.
+we insert value initially , check for val==x , if yes we start backtracking with return the current vector , if NO : we move both left and right until we hit it.
+we will come across many paths LEAF node , if that happens : we pop_back() last element as we backtrack each time from that path and start traversing a new path.
+*/
+
+1) bool getPath(node * root, vector < int > & arr, int x) {
+  // if root is NULL
+  // there is no path
+  if (!root)
+    return false;
+
+  // push the node's value in 'arr'
+  arr.push_back(root -> data);
+
+  // if it is the required node
+  // return true
+  if (root -> data == x)
+    return true;
+
+  // else check whether the required node lies
+  // in the left subtree or right subtree of
+  // the current node
+  if (getPath(root -> left, arr, x) ||
+    getPath(root -> right, arr, x))
+    return true;
+
+  // required node does not lie either in the
+  // left or right subtree of the current node
+  // Thus, remove current node's value from
+  // 'arr'and then return false  as we backtrack to the previous node to find an alternative path to search for.
+  arr.pop_back();
+  return false;
+}

@@ -1,0 +1,52 @@
+/* Approach: [Leetcode]
+Given the root of a binary tree, return the maximum width of the given tree.
+The maximum width of a tree is the maximum width among all levels.
+The width of one level is defined as the length between the end-nodes (the leftmost and rightmost non-null nodes), 
+where the null nodes between the end-nodes that would be present in a complete binary tree extending down to that level are also counted into the length calculation.
+          1       ------ 2^0 = 1
+        /   \
+       3     2    -------2^1 = 2
+      /       \
+     5         9    -------2^2 = 4
+    / \       /
+   6   7     6      -------2^3 = 8
+answer is 7 : in the last level the overall width is btw 6&6 : 6,7,N,N,N,N,6,N : therefore 7 (first and last index.)
+1) SO let's BREAKDOWN the Problem into sub parts and solve it. 
+a) Lets assign unique indexes to each node in the tree including the NULL child if present : numbering goes as if root= i , left = 2i+1 , right = 2i+2 to maintain.
+We use a queue to store Node,level,index accordingly. 
+b) Now , Lets use a map to store the leftmost and rightmost index positions for EACH level : leftmost is the first element since we are doing bfs and rightmost is the
+lastly updated value of that particular level for each level.
+c) Finally we iterate through the (right-left)+1 at each level , to get the maximum window length.
+time - O(N) space - O(N)
+*/
+
+1) int widthOfBinaryTree(TreeNode* root) {
+        if(root==NULL){
+            return 0;
+        }
+        int ans=0;
+        queue<pair<TreeNode*,pair<int,int>>>q;
+        unordered_map<int,pair<int,int>>m;
+        q.push({root,{0,0}});
+        while(!q.empty()){
+            auto p = q.front();
+            q.pop();
+            TreeNode *temp = p.first;
+            long level = p.second.first;
+            long index = p.second.second;
+            if(m.find(level) == m.end()){
+                m[level].first = index;
+            }
+            m[level].second = index;
+            if(temp->left){
+                q.push({temp->left,{(level+1),(2*index)+1}});
+            }
+            if(temp->right){
+                q.push({temp->right,{(level+1),(2*index)+2}});
+            }
+        }
+        for(auto &var : m){
+            ans = max(ans,(var.second.second-var.second.first+1));
+        }
+        return ans;
+    }

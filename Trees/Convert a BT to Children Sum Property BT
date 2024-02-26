@@ -1,0 +1,50 @@
+/* Approach:
+Write a program that converts any binary tree to one that follows the children sum property.
+The children sum property is defined as: For every node of the tree, the value of a node is equal to the sum of values of its children(left child and right child).
+ex: 
+          2                                   
+        /   \
+      35     10      ----->> 
+     / \     / \
+    2   3   5   2      
+
+             45
+            /   \
+          35    10
+         /  \   / \
+       30    5  8  2
+conditions : Node's value can be increased by any number , Node's value should never be decremented , Dont change the tree structure.
+[FAILED APPROACH] : What firstly comes to mind is to do a post order : where we start from the leaf add right and left child and update the parent Node.
+But it will fail , assume theres a parent that is greater than (left+right) , then we cant decrement it. 
+1) Approach : 
+[Updating Nodes so that while backtracking there's no Parent with value greater than SUM(l+r)]
+--Pre-order : firstly we will check the sum off by adding left and right without moving as of yet. if value is less than sum , either to the left or right we'll add
+the parent->val => so that its children are DEFINITELY greater while Stack unwinding.
+--Post-order: once we've assigned proper values and taken care of the conditions : now while unwinding : we add the left and right and assign that to the parent.
+Perfect example for a good difference btw preorder and postorder : how we can use them to the fullest.
+time - O(N) space - O(N)
+*/
+
+1) void reorder(node * root) {
+  if (root == NULL) return;    //base case
+  int child = 0;      //restart each time and calculate current child values for each node starting from the root.
+  if (root -> left) {
+    child += root -> left -> data;
+  }
+  if (root -> right) {
+    child += root -> right -> data;
+  }
+
+  if (child < root -> data) {      //check if child is still lesser than parent : if so , we can't decrement parent , so we add up parent->val to one of the child's
+    if (root -> left) root -> left -> data = root -> data;
+    else if (root -> right) root -> right -> data = root -> data;    //whichever exists
+  }
+
+  reorder(root -> left);    //left
+  reorder(root -> right);    //right
+//post order starts : stack unwinding time
+  int tot = 0;
+  if (root -> left) tot += root -> left -> data;    //now sum the newly updated left and right values for each parent 
+  if (root -> right) tot += root -> right -> data;
+  if (root -> left || root -> right) root -> data = tot;    //and make the parent = right + left.
+}

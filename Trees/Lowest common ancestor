@@ -1,0 +1,53 @@
+/* Approach: PATTERN => Root to Node path 
+Given a Binary Tree with all unique values and two nodes value, n1 and n2. The task is to find the lowest common ancestor of the given two nodes.
+LCA: It is the first common ancestor of both the nodes n1 and n2 from bottom of tree.
+         1
+       / \
+      2   3
+     / \
+    4   5
+         \
+          6
+lets say node1 = 4 and node2 = 6.
+1) Brute Force approach: 
+Find the path between root to node and store it in a vector for both root->x and root->y : then we compare the vectors as follows:
+v1 = {1,2,4} v2 = {1,2,5,6} : so basically these are our ancestors for x and y (including them) , if we observe while iterating from beginning : the point where
+both values diverge is where the ancestors change : so we return 2 which is the lowest possible common ancestor.
+Extra time and space to traverse twice for two paths , two vectors to store two paths.
+
+2) OPTIMIZED : [RECURSION]
+INTUITION : store the left and right Node values , we start traversing the tree from root , base condition : if we reach null , return null , whereas if we reach either
+x or y return node x/y.. in the above example : once we reach node1=4 , we return 4 node to NODE:2 and then start traversing right..
+then we reach 6 and we start returning 6.
+When we reach the point two : we have left=4 and right=6 , we reach the else condition where we get a point where both left and right arent NULL , in that case return 
+the ancestor.
+time - O(N) space - O(N)
+*/
+
+2) Node *common(Node *root,int n1 , int n2){
+        if(root==NULL || root->data==n1 || root->data==n2){    //return node is v. imp as it helps us decide while backtracting the values for left and right
+            return root;    //returning NULL acts a placeholder for us to know that we haven't got a common ancestor yet. So when both aren't NULL , we know we got it
+        }  
+        Node* left = common(root->left,n1,n2);    //storing Node values
+        Node* right = common(root->right,n1,n2);
+        if(left==NULL){      //return the node part which isn't containing NULL , if both are NULL : just return anything since both are NULL anyways
+            return right;
+        }
+        else if(right==NULL){
+            return left;
+        }
+        else{      //when both left and right in this particular stack frame are not NULL , we got our first lowest ancestor from the bottom.
+            return root;
+        }
+    }
+    
+    
+    //Function to return the lowest common ancestor in a Binary Tree.
+    Node* lca(Node* root ,int n1 ,int n2 )
+    {
+       if(root==NULL){
+           return NULL;
+       }
+       Node *ans = common(root,n1,n2);
+       return ans;
+    }

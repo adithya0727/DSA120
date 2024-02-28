@@ -44,8 +44,13 @@ f) Sort the vector and Return it.
 time = O(N*logN) : sorting space : O(N)
 
 
-2) Burning Tree
-time -  space - 
+2) Burning Tree : 
+Literally same Approach : 
+But instead of BREAKING the loop at K times , we run the loop Completely until the Whole tree is Burnt , in other words : we keep traversing similarly till the queue
+becomes empty , since we are ignoring the repeated Nodes using the map , we keep traversing over and over again till the whole tree is fully traversed.
+Finally we subtract -1 to the final answer because , in the last iteration , the queue will check the Last node for (left,right,parent) which wont exist , so we remove that iteration.
+time - O(N) space - O(H)
+
 */
 1) void mapping(Node *root, int target, unordered_map<Node*, Node*>& m, Node*& key) {
     queue<Node*> q;
@@ -67,24 +72,24 @@ time -  space -
     }
 }
 
-    vector<int> distance(Node *root,int target,int k){
-        unordered_map<Node*,Node*>map_parent;
+    vector<int> distance(Node *root,int target,int k){          //insert the K distance values.
+        unordered_map<Node*,Node*>map_parent;                  //To store the mapping from the children and parent to traverse Fully.
         Node* key;
-        mapping(root,target,map_parent,key);
-        unordered_map<Node*,bool>visited;
-        visited[key] = true;
+        mapping(root,target,map_parent,key);                    //we need target as a node which is stored in key as we start traversing from here
+        unordered_map<Node*,bool>visited;                    //to avoid repetitions of nodes that are already traversed in all directions
+        visited[key] = true;                                 //at level 0 : key itself has already been insert , so we check it off
         queue<Node*>q;
-        q.push(key);
-        int count=0;
+        q.push(key);                                        //start traversing from target node
+        int count=0;                    
         while(!q.empty()){
             int size = q.size();
-            if(count++ == k){
+            if(count++ == k){                  // when we reach the required k level , we traverse no more as we have reached the required level
                 break;
             }
-            for(int i=0;i<size;i++){
+            for(int i=0;i<size;i++){          //to iterate through all nodes in the current level and store their l,r,parent
                 Node *temp = q.front();
                 q.pop();
-                if(temp->left && !visited[temp->left]){
+                if(temp->left && !visited[temp->left]){         //it should exist and not be visited
                     q.push(temp->left);
                     visited[temp->left] = true;
                 }
@@ -92,33 +97,93 @@ time -  space -
                     q.push(temp->right);
                     visited[temp->right] = true;
                 }
-                if(map_parent[temp] && !visited[map_parent[temp]]){
+                if(map_parent[temp] && !visited[map_parent[temp]]){// we are checking for the existence of the parent : which is accessed through map_parent[child]
                     q.push(map_parent[temp]);
                     visited[map_parent[temp]] = true;
                 }
             }
         }
         vector<int>v;
-        while(!q.empty()){
+        while(!q.empty()){                    //when we at required level , insert into vector
             Node*t = q.front();
             q.pop();
             v.push_back(t->data);
         }
-        return v;
-    }
+        return v;                    //return
+    }          
 
 
     vector <int> KDistanceNodes(Node* root, int target , int k)
     {
         vector<int>v;
-        if(root==NULL){
+        if(root==NULL){                    //base case
             return v;
         }
-        v = distance(root,target,k);
-        sort(v.begin(),v.end());
+        v = distance(root,target,k);                
+        sort(v.begin(),v.end());                    //sort as per requirement
         return v;
     }
 
 
 
-2) 
+2) void mapping(Node*root,int target,unordered_map<Node*,Node*>&m,Node* &key){  //same aproach : mapping and key storing the target Node*
+        queue<Node*>q;
+        q.push(root);
+        while(!q.empty()){
+            Node *temp = q.front();
+            q.pop();
+            if(temp->data==target){
+                key = temp;
+            }
+            if(temp->left){
+                q.push(temp->left);
+                m[temp->left] = temp;
+            }
+            if(temp->right){
+                q.push(temp->right);
+                m[temp->right] = temp;
+            }
+        }
+    }
+    
+    int time(Node *root, int target){
+        unordered_map<Node*,Node*>map_parent;
+        Node *key;
+        mapping(root,target,map_parent,key);
+        queue<Node*>q;
+        unordered_map<Node*,bool>visited;
+        q.push(key);
+        visited[key] = true;
+        int count=0;                    //this time : count keeps track of the time it requires to burn the whole tree , Given :
+        while(!q.empty()){     //it takes 1 second from a node to spread fire to its surroundings [left,right,parent] , so we increment one only each time[each level]
+            int size = q.size();
+            for(int i=0;i<size;i++){
+                Node *temp = q.front();
+                q.pop();
+                if(temp->left && !visited[temp->left]){
+                    q.push(temp->left);
+                    visited[temp->left] = true;                    
+                }
+                if(temp->right && !visited[temp->right]){
+                    q.push(temp->right);
+                    visited[temp->right] = true;
+                }
+                if(map_parent[temp]  && !visited[map_parent[temp]]){
+                    q.push(map_parent[temp]);
+                    visited[map_parent[temp]] = true;
+                }
+            }
+            count++;  //each level : one layer of surrounding is being burnt , similar till whole tree burns how many seconds would it take? +1 each time till end.
+        }
+        return count;
+    }
+  
+    int minTime(Node* root, int target) 
+    {
+        if(root==NULL){
+            return 0;
+        }
+        int ans=0;
+        ans = time(root,target)-1;  //-1 because the last iteration is not counted as the node will have no left,right and non-repeated parent.
+        return ans;
+    }

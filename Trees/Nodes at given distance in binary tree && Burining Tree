@@ -1,0 +1,124 @@
+/* Approach:    [Refer book for better visualization]
+1) Given a binary tree, a target node in the binary tree, and an integer value k, find all the nodes that are at distance k from the given target node. No parent pointers are available.
+Note:
+You have to return the list in sorted order. The tree will not contain duplicate values.
+KEY POINTS : 1) Number of Edges is EQUAL TO K : so at level 1 : we have all nodes that are 1 EDGE AWAY FROM THE TARGET NODE AND SO ON...
+2) With each step , COUNT : we aremoving one step/edge away from the target node in all directions that possibly exist. (parent,left,right).
+Input:      
+          20
+        /    \
+      8       22 
+    /   \
+   4    12 
+       /   \
+      10    14
+Target Node = 8
+K = 2
+Output: 10 14 22
+Explanation: The three nodes at distance 2
+from node 8 are 10, 14, 22.
+1) Visualization : to find all nodes that are at a distance k from a given node , we will make so that Each edge is considered as one distance away from the target node.
+So visualise a Circle for each node : level 1 circle will be its adjacent left , right and parent node , level 2 circle will be bigger with direction of 2 edges gap
+between left , right and parent. and so on for 3 and 4.
+Two ISSUES : 1) left and right we can move , but the parent node we can't keep track of : so we use a map to store the node-parent relationship.
+MAP
+key=>Node*(children) || value=>Parent   //by doing BFS , now can go back to reach a particular node's parent too
+     8                       20
+     22                      20
+     4                       8
+     12                      8
+     10                      12
+     14                      12
+2) We don't want to be traversing the same repeated Nodes. if a particular node has been traversed once already , we ignore and move forward for that we use a 
+VISITED map , to store nodes with bool values so that we don't repeat it again.
+Usually the parent node,left,right will already be considered once , so that will be repeated and we want to avoid that.
+Problem Breakdown : 
+a) Firstly we'll map the children with thier respective parents as mentioned above and also we need to traget as Node* and not int , since we need to traverse from there.
+b) Next , we perform another BFS , where we start from the target node and a COUNT , which is used to keep track for each level / the count of edges around the target we are searching for.
+c) at count=0 , we just have root and we set that as visited firstly , [READ KEY POINTS ABOVE] => then at level 1 : we have all nodes that are 1 edge away from the target
+, at level 2: we have all nodes in all directions that are two EDGES away from the TARGET node.
+d) after inserting root , we check the size of queue , based on that the WHOLE LEVEL (level 1 : 4,12,20 : 8) , each node : left,right,parent are traversed and pushed
+based on visits and availability and we increment to the next level.
+e) We will keep moving till the count==k , then we break. so right now in the queue : we have all the Nodes that a K EDGES away from the target node , we just insert into a vector
+f) Sort the vector and Return it.
+time = O(N*logN) : sorting space : O(N)
+
+
+2) Burning Tree
+time -  space - 
+*/
+1) void mapping(Node *root, int target, unordered_map<Node*, Node*>& m, Node*& key) {
+    queue<Node*> q;
+    q.push(root);
+    while (!q.empty()) {
+        Node *temp = q.front();
+        q.pop();
+        if (temp->data == target) {
+            key = temp;
+        }
+        if (temp->left) {
+            m[temp->left] = temp;
+            q.push(temp->left);
+        }
+        if (temp->right) {
+            m[temp->right] = temp;
+            q.push(temp->right);
+        }
+    }
+}
+
+    vector<int> distance(Node *root,int target,int k){
+        unordered_map<Node*,Node*>map_parent;
+        Node* key;
+        mapping(root,target,map_parent,key);
+        unordered_map<Node*,bool>visited;
+        visited[key] = true;
+        queue<Node*>q;
+        q.push(key);
+        int count=0;
+        while(!q.empty()){
+            int size = q.size();
+            if(count++ == k){
+                break;
+            }
+            for(int i=0;i<size;i++){
+                Node *temp = q.front();
+                q.pop();
+                if(temp->left && !visited[temp->left]){
+                    q.push(temp->left);
+                    visited[temp->left] = true;
+                }
+                if(temp->right && !visited[temp->right]){
+                    q.push(temp->right);
+                    visited[temp->right] = true;
+                }
+                if(map_parent[temp] && !visited[map_parent[temp]]){
+                    q.push(map_parent[temp]);
+                    visited[map_parent[temp]] = true;
+                }
+            }
+        }
+        vector<int>v;
+        while(!q.empty()){
+            Node*t = q.front();
+            q.pop();
+            v.push_back(t->data);
+        }
+        return v;
+    }
+
+
+    vector <int> KDistanceNodes(Node* root, int target , int k)
+    {
+        vector<int>v;
+        if(root==NULL){
+            return v;
+        }
+        v = distance(root,target,k);
+        sort(v.begin(),v.end());
+        return v;
+    }
+
+
+
+2) 

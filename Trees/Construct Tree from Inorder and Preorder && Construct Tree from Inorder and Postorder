@@ -21,7 +21,10 @@ Value(int)   || index in inorder     => we take elements in the order of the que
       || Instart  | Inend |  Prestart           | Preend              |
 LEFT  || Instart  | idx-1 |  Prestart+1         |   Prestart+nleftelem|
 RIGHT || idx+1    | Inend | Prestart+nleftelem+1| Preend              |
-time - O(N) space - O(N) : map/recursive stack worst case
+time - O(N) space - O(N) : map/recursive stack worst case.
+
+2) Construct Tree from Inorder and Postorder:
+
 */
 
 1) Construct Tree from Inorder & Preorder :
@@ -52,4 +55,5 @@ Node* construct(int in[] , int instart , int inend , int pre[] , int prestart , 
         return construct(in,0,n-1,pre,0,n-1,mp);
     }
 
-2) 
+2) Construct Tree from Inorder and Postorder:
+

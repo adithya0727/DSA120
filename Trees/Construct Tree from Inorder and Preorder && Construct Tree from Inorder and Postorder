@@ -1,0 +1,55 @@
+/* Approach: ref : https://takeuforward.org/data-structure/construct-a-binary-tree-from-inorder-and-preorder-traversal/
+
+1) Construct Tree from Inorder & Preorder:
+Given 2 Arrays of Inorder and preorder traversal. The tree can contain duplicate elements. Construct a tree and print the Postorder traversal. 
+N = 4
+inorder[] = {1 6 8 7}
+preorder[] = {1 6 7 8}
+Output: 8 7 6 1
+So basically we are going to perform a recursive steo by step approach here
+INTUITION (step by step) : 1) since we cannot be copying arrays for each call as it'll become costly , we take indexes required for both the inorder and preorder and
+assign elements accordingly as instart,inend,prestart,preend 2 pointers for each array. 
+2) Then we include a map: which iterates through the inorder array and stores the elements and their corresponding indexes.
+Special Case : we can have duplicate elements , we don't want to overwrite any index , so we use a queue to store repeated elements along with thier multiple indexes.
+Value(int)   || index in inorder     => we take elements in the order of the queue : first in first out and pop() them once we've used them or traversed by.(pass by reference since we will be poping elements and we want that to be reflected in the map for all upcoming stack frames)
+3) preorder first element is always the root of the node since : root,left,right , so we capture that for the root.
+4) Next , now that we have the ROOT , FIND THE ROOT POSITION IN INORDER : Inorder specifically helps us determine what all are the elements of the left subtree and the right subtree.
+5) using queue we store the index of the element(idx) in inorder using the map : the front() always (FIFO) and then we pop() , so that next time we' take the next index if it exists(DUPLICATE NUMBERS).
+6) nleftelem : consists of the number of LEFT elements that exist : to find that we do : idx(position of root node) - instart : [get window size] :these many left elements exist.
+7) NOW , the RECURSION : YOU only have to VISULAISE ONE STEP , recursion will follow through anf perform it for the whole tree.
+8) root-> left : when we are moving towards the left , we change the pointers at both arrays and similarly when we are moving towards the right we change the pointers differently.
+      || Instart  | Inend |  Prestart           | Preend              |
+LEFT  || Instart  | idx-1 |  Prestart+1         |   Prestart+nleftelem|
+RIGHT || idx+1    | Inend | Prestart+nleftelem+1| Preend              |
+time - O(N) space - O(N) : map/recursive stack worst case
+*/
+
+1) Construct Tree from Inorder & Preorder :
+Node* construct(int in[] , int instart , int inend , int pre[] , int prestart , int preend, map<int,queue<int>>&mp){
+        if(prestart > preend || instart > inend){
+            return NULL;
+        }
+        int idx = mp[pre[prestart]].front();
+        mp[pre[prestart]].pop();
+        Node *root = new Node(pre[prestart]);
+        int nleftelem = idx - instart;
+        root->left = construct(in,instart,idx-1,pre,prestart+1,prestart+nleftelem,mp);
+        root->right = construct(in,idx+1,inend,pre,prestart+nleftelem+1,preend,mp);
+        return root;
+    }
+    
+    
+    Node* buildTree(int in[],int pre[], int n)
+    {
+        if(n==0){
+            return NULL;
+        }
+        //int instart = 0,prestart=0,inend=n-1,preend=n-1;
+        map<int,queue<int>>mp;
+        for(int i=0;i<n;i++){
+            mp[in[i]].push(i);
+        }
+        return construct(in,0,n-1,pre,0,n-1,mp);
+    }
+
+2) 

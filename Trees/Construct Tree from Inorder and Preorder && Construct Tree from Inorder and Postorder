@@ -23,8 +23,12 @@ LEFT  || Instart  | idx-1 |  Prestart+1         |   Prestart+nleftelem|
 RIGHT || idx+1    | Inend | Prestart+nleftelem+1| Preend              |
 time - O(N) space - O(N) : map/recursive stack worst case.
 
-2) Construct Tree from Inorder and Postorder:
-
+2) Construct Tree from Inorder and Postorder: Literally same approach as previous just changing of pointers will alter.
+In postorder , we always have the root as the last element : we are using this fact and recursively WE'LL PICK THE LAST ELEMENT => ROOT.
+      || Instart  | Inend |  Poststart           | Postend              |
+LEFT  || Instart  | idx-1 |  Poststart           | Poststart+nleftelem-1|
+RIGHT || idx+1    | Inend | Poststart+nleftelem  | Postend-1            |
+time - O(N) space - O(N) : map/recursive stack worst case. (Use map as reference to save time , as having multiple copies of map can cause TLE).
 */
 
 1) Construct Tree from Inorder & Preorder :
@@ -56,4 +60,28 @@ Node* construct(int in[] , int instart , int inend , int pre[] , int prestart , 
     }
 
 2) Construct Tree from Inorder and Postorder:
+Node* construct(int in[],int instart,int inend,int post[],int poststart,int postend,unordered_map<int,int>&m){
+    if(poststart > postend || instart > inend){
+        return NULL;
+    }
+    Node* root = new Node(post[postend]);
+    int idx = m[post[postend]];
+    int nleftelem = idx-instart;
+    root->left = construct(in,instart,idx-1,post,poststart,poststart+nleftelem-1,m);
+    root->right = construct(in,idx+1,inend,post,poststart+nleftelem,postend-1,m);
+    return root;
+}
+
+
+
+Node *buildTree(int in[], int post[], int n) {
+    if(n==0){
+        return NULL;
+    }
+    unordered_map<int,int>m;
+    for(int i=0;i<n;i++){
+        m[in[i]] = i;
+    }
+    return construct(in,0,n-1,post,0,n-1,m);
+}
 

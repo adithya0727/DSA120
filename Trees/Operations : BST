@@ -1,0 +1,40 @@
+/* Approach:
+
+1) Search a Node : So , we going to search a tree based on a correct path using the bst property : if root->data > data then move left otherwise move right and we follow
+along a correct path : if the data exists it should exist in this particular path only , we don't have to perform dfs or bfs to check if that data exists anywhere else,
+because this is a sorted tree and we are performing binary search. If exists , we keep RECURSIVELY RETURINING THE VALUE OF THAT NODE OR if it doesnt exist we keep recursively returning NULL.
+we don't have to look or further perform any operations , we just have to return it.
+time - O(H) space - O(H)
+2) Insert a Node : we cannot regularly add data from the root like we did in BT. Here , we perform the following:(once we have confirmed that the data doesn't exist in the tree)
+we again move along a correct particular path using the bst property till we reach NULL : once we've reached NULL , it means we've found a empty spot where the 
+Node->val correctly sits , so then we create a new node in heap with the given data and return it to the previous stack frame where we perform the ATTACHING operation
+and [V.IMP] : RETURN THE UPDATED NODE. the prev stack frame node , now has a new left or right pointer based on the node value and we return that modified node to the prev
+and so on till we reach the head. so we ultimately return the updated head , which has the last new leaf value being added/attached to the end.
+time - O(H) space - O(H)
+3) 
+*/
+1) Node* search(Node *root,int &data){      [SEARCH]
+        if(root==NULL || root->data == data){    //base case
+            return root;        //recursively return the value till the end be it a NULL or Node. : if node then found else not found.
+        }
+        if(root->data > data){
+            return search(root->left,data);
+        }
+        return search(root->right,data);
+    }
+
+2) Node* inserts(Node* root,int &data){      [INSERT]
+        if(root==NULL){
+            Node *newnode = new Node(data);    //new slot is found where it can be inserted
+            return newnode;
+        }
+        if(root->data > data){
+            root->left = inserts(root->left,data);
+        }
+        else if(root->data < data){
+            root->right = inserts(root->right,data);
+        }
+        return root;    //to backtrack the updated node which has a new left or right child attached till the root.
+    }
+
+3) 

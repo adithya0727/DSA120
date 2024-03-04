@@ -11,7 +11,14 @@ Node->val correctly sits , so then we create a new node in heap with the given d
 and [V.IMP] : RETURN THE UPDATED NODE. the prev stack frame node , now has a new left or right pointer based on the node value and we return that modified node to the prev
 and so on till we reach the head. so we ultimately return the updated head , which has the last new leaf value being added/attached to the end.
 time - O(H) space - O(H)
-3) 
+3) Ceil of a BST : Smallest root->val that is Greater than or Equal to KEY.
+base case : if we do not find any node->val greater than or equal to key , we return null along as we reach the PATH'S end : remember this is BST : there is only one 
+correct path we move towards , so if along that path we find nothing and reach null : it means it doesn't exist in the tree as per BST PROPERTY.
+we kep track of the minimum value of ceil : all node->val's that are GREATER THAN KEY ARE POSSIBLE CANDIDATES FOR AN ANSWER , minimum of those is the answer.()node->val == key : minimum value.
+time and space - O(H)
+4) Floor of a BST : Greatest root->val that is LESSER THAN OR EQUAL TO KEY.
+same as ceil , all the root->val lesser than key values are candidates and among them the maximum is the answer.
+time and space - O(H)
 */
 1) Node* search(Node *root,int &data){      [SEARCH]
         if(root==NULL || root->data == data){    //base case
@@ -37,4 +44,53 @@ time - O(H) space - O(H)
         return root;    //to backtrack the updated node which has a new left or right child attached till the root.
     }
 
-3) 
+3) void dfs(Node* root,int &key,int &ceil){
+    if(root==NULL){
+        return;
+    }
+    if(root->data >= key){
+        ceil = min(ceil,root->data);
+        dfs(root->left,key,ceil);
+        }
+    dfs(root->right,key,ceil);
+    return;
+}
+int findCeil(Node* root, int input) {
+    if (root == NULL) return -1;
+    int ceil = INT_MAX;
+    dfs(root,input,ceil);
+    if(ceil == INT_MAX){
+        return -1;
+    }
+    else{
+        return ceil;
+    }
+    
+}
+4) void dfs(Node *root,int &key,int &flor){
+        if(root==NULL){
+            return;
+        }
+        if(root->data > key){
+            dfs(root->left,key,flor);
+        }
+        if(root->data <= key){
+            flor = max(flor,root->data);
+            dfs(root->right,key,flor);
+        }
+        return;
+    }
+
+    int floor(Node* root, int x) {
+        if(root==NULL){
+            return -1;
+        }
+        int flor = INT_MIN;
+        dfs(root,x,flor);
+        if(flor==INT_MIN){
+            return -1;
+        }
+        else{
+            return flor;
+        }
+    }

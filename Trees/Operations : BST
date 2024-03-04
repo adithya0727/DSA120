@@ -19,6 +19,13 @@ time and space - O(H)
 4) Floor of a BST : Greatest root->val that is LESSER THAN OR EQUAL TO KEY.
 same as ceil , all the root->val lesser than key values are candidates and among them the maximum is the answer.
 time and space - O(H)
+5) Delete a Node in BST [Very Interesting] :
+4 steps : 
+1) Move across the tree to find the element to be deleted , if not found return the tree as is , if found : we usually stop at the parent of the node to be deleted itself.
+2) Now(BY BST property) , we check if the PARENT : left != key : move left anyways but : left==key , [ATTACH] root->left = helper(root->left).
+helper : 2 base cases : if !right - return left , if !left - return right , if both left and right : find max element in left subtree attach the max element to 
+(node to be deleted right) , return root->left to skip the node to be deleted. Similarly , using BST : move towards right also n check if necessary.
+time and space - O(H)
 */
 1) Node* search(Node *root,int &data){      [SEARCH]
         if(root==NULL || root->data == data){    //base case
@@ -44,7 +51,7 @@ time and space - O(H)
         return root;    //to backtrack the updated node which has a new left or right child attached till the root.
     }
 
-3) void dfs(Node* root,int &key,int &ceil){
+3) void dfs(Node* root,int &key,int &ceil){                        [CEIL]
     if(root==NULL){
         return;
     }
@@ -67,7 +74,7 @@ int findCeil(Node* root, int input) {
     }
     
 }
-4) void dfs(Node *root,int &key,int &flor){
+4) void dfs(Node *root,int &key,int &flor){                        [FLOOR]
         if(root==NULL){
             return;
         }
@@ -94,3 +101,64 @@ int findCeil(Node* root, int input) {
             return flor;
         }
     }
+
+5) Node *Left(Node *root){                        [DELETE]
+    if(root->right == NULL){        //base case to stop right before we reach the rightmost node for the leftsubtree to attach it to the delnode->right
+        return root;
+    }
+    return Left(root->right);
+}
+
+Node *helper(Node *root){                //to attach correctly when the node to be deleted is found
+    if(root->left == NULL){               //base case : if left part of the tree doesn't exist at all , just replace delnode with the rightpart as the root
+        return root->right;
+    }
+    else if(root->right == NULL){        /similarly for the left part : just return the left subtree as the new root
+        return root->left;
+    }
+    Node *noderight = root->right;        //this means the node to be deleted has both right and left child : store the root->right as root will move next.
+    Node *leftend = Left(root->left);        //find the max element from the left subtree.
+    leftend->right = noderight;        //attach left subtree rightmost node to right part of delnode.
+    return root->left;                //SKIP over the delnode and make the parent DIRECTLY POINT TO THE ROOT->LEFT.
+}
+
+Node *deletes(Node *root,int &X){
+    if(root==NULL){                //base case
+        return NULL;
+    }
+    if(root->data == X){           //if root itself is the node to be deleted
+        return helper(root);
+    }
+    Node *dummy = root;                //cause we move the root position
+    while(root!=NULL){                //until the HEIGHT of tree becomes NULL along the single coorect path following the BST PROPERTY.
+        if(root->data > X){        //if GREATER THAN X , check towards root->left 
+            if(root->left && root->left->data == X){
+                root->left = helper(root->left);        //if equal , then attach by skipping over dnode to be deleted and attaching the rest of the parts
+                break;
+            }
+            else{
+                root = root->left;                //either way move towards the left as the node won't be found anywhere else.
+            }
+        }
+        else{
+            if(root->right && root->right->data == X){        //else , we check right if X is greater than root->data
+                root->right = helper(root->right);                //perform attach again
+                break;
+            }
+            else{
+                root = root->right;                //move right anyways if data is not equal.
+            }
+        }
+    }
+    return dummy;
+}
+
+Node *deleteNode(Node *root, int X) {
+    if(root==NULL){                //base case
+        return root;
+    }
+    Node *ans = deletes(root,X);                //has the head of the root => DUMMY.
+    return ans;
+}
+
+

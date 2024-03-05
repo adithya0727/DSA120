@@ -1,0 +1,46 @@
+/* Approach:
+Given the root of a binary tree. Check whether it is a BST or not.
+Note: We are considering that BSTs can not contain duplicate Nodes.
+A BST is defined as follows:
+The left subtree of a node contains only nodes with keys less than the node's key.
+The right subtree of a node contains only nodes with keys greater than the node's key.
+Both the left and right subtrees must also be binary search trees.
+*) We have to check the following conditions FOR EACH NODE , TO PERFORM AND GET THE ANSWER RECURSIVELY:
+1) Immediate left and right nodes of a tree follow BST(left is smaller and right is greater than root->val)
+2) For each node , we also have to check if the whole of left SUBTREE is smaller than root and THE WHOLE OF RIGHT SUBTREE is greater than root.
+So we use the approach of Lower and upper bound for EACH stack frame. we check if THAT node is in the RANGE => btw the lower and upper bound , only then proceed.
+In this approach , we simultaneously checking for for the points 1 and 2 mentioned above.
+How it works ?
+1) Initialise lb = int_min and ub = int_max for the root node , chech if the current node is in the range btw ub and lb , if not start returning FALSE.
+2) as we move LEFT : We get a constraint on the ubber bound , the left must always be lesser than the current node , lb = int_min.
+3) as we move RIGHT : We get a constraint on the lower bound , the right must always be greater than the current node , ub = int_max.
+we recursively do this for each stack frame and have thier lower and upper values.
+time - O(N) space - O(H)
+*/
+
+1) bool check(Node *root,int lb,int ub){
+        if(root==NULL){
+            return true;
+        }
+        if(root->data <= lb || root->data >= ub){
+            return false;
+        }
+        bool left = check(root->left,lb,root->data);
+        bool right = check(root->right,root->data,ub);
+        if(left && right){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    //Function to check whether a Binary Tree is BST or not.
+    bool isBST(Node* root) 
+    {
+        // if(root==NULL){
+        //     return false;
+        // }
+        int lb=INT_MIN,ub=INT_MAX;
+        bool ans = check(root,lb,ub);
+        return ans;
+    }

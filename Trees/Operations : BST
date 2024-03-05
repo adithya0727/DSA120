@@ -26,6 +26,11 @@ time and space - O(H)
 helper : 2 base cases : if !right - return left , if !left - return right , if both left and right : find max element in left subtree attach the max element to 
 (node to be deleted right) , return root->left to skip the node to be deleted. Similarly , using BST : move towards right also n check if necessary.
 time and space - O(H)
+6) Kth smallest - return the kth smallest element in the tree : so we know if we perform inorder we get a ASCENDING ORDER traversal of tree , so just keep a counter 
+and store the value when counter is equal to the given KTH smallest value and return that value.
+time - O(N) space - O(H)
+7) kth largest - Similar to above just rearrage right first and then left : reverseinorderdfs.
+time - O(N) space - O(H)
 */
 1) Node* search(Node *root,int &data){      [SEARCH]
         if(root==NULL || root->data == data){    //base case
@@ -161,4 +166,53 @@ Node *deleteNode(Node *root, int X) {
     return ans;
 }
 
+6) void inorderdfs(Node *root,int &k,int &counter,int &minval){        [KTH SMALLEST]
+        if(root==NULL){
+            return;
+        }
+        inorderdfs(root->left,k,counter,minval);
+        counter++;
+        if(counter==k){
+            minval = root->data;
+        }
+        inorderdfs(root->right,k,counter,minval);
+        return;
+    }
+  
+  
+    // Return the Kth smallest element in the given BST
+    int KthSmallestElement(Node *root, int K) {
+        int counter=0,minval=0;
+        inorderdfs(root,K,counter,minval);
+        if(minval == 0){
+            return -1;
+        }
+        else{
+            return minval;
+        }
+    }
 
+7)  void reverseinorderdfs(Node *root, int &k,int &counter,int &maxval){                [KTH LARGEST]
+        if(root==NULL){
+            return;
+        }
+        reverseinorderdfs(root->right,k,counter,maxval);
+        counter++;
+        if(counter == k){
+            maxval = root->data;
+        }
+        reverseinorderdfs(root->left,k,counter,maxval);
+        return;
+    }
+    
+    int kthLargest(Node *root, int K)
+    {
+        int counter=0,maxval=0;
+        reverseinorderdfs(root,K,counter,maxval);
+        if(maxval==0){
+            return -1;
+        }
+        else{
+            return maxval;
+        }
+    }      

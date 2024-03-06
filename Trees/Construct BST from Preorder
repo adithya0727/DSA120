@@ -1,0 +1,10 @@
+/*Approach:
+Input: preorder = [8,5,1,7,10,12]
+Output: [8,5,10,1,7,null,12] , construct this tree.
+1)Brute-Force :
+Like the insert function() using to insert data into the BST , we can do a similar thing: root = dfs(root,data) , dfs(root,10) , dfs(root,5) , dfs(root,7).
+But this takes O(N*H) time and O(N) space , not very efficient.
+2) 
+*/
+
+1) 

@@ -4,7 +4,30 @@ Output: [8,5,10,1,7,null,12] , construct this tree.
 1)Brute-Force :
 Like the insert function() using to insert data into the BST , we can do a similar thing: root = dfs(root,data) , dfs(root,10) , dfs(root,5) , dfs(root,7).
 But this takes O(N*H) time and O(N) space , not very efficient.
-2) 
+
+2) Sort the vector , we get the inorder (ASCENDING ORDER)and preorder : with this a unique tree will be created and it will be a BST.
+time - O(NlogN) : sorting space - O(H)
+
+3) 
+
 */
 
-1) 
+1) Node* inserts(Node* root,int &data){      [INSERT]
+        if(root==NULL){
+            Node *newnode = new Node(data);    //new slot is found where it can be inserted
+            return newnode;
+        }
+        if(root->data > data){
+            root->left = inserts(root->left,data);
+        }
+        else if(root->data < data){
+            root->right = inserts(root->right,data);
+        }
+        return root;    //to backtrack the updated node which has a new left or right child attached till the root.
+    }
+for(int i=0;i<size;i++)
+{
+inserts(root,arr[i]);
+}
+
+2) 

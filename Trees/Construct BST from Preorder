@@ -9,8 +9,10 @@ But this takes O(N*H) time and O(N) space , not very efficient.
 how did we get inorder from preorder ? : we know that for a BST , the tree's inorder will alwys be sorted , therefore we just the SORT the vector and thus get inorder.
 time - O(NlogN) : sorting space - O(N)
 
-3) 
-
+3) We only use the upper bound similar to the validate BST problem , first wemove towards the left as long as we don't get a value greater than current root->val or 
+we reach the end of the vector , if we find a greater value => we will backtrack accordingly until we find a node->val all the way upto root and then we start moving right.
+if we move right , as per preorder rules : we dont have to update the lowerbound , since all elements will be greater than the root->val.
+time - O(N) space - O(H)
 */
 
 1) Node* inserts(Node* root,int &data){      [INSERT]
@@ -58,4 +60,22 @@ inserts(root,arr[i]);
         return construct(in,0,n-1,pre,0,n-1,mp);
     }
 
-3) 
+3) TreeNode *dfs(vector<int>&v,int &i,int bound){
+        if(i == v.size() || v[i] > bound){
+            return NULL;
+        }
+        TreeNode *root = new TreeNode(v[i++]);
+
+            root->left = dfs(v,i,root->val);
+            root->right = dfs(v,i,bound);
+        return root;
+    }
+
+    TreeNode* bstFromPreorder(vector<int>& preorder) {
+        int n = preorder.size();
+        if(n==0){
+            return NULL;
+        }
+        int i=0;
+        return dfs(preorder,i,INT_MAX);
+    }

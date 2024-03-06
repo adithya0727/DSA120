@@ -6,7 +6,8 @@ Like the insert function() using to insert data into the BST , we can do a simil
 But this takes O(N*H) time and O(N) space , not very efficient.
 
 2) Sort the vector , we get the inorder (ASCENDING ORDER)and preorder : with this a unique tree will be created and it will be a BST.
-time - O(NlogN) : sorting space - O(H)
+how did we get inorder from preorder ? : we know that for a BST , the tree's inorder will alwys be sorted , therefore we just the SORT the vector and thus get inorder.
+time - O(NlogN) : sorting space - O(N)
 
 3) 
 
@@ -30,4 +31,31 @@ for(int i=0;i<size;i++)
 inserts(root,arr[i]);
 }
 
-2) 
+2) Node* construct(int in[] , int instart , int inend , int pre[] , int prestart , int preend, map<int,queue<int>>&mp){
+        if(prestart > preend || instart > inend){
+            return NULL;
+        }
+        int idx = mp[pre[prestart]].front();
+        mp[pre[prestart]].pop();
+        Node *root = new Node(pre[prestart]);
+        int nleftelem = idx - instart;
+        root->left = construct(in,instart,idx-1,pre,prestart+1,prestart+nleftelem,mp);
+        root->right = construct(in,idx+1,inend,pre,prestart+nleftelem+1,preend,mp);
+        return root;
+    }
+    
+    
+    Node* buildTree(int in[],int pre[], int n)
+    {
+        if(n==0){
+            return NULL;
+        }
+        //int instart = 0,prestart=0,inend=n-1,preend=n-1;
+        map<int,queue<int>>mp;
+        for(int i=0;i<n;i++){
+            mp[in[i]].push(i);
+        }
+        return construct(in,0,n-1,pre,0,n-1,mp);
+    }
+
+3) 

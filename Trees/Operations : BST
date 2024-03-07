@@ -31,6 +31,14 @@ and store the value when counter is equal to the given KTH smallest value and re
 time - O(N) space - O(H)
 7) kth largest - Similar to above just rearrage right first and then left : reverseinorderdfs.
 time - O(N) space - O(H)
+8) Predecessor and Sucessor : key = 8.
+In an inorder traversal the number just smaller than the target is the predecessor and the number just greater than the target is the successor. 
+1) brute force is traverse through the whole of the tree using the key , and for pre: find maximum element just lesser than key
+and suc : find the minimum element just greater than key , we use reference.
+time- O(N) space - O(H)
+2) We can optimise this considering it is a BST , using the property , we have to move along just one correct path as usual and we'll get the CEIL AND FLOOR basically.
+time and space  - O(H)
+
 */
 1) Node* search(Node *root,int &data){      [SEARCH]
         if(root==NULL || root->data == data){    //base case
@@ -216,3 +224,90 @@ Node *deleteNode(Node *root, int X) {
             return maxval;
         }
     }      
+
+8) 1)  void pred(Node *root, Node *&pre, int &key, int &max){                [PRE AND SUCC BRUTE FORCE]
+        if(root==NULL){
+            return;
+        }
+        if(root->key < key && root->key > max){
+            pre = root;
+            max = root->key;
+        }
+        pred(root->left,pre,key,max);
+        pred(root->right,pre,key,max);
+        return;
+    }
+    
+    void succ(Node *root, Node *&succe,int &key,int &min){
+        if(root==NULL){
+            return;
+        }
+        if(root->key < min && root->key > key){
+            succe = root;
+            min = root->key;
+        }
+        succ(root->left,succe,key,min);
+        succ(root->right,succe,key,min);
+        return;
+    }
+    
+    
+    void findPreSuc(Node* root, Node*& pre, Node*& suc, int key)
+    {
+        if(root==NULL){
+            pre = NULL;
+            suc = NULL;
+            return;
+        }
+        int max = INT_MIN,min = INT_MAX;
+        pred(root,pre,key,max);
+        succ(root,suc,key,min);
+        if(max == INT_MIN){
+            pre = NULL;
+        }
+        else if(min == INT_MAX){
+            suc = NULL;
+        }
+        else if(max == INT_MIN && min == INT_MAX){
+            pre = NULL;
+            suc = NULL;
+        }
+        return;
+    }
+
+
+8) 2) void findPreSuc(Node* root, Node*& pre, Node*& suc, int key)                [PRE AND SUC OPTIMISED]
+    {
+        if(root==NULL){
+            return;
+        }
+        pre = NULL;
+        suc = NULL;
+        Node *first = root;
+        while(first!=NULL){
+            if(first->key > key){
+                first = first->left;
+            }
+            else if(first->key < key){
+                pre = first;
+                first = first->right;
+            }
+            else{
+                first = first->left;
+            }
+        }
+        Node *second = root;
+        while(second!=NULL){
+            if(second->key < key){
+                second = second->right;
+            }
+            else if(second->key > key){
+                suc = second;
+                second = second->left;
+            }
+            else{
+                second = second->right;
+            }
+        }
+        return;
+    }

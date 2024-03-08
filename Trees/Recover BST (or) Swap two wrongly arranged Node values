@@ -1,0 +1,61 @@
+/* Approach:
+You are given the root of a binary search tree(BST), where exactly two nodes were swapped by mistake. 
+Fix (or correct) the BST by swapping them back. Do not change the structure of the tree. (only nodes values).
+       10
+      /  \
+     5    8
+    / \
+   2   20
+[8,20] are misarranged. 
+Inorder : case 1 : 2,5,20,10,8.      case 2 : 2,8,7,10,15,20
+1) Using the IN-ORDER approach : we get the almost ASCENDING order , now only two elements will be misarranged , so there can be two cases:
+case 1) elements are not adjacent : we use prev to keep track of prev element , first -> first val where the misarrangement is found , middle -> case 2 and last ->
+the next place where the element was misarranged. and then we swap first and last.
+case 2) in this case we might find the misarrangement happening only once , so if thats the case we swap first and middle.
+time - O(N) space - O(H).
+*/
+
+1) class Solution {
+    private:
+    Node *first;
+    Node *prev;
+    Node *middle;
+    Node *last;
+  public:
+   void inorder(Node *root){
+       if(!root){      //base case
+           return;
+       }  
+       inorder(root->left);      // we are performing INORDER , so all operations from the ascending order.
+       if(prev!=NULL && root->data < prev->data){    //when an anamoly is found
+           if(first == NULL){    //if its the FIRST anamoly , we store in first and middle
+               first = prev;
+               middle = root;
+           }
+           else{      //if second is found , they are clearly not adjacent and thus we swap first and last.
+               last = root;
+           }
+       }
+       prev = root;    //update prev
+       inorder(root->right);    //move right
+       return;
+   }
+
+    void correctBST( struct Node* root )
+    {
+        if(!root){
+            return;
+        }
+        first = middle = last = NULL;
+        prev = new Node(INT_MIN);    //will always be lesser than the first element
+        inorder(root);
+        if(first && last){    //case 1
+            swap(first->data,last->data);
+        }
+        else if(first && middle){      /case 2
+            swap(first->data,middle->data);
+        }
+        return;
+    }
+};
+

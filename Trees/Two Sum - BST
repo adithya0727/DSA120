@@ -1,0 +1,62 @@
+/* Approach:
+Given the root of a binary search tree and an integer k, return true if there exist two elements in the BST such that their sum is equal to k, or false otherwise.
+1) Using the similar approach compared to the BSTIterator.
+Combination problem :
+1) Two class instances created : L -> which is going to move in the ASCENDING ORDER , R -> which i going to move in the DESCENDING ORDER.
+[We are making use of the inorder traversal property of a BST to get the above patterns.]
+2) Then we just use two pointers on the sorted tree and if at any point we find an element that is equal to key , we return true , otherwise false.
+time - O(N) space - O(H).
+
+2) brute force : keep a vector and perform inorder to store all elements in the vector in ascending order and perform two pointers.
+time and space - O(N).
+
+*/
+
+1) class Solution {
+public:
+
+    class BSTIterator{
+        private:
+        stack<TreeNode*>st;
+        bool reverse;
+        void pushAll(TreeNode* root) {
+            while (root != NULL) {
+                st.push(root);
+                root = reverse ? root->right : root->left;
+            }
+        }
+
+        public:
+        BSTIterator(TreeNode* root,bool reverse){
+            this->reverse = reverse;
+            pushAll(root);
+        }
+        int next(){
+            TreeNode* temp = st.top();
+            st.pop();
+            pushAll(reverse ? temp->left : temp->right);
+            return temp->val;
+        }
+    };
+
+    bool findTarget(TreeNode* root, int k) {
+        if(!root){
+            return false;
+        }
+        BSTIterator L(root,false);
+        BSTIterator R(root,true);
+        int i=L.next(),j=R.next();
+        while(i < j){
+            if(i + j == k){
+                return true;
+            }
+            else if(i + j > k){
+                j = R.next();
+            }
+            else{
+                i = L.next();
+            }
+        }
+        return false;
+    }
+};

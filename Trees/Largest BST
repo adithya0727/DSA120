@@ -1,0 +1,47 @@
+/* Approach:
+Given a binary tree. Find the size of its largest subtree that is a Binary Search Tree.
+Note: Here Size is equal to the number of nodes in the subtree.
+1) Brute Force - Firstly , we VALIDATE EACH node for bst , if it returns true -> we then pass it into another function which calculates the overall count of nodes 
+and we compare with maximum and update if greater , all this happens for each node using a dfs traversal maybe.
+time - O(N)*O(N)*O(N) : validate , count number of nodes for each node , all this happens for each node in the bt.
+2) OPTIMISED : create a class which will help us store the min , max and size(count of nodes) for each iteration.
+WE PERFORM POST ORDER : since we need to operate on the left and right first before we reach the node during backtracking.
+if we reach a NULL , we just pass in the max and min values , so that they can be easily overwritten , calculate the left and right and for both we calculate the min,max and size.
+if it is a valid BST , we update the min with the current root->val (which will always be greater) and update root->right with curr root->val and return +1(this node
+is also a BST).
+if not : we return min and max as EXTREMES : so that whichever other side backtrack we encounter , this node will always be backtracking and returned until the root.
+(A simple way to keep track of the number of nodes that are a BST : maximum in that). REFER NOTES FOR RECURSION
+*/
+
+2) class nodeval{      //for each stack frame when a constructor is being called : always assign this class's variables min,max,size for the arguments passed each time
+    public:
+    int min,max,size;
+    nodeval(int min,int max,int size){
+        this->min = min;
+        this->max = max;
+        this->size = size;
+    }
+};
+
+
+class Solution{
+    public:
+    
+    nodeval calculate(Node *root){
+        if(!root){    //base case : to be easily overwritten
+            return nodeval(INT_MAX,INT_MIN,0);
+        }
+        auto left = calculate(root->left);
+        auto right = calculate(root->right);
+        if(left.max < root->data && root->data < right.min){    //left maximum is lesser than root and right minimum is greater than root : VALID BST
+            return nodeval(min(root->data,left.min),max(root->data,right.max),left.size+right.size+1);
+        }      //update min left and max right and counter as its true
+        return nodeval(INT_MIN,INT_MAX,max(left.size,right.size));    //else impossible values never to be overwriteen but to be carried on forever till root backtrack
+        
+    }
+    
+    int largestBst(Node *root)
+    {
+    	return calculate(root).size;    //returns the max size.
+    }
+};

@@ -1,0 +1,18 @@
+/* Approach:
+Given an array arr[] and an integer K where K is smaller than size of array, the task is to find the Kth smallest element in the given array.
+It is given that all array elements are distinct.
+1) we use maxheap so that all top elements will be the largest , we will maintain the size of the queue only uptil k , over that we keep poping after comparing
+to check the right position. once we've iterated through all array element , the top element at k will be the largest , so we return that.
+time - O(N*LogK) : n for each array element , inside that : logk : time to insert in right sorted order . space - O(K)
+*/
+
+1) int kthSmallest(int arr[], int l, int r, int k) {
+        priority_queue<int>p;
+        for(int i=0;i<=r;i++){
+            p.push(arr[i]);
+            if(p.size() > k){
+                p.pop();
+            }
+        }
+        return p.top();
+    }

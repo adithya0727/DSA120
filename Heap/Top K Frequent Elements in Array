@@ -1,0 +1,36 @@
+/* Approach:
+Given a non-empty array nums[] of integers of length N, find the top k elements which have the highest frequency in the array.
+If two numbers have same frequencies, then the larger number should be given more preference.
+Input:
+N = 6
+nums = {1,1,1,2,2,3}
+k = 2
+Output: {1, 2}
+
+1) So here the KEY is , based on the frequency we sort : so we want the top k maximum frequencies : take a min heap , les keep poping the min frequency element 
+upto k , when we've iterated throughout the array , the most frequent elements will be remaining from smallest to greatest (since minheap) , so we reverse it
+to get the most frequent to least in the remaining k WINDOWS size. we have used a map to create the frequncy count for each element.
+time - O(N*LogK) space - O(N) - map
+
+*/
+
+1) vector<int> topK(vector<int>& nums, int k) {
+        vector<int>v;
+        priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>>p;
+        unordered_map<int,int>m;
+        for(int i=0;i<nums.size();i++){
+            m[nums[i]]++;
+        }
+        for(auto &var : m){
+            p.push({var.second,var.first});
+            if(p.size() > k){
+                p.pop();
+            }
+        }
+        while(!p.empty()){
+            v.push_back(p.top().second);
+            p.pop();
+        }
+        reverse(v.begin(),v.end());
+        return v;
+    }

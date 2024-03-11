@@ -1,0 +1,38 @@
+/* Approach:
+Given an array of integers, sort the array according to frequency of elements. That is elements that have higher frequency come first.
+If frequencies of two elements are same, then smaller number comes first.
+A[] = {5,5,4,6,4}
+Output: 4 4 5 5 6
+1) We have to find out the KEY : on what basis is the sorting going to happen? ofc : frequency : so we use a map to store elements along their frequencies.
+Next : we can use a min or a maxheap either way is fine , we just have to reverse once if we use a min heap based on frequncies so instead we use a max heap.
+If there is a collision btw 2 elements with same frequencies : we just have to print the smaller one first : thats why we negate so that the maxheap consideres the
+larger positive number after the smaller positive number once they are negated.
+now we just have to pop() and insert the numbers as they are in the correct higher to lower frequency sort in the maxheap. for each number : push_back
+q.first() => NUMBER OF TIMES - CONTAINS THE FREQUENCY and then move on to the next number.
+time - O(N*LogN) : we have to traverse the whole tree in correct path (parent->parent->parent->till root worst case to sort according to max heap) : therefore
+logn time : height of the tree : there is no K here.
+space - O(N) : map
+*/
+
+1) vector<int> sortByFreq(int arr[],int n)
+    {
+        vector<int>v;
+        priority_queue<pair<int,int>>p;
+        unordered_map<int,int>m;
+        for(int i=0;i<n;i++){
+            m[arr[i]]++;
+        }
+        
+        for(auto &var : m){
+            p.push({var.second,-(var.first)});
+        }
+        while(!p.empty()){
+            auto q = p.top();
+            while(q.first>0){
+                v.push_back(-q.second);
+                q.first--;
+            }
+            p.pop();
+        }
+        return v;
+    }

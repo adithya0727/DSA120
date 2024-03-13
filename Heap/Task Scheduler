@@ -1,0 +1,51 @@
+/* Approach:    COMBINATION PATTERN : [K + MINIMUM] : MAX_HEAP.
+You are given an array of CPU tasks, each represented by letters A to Z, and a cooling time, n. Each cycle or interval allows the completion of one task.
+Tasks can be completed in any order, but there's a constraint: identical tasks must be separated by at least n intervals due to cooling time.
+​Return the minimum number of intervals required to complete all tasks.
+Input: tasks = ["A","A","A","B","B","B"], n = 2
+Output: 8
+Explanation: A possible sequence is: A -> B -> idle -> A -> B -> idle -> A -> B.
+After completing task A, you must wait two cycles before doing A again.
+The same applies to task B. In the 3rd interval, neither A nor B can be done, so you idle. By the 4th cycle, you can do A again as 2 intervals have passed.
+1) INTUITION TO SOLVE : we start by the FREQUENCY of the characters which have the MAXIMUM , since if we start them we will have a lesser chance of having a extra time
+due to resources still waiting for the resource time. 
+For example : if n=1 and {A,A,A,B,B,C,C} : if we start with C : CBCABA_A => Now , we see that we need to have one extra wait time for 2 continous A's in the end : this
+causes uneccessary delay and maximises time.  
+** THE KEY ELEMENT ON THE BASIS OF WHICH WE SHOULD SORT THE HEAP IS FREQUENCY : maxheap is used as we start from max to min frequencies as explained above.**
+time is set before the loop and for each iteration time keeps on adding up IRRESPECTIVE OF ANY CONSTRAINT.
+While either p or q is not empty : we still have elements to be traversed , 
+1) we start with p.top() max frequency : keep subtracting till we reach 0 : if 0 then
+we dont need to continue anymore (BUT THE TIME WILL BE COUNTED) and we push into the queue {currentfrequency,currenttime+n} : this signifies when the current resource
+is going TO BE AVAILABLE IN TIME and then we pop in p.
+2) in queue [FIFO]: the first element is DEFINITELY GOING TO BE THE ONE WHICH IS GOING TO BE REACHING THE TIME FIRST SINCE IT WAS INSERTED FIRST AND BECOMING AVAIABLE
+TO BE USED AGAIN : so if it reaches time to be ready : we push back into max_heap in right position and continue so on till both become empty.
+time - O(N) space - O(1)
+*/
+
+1) int leastInterval(vector<char>& tasks, int n) {
+        priority_queue<int>p;
+        queue<pair<int,int>>q;
+        vector<int>frequencycounter(26);
+        for(int i=0;i<tasks.size();i++){
+            ++frequencycounter[tasks[i] - 'A'];
+        }
+        for(int i=0;i<26;i++){
+            if(frequencycounter[i])
+                p.push(frequencycounter[i]);
+        }
+        int time=0;
+        while(!p.empty() || !q.empty()){
+            ++time;
+            if(!p.empty()){
+                if(p.top()-1){
+                    q.push({p.top()-1,n+time});
+                }
+                p.pop();
+            }
+            if(!q.empty() && q.front().second == time){
+                p.push(q.front().first);
+                q.pop();
+            }
+        }
+        return time;
+    }

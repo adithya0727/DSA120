@@ -1,0 +1,119 @@
+/* Approach:
+Given K sorted arrays arranged in the form of a matrix of size K*K. The task is to merge them into one sorted array.
+K = 3
+arr[][] = {{1,2,3},{4,5,6},{7,8,9}}      [RECURSION TAKES SPACE]
+Output: 1 2 3 4 5 6 7 8 9
+1) Merge Sorting : using DNC. #Read Comments : Prequerisite => Merge Sort.
+time - O(N * K * log K) => 
+N- Number of elements in a K sorted array , K - Number of sorted arrays : deep-dive => (DIVIDE PART)logk : at maximum we are going on k levels of depth in the recursion stack not beyond that.
+N*K - in each recusion call : we are sorting each subpart of k , each K is divided on many levels and it requires n (worst case time) to sort that segment. therefore
+N*K is the overall time for the : MERGING PART.   IF we use a 1D array : we have atmost n elements to sort, in 1 2d array : we have atmost n*k times as the overall length
+space - O(N * K * log K) =>
+During the MERGING PROCESS : we have two intermediatory arrays : ou1 and out2 (which store the sorted halves) : for EACH LEVEL OF RECURSION WE MAY CREATE AT MAX
+(N*K) space for the sorted part of two halves and since there are logk level of recursion => FINALLY : (N*K*logK) : for all vectors on each level.
+
+2) Min_Heap (OR) max_heap : This can be solved using min or max heap..
+Basically , start with the first indexes of every K SORTED VECTOR in the 2D vector : compare all three and minheap will have the SMALLEST VALUE at top , we can start pushing
+that into the vector and move the iterator to the next and SO on , we keep checking the smallest out of the three , take the top() , push the next one of that array
+and update the iterator.
+In MAX_HEAP : we can start the pointers from the end as well and and finally reverse() the vector.
+time - (N*K*2LogK) ~ (N*K*LogK) : we are going to perform insert (logk) and delete (logk) for all the elements in the 2d vector (N*K)
+space - O(K) : minimum element stack space. [SPACE OPTIMISED SOLUTION]
+*/
+
+1) #include <iostream>
+#include <vector>
+using namespace std;
+
+void mergeArrays(vector<int>& arr1, vector<int>& arr2, int N1, int N2, vector<int>& arr3) {    //merging two arrays and storing them in the output array.
+    int i = 0, j = 0, k = 0;
+
+    // Traverse both arrays
+    while (i < N1 && j < N2) {
+        if (arr1[i] < arr2[j])
+            arr3[k++] = arr1[i++];
+        else
+            arr3[k++] = arr2[j++];
+    }
+
+    // Store remaining elements of first array
+    while (i < N1)
+        arr3[k++] = arr1[i++];
+
+    // Store remaining elements of second array
+    while (j < N2)
+        arr3[k++] = arr2[j++];
+}
+
+void mergeKArrays(vector<vector<int>>& arr, int i, int j, vector<int>& output) {      //i and j are the two bounds of the k number of sorted arrays that we have to merge
+    int N = arr[0].size();
+    // If one array is in range
+    if (i == j) {      //if only one is remaining : add it to output array
+        for (int p = 0; p < N; p++)
+            output[N * i + p] = arr[i][p];
+        return;
+    }
+
+    // if only two arrays are left, then merge them
+    if (j - i == 1) {      // if not one , then post recursion : two will be remaining : so lets sort them
+        mergeArrays(arr[i], arr[j], N, N, output);
+        return;
+    }
+
+    // Output vectors
+    vector<int> out1(N * (((i + j) / 2) - i + 1));    //define the sizes
+    vector<int> out2(N * (j - ((i + j) / 2)));
+
+    // Divide the array into halves
+    mergeKArrays(arr, i, (i + j) / 2, out1);    //out1 will store the sorted part of the left side in-depth part RECURSIVELY (till base case hits).
+    mergeKArrays(arr, (i + j) / 2 + 1, j, out2);    //out2 will store the sorted part of the right side in-depth part recursively
+
+    // Merge the output vectors
+    mergeArrays(out1, out2, N * (((i + j) / 2) - i + 1),    //now we again merge the two sort halves and return this output which is being passed by reference to the previous stack frame till ROOT.
+                N * (j - ((i + j) / 2)), output);
+}
+
+int main() {
+    int N = 4; // Number of elements in each array
+    vector<vector<int>> arr = { { 2, 6, 12, 34 },
+                                { 1, 9, 20, 1000 },
+                                { 23, 34, 90, 2000 } };
+    int K = arr.size(); // Number of arrays
+    vector<int> output(N * K);    //overall length of the 1d array which is being converted using the 2d array.
+    mergeKArrays(arr, 0, K - 1, output);    //number of k sorted arrays
+    // Function call
+    cout << "Merged array is " << endl;
+    printArray(output, N * K);
+    return 0;
+}
+
+
+2) void mergearrays(vector<vector<int>>&arr,int &k , vector<int>&mergedarray){
+        vector<int>indeces(arr.size(),0);    //for all k sorted arrays in 2d vector , initialise their index values to 0 initially. This vector will help us keep track of indexes.
+        priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>>p;    //min_heap : <value for comparion of smallest,which arraynumber does it belong to>
+        for(int i=0;i<arr.size();i++){    //push all first elements of k sorted arrays
+            if(!arr[i].empty()){
+                p.push({arr[i][0],i});    //push along with their arraynumber
+                indeces[i] = 1;    //update their indexes to 1
+            }
+        }  
+        while(!p.empty()){    //till all elements are traversed
+            auto arrval = p.top();    //take the topmost , pop() and insert.
+            p.pop();
+            mergedarray.push_back(arrval.first);
+            int arridx = arrval.second;  //capture the arrayindex of the smallest element we already stored
+            if(indeces[arridx] < arr[arridx].size()){    //if it is still in range
+                p.push({arr[arridx][indeces[arridx]],arridx});    //push that value in the corresponding arraynumbers; current index (which is in indeces)
+                indeces[arridx]++;    //update that arraynumbers index+1.
+            }  
+        }
+    }
+    
+    
+    vector<int> mergeKArrays(vector<vector<int>> arr, int K)
+    {
+        vector<int>mergedarray;    //output array
+        mergearrays(arr,K,mergedarray);    //pass by reference
+        return mergedarray;
+    }
+

@@ -6,11 +6,30 @@ List<Integer> getNewsFeed(int userId) Retrieves the 10 most recent tweet IDs in 
 void follow(int followerId, int followeeId) The user with ID followerId started following the user with ID followeeId.
 void unfollow(int followerId, int followeeId) The user with ID followerId started unfollowing the user with ID followeeId.
  
-1) 
-
+1) 1st Approach : MIN_HEAP=>
+1) Follow and unfollow : We use an unordered map to store for each userid , who are all the followers he has : now for the value : we use an unorderd set:
+because O(1) is the operation it takes for insertion and deletion to make it more efficient.
+2) We use another map to store :
+USERID    ||  pair<TIME , TWEETID>
+1               {1,13}
+2               {2,34}
+3               {3,24}
+time for each user , he we store the corresponding twtid which is always unique and the time frame when it was tweeted.
+3) now , to get the most recent tweets from all the accounts a particular user is following what is do is : 
+userid is given input : we go to the corresponding followers and store that in a hashset : now we iterate through the second map and for each followerid : we capture
+all the pairs<time,twtid> : now we get a pattern same as K SORTED ARRAYS : we can use a MAXHEAP : key based on which we perform the sorting is the time , 
+the one with the maximum time is the one that is to be inserted first as we want the most recently tweeted considered all the followers , all pointers are starting
+from the end of each of the k sorted arrays and we iterate reverse through each array and return the ans vector.
+time - N*K*LogK (k sorted arrays) space - O(N) to store all userid and their twtids
+2) 2nd Approach: using pair of vectors : [Easier to understand]
+follow and unfollow is the same.
+INTUITION : we use a pair of vectors , we iterate from the END of the vector : for each element in the vector : we check if it is a follower of the GIVEN USERID : 
+if yes => then we pushback and count-- (so on till count becomes 0) : we dont need to keep track of time here : since we come from the end : the most recent one
+who is the follower is only directly printed.
+time - O(K=10)*O(no.of.followers) ~ 10*K space - O(N) : pair of vectors to store all info.
 */
 
-1) class Twitter {
+2) class Twitter {
 private:
     unordered_map<int,unordered_set<int>>followers;
     vector<pair<int,int>>userwithtwt;

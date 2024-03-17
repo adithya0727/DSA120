@@ -1,0 +1,64 @@
+/* Approach:    [MOST IMPORTANT HEAP PROBLEM]
+The median is the middle value in an ordered integer list. If the size of the list is even, there is no middle value, and the median is the mean of the two middle values.
+For example, for arr = [2,3,4], the median is 3.
+For example, for arr = [2,3], the median is (2 + 3) / 2 = 2.5.
+1)To solve this problem , we require two heaps : maxheap and minheap.
+maxheap [LOWER]: store all elements that are smaller than minheap 
+minheap [LARGER] : store all elements that are greater than maxheap
+REASONING : we need to find the median : if odd , we can just return the top() of the element which is more in size() , as one is MAX and one is Min : the top()
+elements actually are the two main middle points : in-case the size() of both are equal then that means there are EVEN elements and we can ust add the top() of both
+and divide by two. and they are SUPPOSED TO BE IN THE CORRECT SORTED ORDER TOO : so exactly the top() of each heaps would have the corresponding middle elements.
+BALANCING THE HEAP SIZE() : we have to maintain the heap size of both to get the correct MEDIAN : so we check if values and insert the values accordingly.
+*/
+
+1) private:
+priority_queue<int>lower;      //maxheap to store smaller elements
+priority_queue<int,vector<int>,greater<int>>larger;    //minheap to store greater elements
+public:
+
+    MedianFinder() {
+        
+    }
+    
+    void addNum(int num) {    //time : LogN : to push/delete in heap || space: overall => n/2 : LogN
+        if(!lower.size()){    //base case , if only one element exists : it will itself be the median
+            lower.push(num);
+            return;
+        }
+        if(lower.size() > larger.size()){    //if lower is more in size : We perform both INSERT AND BALANCE TOGETHER.
+            if(lower.top() > num){      //we have a candidate if in the maxheap : the top element is greater than current num
+                larger.push(lower.top());// that means since it is smaller, it will join the lower and max at lower will go to greater (as it is the greatest element)
+                lower.pop();    //remove the top and add the new SMALLER candidate.
+                lower.push(num);
+            }
+            else{
+                larger.push(num);    //if greater than max element in lower , just add that to larger : no need to balance since lower was already one size greater than larger.
+            }
+        }  
+        else{    //if larger is greater in size :
+            if(larger.top() < num){  //if currnum is greater than the smallest in larger : it belongs in the larger heap and the smallest number at larger which is at top
+                lower.push(larger.top());    //will be popped and added to the lower heap
+                larger.pop();
+                larger.push(num);
+            }
+            else{
+                lower.push(num);    //if not , directly add it to the lower heap and it will also be balanced.
+            }
+        }
+    }
+    
+    double findMedian() {    //  time : O(1) : to access top() from heap || space : O(1)
+        double ans=0.0;
+        if(lower.size() == larger.size()){    //if even 
+            ans =  lower.top() + (larger.top()-lower.top())/2.0;
+        }
+        else{    //if odd
+            if(lower.size() > larger.size()){
+                ans =  lower.top();
+            }
+            else{
+                ans =  larger.top();
+            }
+        }
+        return ans;
+    }

@@ -1,0 +1,40 @@
+/* Approach:        [LEVEL ORDER TRAVERSAL]
+Given a binary tree. The task is to check whether the given tree follows the max heap property or not.
+Note: Properties of a tree to be a max heap - Completeness and Value of node greater than or equal to its child.
+1) INTUITION : a) Completeness of tree CHECK : if we visit a node where it's left or right is equal to NULL : we know that , this is the last node and any further
+we should not have any left or right in level order traversal , if we do : it means there is a GAP in the completeness of a tree , we'll return false.
+b) check if root->val is greater than both it's left and right children ->values , if not return false.
+time - O(N) space - O(N)
+*/
+
+1) bool isHeap(struct Node* tree) {
+        bool nullish = false;    //flag : if at any point the left or right is NULL => we set the flag to true : from the next node : if at all it has 
+        if(tree==NULL){            //node->left (or) node->right as true : it means we've found an element after we've crossed NULL.
+            return false;
+        }    //base case
+        queue<Node*>q;
+        q.push(tree);
+        while(!q.empty()){
+            Node *temp = q.front();
+            q.pop();
+            if(temp->left){    //if true , previously if we've met a child which is NULL , we can't have this currentnode to have a left , if we do return false: NULLISH
+                if(nullish || temp->data < temp->left->data){    //or if data is smaller than root return false
+                    return false;
+                }
+                q.push(temp->left);    //if not push to queue and continue bfs
+            }
+            else{
+                nullish = true;    //only one Node can exist that reaches the null first , this should be the end : make it true.
+            }
+            if(temp->right){    //same for right
+                if(nullish || temp->data < temp->right->data){
+                    return false;
+                }
+                q.push(temp->right);    //push to queue
+            }
+            else{
+                nullish = true;    //only one right can be null at first , this should be the end : make it true.
+            }
+        }
+        return true;    //if noting is violated , return true.
+    }

@@ -1,0 +1,45 @@
+/* Approach:
+Given a number K and string str of digits denoting a positive integer,
+build the largest number possible by performing swap operations on the digits of str at most K times.
+K = 4
+str = "1234567"
+Output:
+7654321
+1) INTUITION : So , to find the maximum number the logic we can think of is : store the maximum possible number from the starting digits : that will make our number the 
+maximum , We have a CONSTRAINT of MAXIMUM K swaps : Height of the tree ->since at each level we perform one swap and move the pointer and decrement the value of K.
+Why and how BACKTRACKING ? : 
+1) For loop logic : we start from start+1 , as if the element we want to swap itself is the max element we don't want to WASTE our SWAP on number ITSELF to the 
+end of the str length. 
+2) Controlled Recursion : Only if we Find a value that is GREATER THAN(GREATEST) the current I , will we swap and recursively move down the GREATEST PATH : otherwise , we wont'
+find our answer in the element whose number is equal to or lesser than current position. So : only ONE GREATEST PATH AT EACH LEVEL.
+3) Backtracking : Str is passed by reference where we swap to greater element and we recursively move backwards we are re-swapping so that we move accurately to other brancehs.
+
+time -  space - 
+*/
+
+1) void check(string &str,int k,int start,string &ans){      \\ans stores our final maximum number to be outputed : its passed by reference
+        if(k==0 || start == str.length()-1){    //when either we've reached the Height level for K swaps we stop (or) when there are no swaps but we've iterated through the string
+            return;    //we just return
+        }
+        char mx = *max_element(str.begin()+start+1,str.end());  //at each level : we find the max element : as that is where our maximum element will be.(start+1)
+        for(int i=start+1;i<str.length();i++){    //we start from +1 as we dont want to compare and swap with the number itself if its already maximum.
+            if(str[start] < str[i] && str[i] == mx){  //only when we reach max element and that max should be greater than our current element too : only then swap makes sense
+                swap(str[start],str[i]);    //change Variable
+                if(ans.compare(str) < 0){    //used to compare the lengths : if greater than 0 : it means Lexicographically it is superior and lesser is opposite
+                    ans = str;    //store each max reference
+                }
+                check(str,k-1,start+1,ans);    //continue the swapping until the final level of swaps are utilised or whole string is iterated.
+                swap(str[start],str[i]);    //BACKTRACKING : to get the string back to its original state
+            }
+        }
+        check(str,k,start+1,ans);    //in case : throughout the loop : we find no greater elements , we move start but dont DECREMENT K : as we didnt swap YET.
+        return;
+    }
+    
+    
+    string findMaximumNum(string str, int k)
+    {
+       string ans=str;    //initialise so that when we compare for largest number : this is our base / minimum value to begin with.
+       check(str,k,0,ans);
+       return ans;
+    }

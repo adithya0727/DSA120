@@ -1,1 +1,45 @@
+/* Approach:            [CHECK DRY RUN BOOK FOR PERFECT VISUALIZATION]
+Given a string S. The task is to print all unique permutations of the given string that may contain dulplicates in lexicographically sorted order. 
+Input: ABC
+Output:
+ABC ACB BAC BCA CAB CBA
+BACKTRACKING : CONTROLLED RECURSION + PASS BY REFERENCE.
+3 STAGES : 1) FOR LOOP use case : we can solve using recursion too , but if the value of n increase the PERMUTATIONS will go N! times and it'll become too complex and it also saves stack space.
+2) CONTROLLED RECURSION : Based on certain criteria ie., only if elements are not present in the set we traverse through that part of recursion , if not : we control
+the recursion in some way and completely avoid that path since we already know that duplicates are not needed and we'll waste time traversing that.
+3) BACKTRACKING : pass by reference and bt come hand-in-hand : it saves spaces and is more intuitive. We use the same string s throughout the recursion : once
+we are stack unwinding back to the previous call => we just perform RE-SWAP : and bring it back to its previous state.
+That's why we use FOR LOOPS , to maintain this state too easily. 
 
+time - O(N*N!) : formula : (time on each node) * (total number of nodes) => (for loop : O(N)) * (n! : on each level n*(n-1)*(n-2)..and so on).
+
+space - O(N) : To store all the n elements in the set.
+*/
+
+1) void check(string &s,int start,vector<string>&str){    //by reference
+	        if(start == s.length()-1){    //when start reaches the end of length of string.
+	            str.push_back(s);      //we got an answer.
+	            return;
+	        }
+	        unordered_set<char>m;
+	        for(int i=start;i<s.length();i++){    //from the start till end 
+	            if(m.find(s[i]) == m.end()){      //if element already exists : skip the iteration and move on.
+	                m.insert(s[i]);          //if not insert it for the next time reference
+	                swap(s[start],s[i]);        //swap once : INTUITION : keep one element[start] and swap it with the rest of them using i : iterator
+	                check(s,start+1,str);        //after each swap go recursively and and swap all possibilities
+	                swap(s[start],s[i]);      //BACKTRACKING : to restructure the code before go the previous stack frame.
+	            }
+	        }
+	        return;
+	    }
+	
+	
+		vector<string>find_permutation(string S)
+		{
+		    vector<string>str;    //store answer
+		    if(S.length()==0){
+		        return str;
+		    }
+		    check(S,0,str);
+		    return str;
+		}

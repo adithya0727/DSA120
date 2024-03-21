@@ -14,7 +14,11 @@ end of the str length.
 find our answer in the element whose number is equal to or lesser than current position. So : only ONE GREATEST PATH AT EACH LEVEL.
 3) Backtracking : Str is passed by reference where we swap to greater element and we recursively move backwards we are re-swapping so that we move accurately to other brancehs.
 
-time -  space - 
+time - O(N^2 * N!/(N-K)!) : total time complexity on each node * total number of nodes:
+1) total tc : we have one FOR loop and in that COMPARE function which causes O(N^2)
+2) total number of nodes is , n*(n-1)*(n-2)*(n-3)..so on till (n-k-1) : so we take the whole of n! and divide it by the remaining part that comes after (n-k-1) which
+is (n-k)*(n-k-1)*(n-k-2)...and so on till 4*3*2*1.
+space - O(N) to store the final answer of string.
 */
 
 1) void check(string &str,int k,int start,string &ans){      \\ans stores our final maximum number to be outputed : its passed by reference

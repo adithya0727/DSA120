@@ -1,0 +1,43 @@
+/* Approach:
+Given an array arr[] of integers of size N that might contain duplicates, the task is to find all possible unique subsets.
+Note: Each subset should be sorted.
+Input: N = 3, arr[] = {2,1,2}
+Output:(),(1),(1 2),(1 2 2),(2),(2 2)
+Explanation: 
+All possible subsets = (),(2),(1),(1,2),(2),(2,2),(2,1),(2,1,2)
+After Sorting each subset = (),(2),(1),(1,2),(2),(2,2),(1,2),(1,2,2) 
+Unique Susbsets in Lexicographical order = (),(1),(1,2),(1,2,2),(2),(2,2)
+1) INTUITION : we initially sort the array so that , every instance created will be in the right order because the recursion goes from left to right one element after
+another in a sorted manner : we use a SET to not include any duplicates : finally we let recursion follow through to find all various possibilities.
+a) No base case required since at every point we find a new subset and we let return happen Automatically once the for loop ends.
+b) for loop : for each element we are going till the end of the array to find all various possibilities or combinations.
+c) backtracking : once a path is covered , we pop back the latest element and look for alternatives.
+time - O(2^N) : at each element as we pick from the array , we have two options [TO TAKE or TO NOT TAKE] : so at each level : 
+height of tree is N at maximum and 2^N at every level as options go on and on..
+space - O(2^N*N) : 2^N are the possible unique subset and each subset can be at worst case of N.
+*/
+
+1) void solve(vector<int>&arr,int start,vector<int>&curr,set<vector<int>>&s){
+        s.insert({curr});    //no base case : store the vector until now.
+        for(int i=start;i<arr.size();i++){    //for each element find all its unique combinations
+            curr.push_back(arr[i]);    //change value
+            solve(arr,i+1,curr,s);    //call
+            curr.pop_back();      //BackTracking
+        }
+        return;
+    }
+    
+    
+    //Function to find all possible unique subsets.
+    vector<vector<int> > AllSubsets(vector<int> arr, int n)
+    {
+        set<vector<int>>s;    //to store all unique subsets only
+        vector<vector<int>>res;    //final result
+        vector<int>curr;    //acts like a path to store the current recursion possible candidate path
+        sort(arr.begin(),arr.end());    //to get all sorted values in the answer
+        solve(arr,0,curr,s);
+        for(auto &var : s){    //convert set to vector.
+            res.push_back({var});
+        }
+        return res;  //return final answer.
+    }

@@ -23,7 +23,11 @@ we mark it as visited and append() the direction to our current path and recursi
 c) BackTracking : once we get a Possible Candidate , we start backtracking , here we should make the node unvisited again and remove it from our current path and go
 back to look for alternative/DIFFERENT CANDIDATES the rat can reach its destination.
  
-time -  space - 
+time - O((3^N^2)) : at each decision point(each position in the matrix) : the rat can move in 4 different directions : U,D,L,R. In the worst case it'll move : 
+throughout the matrix and it'll cause : 4^(N*N) => If we try we can reduce at each point 3 directions : as , if we a rat is moving , it will not go back to the position
+it came from , so rat will choose only from the three directions making the complexity so.
+space - O(L * X) :  L = length of the path, X = number of paths. : in the vector<string> , we are stroing multiple paths and these paths overall give us a vector of 
+size X assume.
 */
 
 1) class Solution{

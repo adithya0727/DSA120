@@ -1,0 +1,56 @@
+/* Approach:
+Given an integer N, print all the N digit numbers in increasing order, such that their digits are in strictly increasing order(from left to right).
+N = 2
+Output:
+12 13 14 15 16 17 18 19 23....79 89
+Explanation:
+For N = 2, the correct sequence is
+12 13 14 15 16 17 18 19 23 and so on 
+up to 89.
+Strictly increasing order means : considering two digits it has two placeholders for possibilities to arrange digits in 2 ways : if 1st digit is 1 , second digit
+should always be greater than the first digit.
+1) Intuition : we start by checking all possibilities for each element from 0-9 and for each element we are going to check different possible solutions which follow
+the constraint of strictly increasing numbers in digits , as we fill the values each time we decrement n-1 , to show that that the slots are filling up.
+a) base condition : once all n values are enetered and we have a CANDIDATE NOW , we insert it into our vector after converting it into a proper combination of digits.
+b) for loop : for each digit 0-9 , we are performing and checking various possibilities.
+controlled recursion : if vector is initially empty , no comparison is required , just insert i , once we have at least one digit in the vector : we take the last digit
+in the current vector (which will be the greatest until at this point) and compare and we a get a possibility only if the i value is greater than i.
+Once we get a candidate each time , we insert at back and continue with recursion.
+c) BACKTRACKING : Once we reach the end and get a possibile candidate , we start unwinding and as we do that , we perform backtracking where we start popping the last
+element each time we backtrack.
+time -  9^N : consider we have been given N slots for finding various possibilities of arranging digits to get our answer : we always consider the worst case
+possibility => each slot : 9 ways to arrange the numbers : for 3 slots : 9*9*9 , 4 slots : (9*9*9*9) , therefore 9^N(given slots).
+space - O(N) => to store all vector elements in res for our answer.
+*/
+
+1) void solve(vector<int>&v,vector<int>&res,int n){
+        if(n==0){  //this is the time when we have a CANDIDATE , we must convert the digits into a number and store in our final result.
+            int ans=0;
+            for(int i=0;i<v.size();i++){
+                ans = ans*10 + v[i];
+            }
+            res.push_back(ans);
+            return;    //stack unwinding as we get one candidate , we start going back to look for other candidates.
+        }
+        for(int i=1;i<=9;i++){    //for each element , we are recursively looking for various possible paths of strictly increasing property.
+            if(v.size()==0 || i > v[v.size()-1]){    //if empty , we can insert the first element anyways , if not : only add the greater element.
+                v.push_back(i);
+                solve(v,res,n-1);    //recursively fill the digits until the length is equal to n.
+                v.pop_back();    //BACKTRACKING.
+            }
+        }
+    }
+
+    vector<int> increasingNumbers(int N)
+    {
+        vector<int>res;
+        vector<int>v;
+        if(N==1){      //handle the case seperately for n=1 digits since we also have to consider 0 in this case , in other cases we don't consider 0:as we'll get N-1 digits if we start with 0.
+            for(int i=0;i<=9;i++){  
+                res.push_back(i);
+            }
+            return res;
+        }
+        solve(v,res,N);
+        return res;
+    }

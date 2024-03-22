@@ -1,0 +1,72 @@
+/* Approach:        [Most IMPORTANT]
+Consider a rat placed at (0, 0) in a square matrix of order N * N. It has to reach the destination at (N - 1, N - 1). 
+Find all possible paths that the rat can take to reach from source to destination. The directions in which the rat can move are 'U'(up), 'D'(down), 'L' (left), 'R' (right).
+Value 0 at a cell in the matrix represents that it is blocked and rat cannot move to it while value 1 at a cell in the matrix represents that rat can be travel through it.
+Note: In a path, no cell can be visited more than one time. If the source cell is 0, the rat cannot move to any other cell.
+N = 4
+m[][] = {{1, 0, 0, 0},
+         {1, 1, 0, 1}, 
+         {1, 1, 0, 0},
+         {0, 1, 1, 1}}
+Output:
+DDRDRR DRDDRR
+Choice : we create a struct , basically which stores the 3 values together : the direction and its corresponding newX and newY values that will be added to the existing
+x and y values whenever the rat chooses to move in a certain direction.(helps keeps things together).
+1) INTUITION : rat can move in 4 directions , we make the rat move in position where arr[x][y]=1 so that is can freely move until we reach the destination , we are going to
+try various combinations to find all possible paths the rat can reach its destination.
+We can break this problem down into various parts for a backtracking Pattern :
+a) Base condition : Only when both the x and y axises are at (n-1) each , we know the rat has reached it destination , then we store the path it has taken to come 
+all this way and return.
+b) For loop(to find all possible paths) : Firstly : we add the new x and y values for each of the DIRECTION CHOICES , and we check for its validity.
+Secondly : isvalid() : we check for a) out-of-bounds limits b) paths is movalbe for rat(==1) and not visited together => if true :
+we mark it as visited and append() the direction to our current path and recursively keep checking whether it runs out of the FOR loop and it reaches its DESTINATION.
+c) BackTracking : once we get a Possible Candidate , we start backtracking , here we should make the node unvisited again and remove it from our current path and go
+back to look for alternative/DIFFERENT CANDIDATES the rat can reach its destination.
+ 
+time -  space - 
+*/
+
+1) class Solution{
+    private:
+    struct Choice{    //struct
+        char dname;
+        int dx,dy;
+    };
+    bool isSolved(int x,int y , int n){    //to check for the destination case in case rat is at the finish line already.
+        return x==n-1 && y == n-1;
+    }
+    bool isValid(int newx,int newy,int n,const vector<vector<int>>&m){    //out-ofbounds , availablity and nonvisited are checked if a rat wants to go in
+        return newx>=0 && newx<n && newy>=0 && newy<n && m[newx][newy]==1;    //a certain new direction using its new x and new y co-ordinates.
+    }
+    
+    public:
+    void solve(int x,int y,const int n,string &path,vector<string>&res,vector<vector<int>> &m,const vector<Choice>&choices){
+        if(isSolved(x,y,n)){    //base case
+            res.push_back(path);
+            return;
+        }
+        for(const auto &choice : choices){    //we run through a loop for each of the directions : we use auto for easier access of the structs and const:not not actually change any values.
+            int newX = x + choice.dx;    //new coordinate values
+            int newY = y + choice.dy;
+            if(isValid(newX,newY,n,m)){    //if next step exists
+                m[x][y] = 0;    //make it visited
+                path.push_back(choice.dname);    //add direction to path
+                solve(newX,newY,n,path,res,m,choices);    //recursively check till base case.
+                m[x][y] = 1;    //make it non-visted again as we BackTrack.
+                path.pop_back();    //BACKTRACKING : to find newer paths as we stack unwind.
+            }
+        }
+        return;
+    }
+    
+    
+    vector<string> findPath(vector<vector<int>> &m, int n) {
+        vector<string>res;  //stores a candidate paths rat can reach its destination
+        string path = "";    //path tracker : which is used to keep track of the current path.
+        vector<Choice>choices = {{'U',-1,0},{'D',1,0},{'L',0,-1},{'R',0,1}};  //struct of choices which is a const , used to keep things together.
+        if(m[0][0] == 1){    //edge case => if initial path itself is blocked : rat can't go anywhere , so just return.
+            solve(0,0,n,path,res,m,choices);
+        }
+        return res;
+    }
+};

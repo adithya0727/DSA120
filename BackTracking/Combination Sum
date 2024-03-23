@@ -1,0 +1,53 @@
+/* Approach:                  [REFER NOTES FOR DIAGRAM]
+Given an array of integers and a sum B, find all unique combinations in the array where the sum is equal to B.
+The same number may be chosen from the array any number of times to make B.
+Input:
+N = 4
+arr[] = {7,2,6,5}
+B = 16
+Output:
+(2 2 2 2 2 2 2 2)
+(2 2 2 2 2 6)
+(2 2 2 5 5)
+(2 2 5 7)
+(2 2 6 6)
+(2 7 7)
+(5 5 6).
+
+1)
+INTUITION : First Brute-force that comes to your mind is that : for each element let's run a loop throughout all the elements in the array. But we would end up getting
+duplicate values and thats not what we need , so to remove that.
+We follow of approach to TO PICK (OR) TO NOT PICK and recursively keep going on until we get an answer.
+a) Base Case : if the sum == 0 , we found an answer and we get to the previous stack frame as going any futher would only increase the value.
+b) while loop : till we iterate through all the elements in the array (or) the sum becomes lesser than 0 , we stop and return.
+c) BackTracking : once previous stack frames comes in : we start with the i+1 elements , (to not have duplicates again) : pop the latest
+element and then continue the while loop.
+time - O((2^N)*K) : 2^N : as we pick one element only at a time and it as two option to take or not , 
+at each recusrive call : we perform a while loop which runs on AVERAGE K TIMES : AVERAGE LENGTH OF THE VARIOUS COMBINATIONS
+space - O(X*K) : X- total number of combinations , K - average length of all combinations : k times x combinations.
+
+*/
+
+1) void solve(vector<int>&A,int sum,vector<int>&path,vector<vector<int>>&res,int i){
+        if(sum==0){    //base case
+            res.push_back(path);    //candidate
+            return;
+        }
+        while(i < A.size() && sum - A[i] >=0){    //until index goes out of bounds or path value becomes more than GIVEN B
+            path.push_back(A[i]);    //change value
+            solve(A,sum-A[i],path,res,i);      //recursive call
+            i++;          ///[MOST IMPORTANT] : we won't include anymore number till the path and we start from the next index (to pick or to not pick).
+            path.pop_back();  //BackTracking
+        }
+        return;
+    }
+    
+    
+    vector<vector<int> > combinationSum(vector<int> &A, int B) {
+        vector<vector<int>>res;    //stores answer
+        vector<int>path;        //stores path : by reference : BT
+        sort(A.begin(),A.end());    //to get all sorted values in array
+        A.erase(unique(A.begin(), A.end()), A.end());      //to remove possible duplicates
+        solve(A,B,path,res,0);
+        return res;
+    }

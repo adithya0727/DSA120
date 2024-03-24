@@ -1,0 +1,91 @@
+/* Approach:                [PATTERN : SAME AS RAT IN A MAZE-1]
+Given a dictionary of distinct words and an M x N board where every cell has one character. Find all possible words from the dictionary that can be formed by a sequence of adjacent characters on the board.
+We can move to any of 8 adjacent characters
+Note: While forming a word we can move to any of the 8 adjacent cells. A cell can be used only once in one word.
+Input: 
+N = 1
+dictionary = {"CAT"}
+R = 3, C = 3   //numbers
+board = {{C,A,P},{A,N,D},{T,I,E}}
+Output:
+CAT
+Explanation: 
+C A P
+A N D
+T I E
+1) INTUITION : We consider each Character [cell in the 2D vector] as a STARTING CHARACTER TO FIND ALL THE WORDS THAT WE CAN BUILD WITH THAT CHARACTER : If at any instance
+it matches with any of the words in the dictionary we store it in our result vector.
+BREAKDOWN : 
+a) Firstly , we run a for loop to check the dfs for each and every element/cell to check for occurances of words , For each element:
+b) we need the visited array to keep track of all the vistied elements to avoid re-visiting : and we keep appending the characters to the str until there are no
+more elements left in the matrix , we also compare with the dict at each instance to see if we find any words. [BASE CASE]
+c) for loop : We have the option to move in 8 DIFFERENT DIRECTIONS : so we make two arrays in such a way that they act as pairs , they are the co-ordinates on
+how i and j will move when the user goes in either of the 8 directions 
+we check for 2 validations like rat in a maze :
+out-of-bounds , visited or not.
+d) We create the new co-ordinate values and controlled recursion is applied only when the conditions are true.
+e) BackTracking : we make the position unvisited again and remove the last element in the string.
+time -  O(ROW*COL*N*W) : row*col : outer loop , for each cell we used nested for loops and within these nested for loops : (N*W) => w-avg length of all words we 
+generate times the N-number of words in the dictionary we check for each recursive call.
+space - O(ROW*COL + K*X) : visited array + result(K-avg length of words , X-Total number of words).
+*/
+
+1)bool isSolved(const vector<string>& dictionary, const string& str) {    //to check at every instance if the string uptil now is equal to any of the words in the dictionary.
+    for (const string& word : dictionary) {
+        if (word == str) {    //any word in the dict.
+            return true;
+        }
+    }
+    return false;
+}
+
+void Boggle(const vector<vector<char>>& board, vector<vector<bool>>& visited, int i, int j, string &str, const vector<string>& dictionary, vector<string>& res) {
+    int row = board.size(), col = board[0].size();    //boundary conditions to check for out-of-bounds access.
+    
+    // Append current character to str
+    str += board[i][j];    //append current position
+    
+    // Mark current cell as visited
+    visited[i][j] = true;//make it visited
+    
+    // If str is present in dictionary, then add it to results
+    if (isSolved(dictionary, str)) {        //base case
+        res.push_back(str);      //if word exists in dict.
+    }
+    
+    // Directions array to explore valid paths
+    int dx[] = {-1, -1, -1, 0, 0, 1, 1, 1};    //x co-ordinates
+    int dy[] = {-1, 0, 1, -1, 1, -1, 0, 1};    //y co-ordinates
+    
+    // Traverse in all directions
+    for (int dir = 0; dir < 8; ++dir) {
+        int newdx = i + dx[dir];    //combining the new x and y cordinates as per in whichever direction the next we move in.
+        int newdy = j + dy[dir];
+        
+        // Check if the new position is valid and not visited
+        if (newdx >= 0 && newdx < row && newdy >= 0 && newdy < col && !visited[newdx][newdy]) {    //edges cases and non-visited
+            Boggle(board, visited, newdx, newdy, str, dictionary, res);    //recursive call
+        }  
+    }
+    
+    // Backtrack: Mark current cell as unvisited and remove last character from str
+    visited[i][j] = false;    //backtracking
+    str.pop_back();
+}
+
+vector<string> wordBoggle(vector<vector<char>>& board, vector<string>& dictionary) {
+    vector<string> res;
+    int row = board.size(), col = board[0].size();
+    vector<vector<bool>> visited(row, vector<bool>(col, false));
+    
+    // Explore words starting from each cell
+    for (int i = 0; i < row; ++i) {    //each cell is considered as a starting point to find words if it exists in the dict.
+        for (int j = 0; j < col; ++j) {
+            string str = "";
+            Boggle(board, visited, i, j, str, dictionary, res);
+        }
+    }
+    
+    return res;
+}
+

@@ -1,0 +1,37 @@
+/* Approach:                [SIMILAR PATTERN : COMBINATION SUM 1]
+You are given a collection of numbers (candidates) and a target number (target), find all unique combinations in candidates where the candidate numbers sum to the target.
+Each number in candidates may only be used once in the combination.
+Input:  candidates = [10,1,2,7,6,1,5], target = 8. 
+Output:  [[1,1,6], [1,2,5], [1,7], [2,6]]. 
+1)
+time -  space -  
+*/
+
+1) void solve(const vector<int> &candidates, int sum,vector<int>&path,vector<vector<int>>&res,int start){
+        if(sum==0){
+            res.push_back(path);
+            return;
+        }
+        if(start>candidates.size() || sum<0){
+            return;
+        }
+        for(int i=start;i<candidates.size();i++){
+            if(i>start && candidates[i] == candidates[i-1]){
+                continue;
+            }
+            path.push_back(candidates[i]);
+            solve(candidates,sum-candidates[i],path,res,i+1);
+            path.pop_back();
+        }
+        return;
+    }
+  
+  
+  
+    vector<vector<int>> combinationSum2(vector<int> &candidates, int target) {
+        vector<vector<int>>res;
+        vector<int>path;
+        sort(candidates.begin(),candidates.end());
+        solve(candidates,target,path,res,0);
+        return res;
+    }

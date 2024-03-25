@@ -51,3 +51,31 @@ space - O(X*K) : X- total number of combinations , K - average length of all com
         solve(A,B,path,res,0);
         return res;
     }
+
+
+2) FOR LOOP APPROACH : TO SIMILIARISE PATTERNS =>
+void solve(vector<int>&A,int sum,vector<int>&path,vector<vector<int>>&res,int start){
+        if(sum==0){
+            res.push_back(path);
+            return;
+        }
+        if(start > A.size() || sum<0){
+            return;
+        }
+        for(int i=start;i<A.size();i++){
+            path.push_back(A[i]);
+            solve(A,sum-A[i],path,res,i);
+            path.pop_back();
+        }
+        return;
+    }
+    
+    
+    vector<vector<int> > combinationSum(vector<int> &A, int B) {
+        vector<vector<int>>res;
+        vector<int>path;
+        sort(A.begin(),A.end());
+        A.erase(unique(A.begin(), A.end()), A.end());
+        solve(A,B,path,res,0);
+        return res;
+    }

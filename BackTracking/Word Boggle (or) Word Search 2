@@ -1,4 +1,4 @@
-/* Approach:                [PATTERN : SAME AS RAT IN A MAZE-1]
+/* Approach:                [PATTERN : SAME AS RAT IN A MAZE-1 || WORD SEARCH-1]
 Given a dictionary of distinct words and an M x N board where every cell has one character. Find all possible words from the dictionary that can be formed by a sequence of adjacent characters on the board.
 We can move to any of 8 adjacent characters
 Note: While forming a word we can move to any of the 8 adjacent cells. A cell can be used only once in one word.
@@ -12,7 +12,7 @@ CAT
 Explanation: 
 C A P
 A N D
-T I E
+T I E            [ADITYA VERMA APPROACH]
 1) INTUITION : We consider each Character [cell in the 2D vector] as a STARTING CHARACTER TO FIND ALL THE WORDS THAT WE CAN BUILD WITH THAT CHARACTER : If at any instance
 it matches with any of the words in the dictionary we store it in our result vector.
 BREAKDOWN : 
@@ -28,8 +28,17 @@ e) BackTracking : we make the position unvisited again and remove the last eleme
 time -  O(ROW*COL*N*W) : row*col : outer loop , for each cell we used nested for loops and within these nested for loops : (N*W) => w-avg length of all words we 
 generate times the N-number of words in the dictionary we check for each recursive call.
 space - O(ROW*COL + K*X) : visited array + result(K-avg length of words , X-Total number of words).
-*/
 
+2)  [OPTIMISED APPROACH]:
+INTUITION : Instead of using a for loop , we just use recursive calls , it does increase the stack space but it's more efficient , i don't know how to perform
+pruning in the above method , but using this we only traverse through the right path till the length of the word. We perform pruning and save a lot of time by 
+ignoring a lot of unnessasary branches : For each cell where the first index is matching : we check in 8 different directions if the given word is found.
+time - O(N*ROW*COL*8^L) : (ROW*COL) : we might to traverse through whole matrix , (8^L) : till the length of the word matches , since we are choosing only the right
+path , for each index we have 8 different directions we can move in.
+space - O(ROW*COL + N*X) : (recursion stack at the max might take row*col stack space) , to store our answer in a string vector : N-number of words in dictionary
+in worst case if all words are present and X- avg length of each word.
+*/
+                                [TLE]
 1)bool isSolved(const vector<string>& dictionary, const string& str) {    //to check at every instance if the string uptil now is equal to any of the words in the dictionary.
     for (const string& word : dictionary) {
         if (word == str) {    //any word in the dict.
@@ -89,3 +98,46 @@ vector<string> wordBoggle(vector<vector<char>>& board, vector<string>& dictionar
     return res;
 }
 
+
+2) bool solve(vector<vector<char>>& board, string &word,int i,int j,int index){            [WORKING SOLUTION]
+        if(index == word.length()){      //base case : as we consider right path only 
+            return true;
+        }
+        if(i<0 || j<0  || i >= board.size() || j>=board[0].size()){        //out-of-bounds
+            return false;
+        }
+        if(board[i][j] == word[index]){    //only if word's index matches the current board cell , we move in.
+            char temp = board[i][j];
+            board[i][j] = '#';        //temporarliy hash and store
+            bool res =  solve(board,word,i-1,j,index+1)   ||    //if in any of the 8 directions through depth of recursion we find a true , we just return that
+                        solve(board,word,i,j+1,index+1)   ||    //till the end of stack unwinding.
+                        solve(board,word,i+1,j,index+1)   ||
+                        solve(board,word,i,j-1,index+1)   ||
+                        solve(board,word,i-1,j+1,index+1) ||
+                        solve(board,word,i+1,j+1,index+1) ||
+                        solve(board,word,i+1,j-1,index+1) ||
+                        solve(board,word,i-1,j-1,index+1);
+            board[i][j] = temp;        //backtracking.
+            return res;        //if true , it won't enter the else loop and we finally return true at the final stack frame.
+        }
+        else{
+            return false;
+        }
+    }
+
+	vector<string> wordBoggle(vector<vector<char> >& board, vector<string>& dictionary) {
+	    vector<string>res;        //to store all found words from dict.
+	    int row = board.size(),col = board[0].size();
+	    for(auto &word : dictionary){        //iterate through each word and check if it is present
+        for(int i=0;i<row;i++){
+            for(int j=0;j<col;j++){
+                if(board[i][j] == word[0]){        //only if the word's first index matches , we start the dfs.
+                    if(solve(board,word,i,j,0))
+                        res.push_back(word);    //if true , we've found this word and we store it , otherwise : we pick the next word from dict and continue 
+                }                               //till there are no more words in the dict.
+            }        
+        }
+	}
+	res.erase(unique(res.begin(),res.end()),res.end());    //in case there are multiple instances of the same word present from different cell positions? : 
+        return res;                                        //we want to remove that.
+	}

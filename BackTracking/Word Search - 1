@@ -1,0 +1,118 @@
+/* Approach:
+Given a 2D board of letters and a word. Check if the word exists in the board. The word can be constructed from letters of adjacent cells only.
+ie - horizontal or vertical neighbors. The same letter cell can not be used more than once.
+Input: board = {{a,g,b,c},{q,e,e,l},{g,b,k,s}},
+word = "geeks"
+Output: 1
+Explanation: The board is-
+a g b c
+q e e l
+g b k s
+
+1) [Aditya Verma Approach] :
+INTUITION : similar to word boggle ,but we have only one word here , Each cell is considered as possible starting point to find our word , we moce each cell in 
+all different directions until we match a string : But the problem here is , we are checking each and every instance and moving in every single branch
+this is not efficient and causes TLE.
+
+2)  [OPTIMIZED APPROACH] :
+INTUITION : Similar approach => we pick the cell only when it matches the first string of the word making it more efficient , we don't need a visited array,
+we temporarily store the variable value in temp and replace it by "#", so it wont be recognisable and can backtrack it later on.
+We move ONLY IN THE DIRECTION WHERE WE ARE GETTING THE ANSWER USING AN INDEX TO KEEP TRACK OF THE POSITION IN WORD WITH THE POSITION OR LEVEL OF RECURSION , this is
+called PRUNING.
+time - O(ROW*COL*4^L) : Total number of nodes we'll traverse in worst case : whole matrix (nested for loops) : L->length of the word : in the worst case :
+since we the choosing only the right path : at each index , we have four options to move in and so on till the index reaches the length of the word, we wont go beyond that.
+space - O(ROW*COL) : recursion call stack might end up taking the full matrix traversal in finding our word in worst case.
+*/
+
+1) class Solution {            [TLE]
+    private:
+    struct Choice{    //struct
+        char dname;
+        int dx,dy;
+    };
+public:
+
+    bool isSolved(string &word,string &str){
+        return word==str;
+        }
+    bool isValid(const vector<vector<char>>& board,vector<vector<bool>>&visited,int i,int j){
+        return i>=0 && i<board.size() && j>=0 && j<board[0].size() && !visited[i][j];
+    }
+
+    void search(const vector<vector<char>>& board,vector<vector<bool>>&visited, const vector<Choice>&choices,string &word,int i,int j,string &str,bool &flag){
+        if(str.length() > word.length()){
+            return;
+        }
+        
+        if(isSolved(word,str)){
+            flag = true;
+            return;
+        }
+        for(const auto &choice : choices){
+            int newdx = i + choice.dx;
+            int newdy = j + choice.dy;
+            if(isValid(board,visited,newdx,newdy)){
+                visited[i][j] = true;
+                str += board[i][j];
+                search(board,visited,choices,word,newdx,newdy,str,flag);
+                 if (flag) return;
+                 visited[i][j] = false;
+                str.pop_back();
+            }
+        }
+        return;
+    }
+
+
+    bool isWordExist(vector<vector<char>>& board, string word) {
+        bool flag = false;
+        string str = "";
+        vector<vector<bool>>visited(board.size(),vector<bool>(board[0].size(),false));
+        vector<Choice>choices = {{'U',-1,0},{'D',1,0},{'L',0,-1},{'R',0,1}};
+        for(int i=0;i<board.size();i++){
+            for(int j=0;j<board[0].size();j++){
+                if(board[i][j] == word[0])
+                    search(board,visited,choices,word,i,j,str,flag);
+                if(flag) return true;
+                    }
+            }
+            return flag;
+        }
+};
+
+
+2) bool solve(vector<vector<char>>& board, string &word,int i,int j,int index){    [Working Solution]
+        if(index == word.length()){      //base case : since we are only choosing the right path , if index matches , we have found our word.
+            return true;
+        }
+        if(i<0 || j<0  || i >= board.size() || j>=board[0].size()){    //out of bounds , return false
+            return false;  
+        }
+        if(board[i][j] == word[index]){    //only if the index matches we go in : CONTROLLED RECURSION
+            char temp = board[i][j];    //store it temporarily to that when we repalce it wont be recognised by the next call
+            board[i][j] = '#';
+            bool res = solve(board,word,i-1,j,index+1) ||    //if either one is true , its enough that where we found our word.
+                        solve(board,word,i,j+1,index+1) ||
+                        solve(board,word,i+1,j,index+1) ||
+                        solve(board,word,i,j-1,index+1);
+            board[i][j] = temp;  //backtracking
+            return res;    //[V.IMP] : we go only through the if part when we've found our word and return true, since all those path elements would have been found
+        }
+        else{
+            return false;  // if no directions has a true value be return false.
+        }
+    }
+
+
+    bool isWordExist(vector<vector<char>>& board, string word) {
+        int row = board.size(),col = board[0].size();
+        for(int i=0;i<row;i++){      //to iterate through each cell in the matrix to check if its the word 
+            for(int j=0;j<col;j++){
+                if(board[i][j] == word[0]){    //only call when cell number is equal to the first index.
+                    if(solve(board,word,i,j,0))
+                        return true;
+                }
+            }
+        }
+        return false;
+    }

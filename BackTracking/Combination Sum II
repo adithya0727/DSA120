@@ -3,25 +3,30 @@ You are given a collection of numbers (candidates) and a target number (target),
 Each number in candidates may only be used once in the combination.
 Input:  candidates = [10,1,2,7,6,1,5], target = 8. 
 Output:  [[1,1,6], [1,2,5], [1,7], [2,6]]. 
-1)
-time -  space -  
+1) Very Similar to first problem : only 1 difference : here we can consider each element only once and then we move on.
+So literally there just one difference : in the RECURSIVE CALL : we use (i+1) instead of i.
+After considering one element we move on to the next and while backtracking and checking for the next possibilities(for the current path).
+for loop handles the incrementing part on its own and we thereby check all possibilities without reconsidering same elements.
+edge case : In case of DUPLICATE elements , as we have sorted them , if curridx and nextidx value is same continue and skip that iteration.
+time - O(2^N) : at each recursive call : we can an option : to choose (or) to not choose.
+space -  O(X*L) : X->avg length of each combination , L->number of combinations.
 */
 
 1) void solve(const vector<int> &candidates, int sum,vector<int>&path,vector<vector<int>>&res,int start){
-        if(sum==0){
+        if(sum==0){        //base case : if sum is 0 , pushback
             res.push_back(path);
             return;
         }
-        if(start>candidates.size() || sum<0){
+        if(start>candidates.size() || sum<0){                //edge cases 
             return;
         }
-        for(int i=start;i<candidates.size();i++){
-            if(i>start && candidates[i] == candidates[i-1]){
+        for(int i=start;i<candidates.size();i++){        //for each element we check through the possibilities of all other element =s from i+1 using recursion
+            if(i>start && candidates[i] == candidates[i-1]){                       skip through duplicate elements
                 continue;
             }
-            path.push_back(candidates[i]);
-            solve(candidates,sum-candidates[i],path,res,i+1);
-            path.pop_back();
+            path.push_back(candidates[i]);        //store value in path : change variable
+            solve(candidates,sum-candidates[i],path,res,i+1);        //call
+            path.pop_back();        //backtrack
         }
         return;
     }
@@ -29,9 +34,9 @@ time -  space -
   
   
     vector<vector<int>> combinationSum2(vector<int> &candidates, int target) {
-        vector<vector<int>>res;
-        vector<int>path;
-        sort(candidates.begin(),candidates.end());
+        vector<vector<int>>res;                //store final answer
+        vector<int>path;                //backtracking variable to find all possibilities of various paths
+        sort(candidates.begin(),candidates.end());        //to return sorted paths
         solve(candidates,target,path,res,0);
         return res;
     }

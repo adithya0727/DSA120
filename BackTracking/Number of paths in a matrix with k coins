@@ -1,0 +1,61 @@
+/* Approach:          [PATTERN : RAT IN A MAZE-1]
+Given a n x n matrix such that each of its cells contains some coins. Count the number of ways to collect exactly k coins 
+while moving from top left corner of the matrix to the bottom right.
+From a cell (i, j), you can only move to (i+1, j) or (i, j+1).
+k = 12, n = 3
+arr[] = [[1, 2, 3], 
+       [4, 6, 5], 
+       [3, 2, 1]]
+Output: 
+2
+Explanation: 
+There are 2 possible paths with exactly 12 coins, (1 + 2 + 6 + 2 + 1) and (1 + 2 + 3 + 5 + 1).
+1) INTUITION : Similar to rat in a maze : from source to destination , we have to check all paths where exactly the sum add upto the k coins and we return the count
+of all the possibilities.
+
+time - O(N*M) : might traverse the whole matrix by trail and error exploring various paths.
+space - O(N*M/2) : at maximum since we are only moving down,right : we can go only that much of a recursive stack space at one time till we reach destination.
+*/
+
+1)  private:
+    struct Choice{    //for choices
+        char dname;
+        int dx,dy;
+    };
+public:
+    bool isSolved(int i,int j,int n){    //when destination is reached
+        return i==n-1 && j==n-1;
+    }
+
+    bool isValid(int newdx,int newdy,int n,const vector<vector<int>> &arr,int k){    //out-of-bounds access && choosing only the valid paths
+        return newdx >=0 && newdx <n && newdy>=0 && newdy < n && k-arr[newdx][newdy] >=0;
+    }
+
+    void solve(const vector<vector<int>> &arr,int &k,int &n,int i,int j,long long &count,vector<Choice>&choices){
+        if(isSolved(i,j,n)){    //if base case hits , and k value is exactly as it's expected add count , else just return
+            if (k==0)
+                count++;
+            return;
+        }
+        for(auto &choice : choices){  //we check all the choices for each instance in the matrix. (DOWN,RIGHT)
+            int newdx = i + choice.dx;
+            int newdy = j + choice.dy;
+            if(isValid(newdx,newdy,n,arr,k)){    //if exists properly
+                k = k - arr[newdx][newdy];    //we subtract till we get 0 recursively or rather till we reach destination
+                solve(arr,k,n,newdx,newdy,count,choices);
+                k = k + arr[newdx][newdy];    //backtracking
+            }
+        }
+        return;
+    }
+
+    
+    long long numberOfPath(int n, int k, vector<vector<int>> &arr){
+        long long count=0;
+        vector<Choice>choices = {{'D',1,0},{'R',0,1}}; 
+        if(arr[0][0] < k){
+            k = k-arr[0][0];    //the first one is never calculated if you observe , so we initially remove it and then pass k by reference.
+            solve(arr,k,n,0,0,count,choices);
+        }
+        return count;
+    }

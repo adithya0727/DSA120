@@ -1,0 +1,52 @@
+/* Approach:                  [BEAUTIFUL FOUNDATIONAL PROBLEM]
+Given a keypad as shown in the diagram, and an N digit number which is represented by array a[ ],
+the task is to list all words which are possible by pressing these numbers.
+Input: N = 3, a[] = {2, 3, 4}
+Output:
+adg adh adi aeg aeh aei afg afh afi 
+bdg bdh bdi beg beh bei bfg bfh bfi 
+cdg cdh cdi ceg ceh cei cfg cfh cfi [once you visualise it , it's a cake walk]
+1) INTUITION : Typical backtracking problem , where we first go till the depth till the index is equal to input size N and then we backtracking and check for
+all the possibilities using the for loop , we further backtrack as each for loop finishes in the given stack frame and so on till the end.
+TIME -  O(N*4^L) : (4^L) : at the highest on each button we can have 4 options : (wxyz) and L: length of the array/number of buttons we have : consider this as the
+depth , so at each level we have 4 more options for every element, and at each level we have to append the word to the vector(which is a constant time operation)
+since there could be multiple valid words > we take N.(or consider the for loop which runs str.length() times on each recursive call stack).
+SPACE - O(N) : to store the map elements.
+*/
+
+1) void solve(int a[], int &N,string &path,vector<string>&res,int index,unordered_map<int,string>&m){
+        if(index==N){    //when we have n number of characters in our string , it means we've found a possible combination by pressing each button once.
+            res.push_back(path);    //store the string answer.
+            return;
+        }
+        string str = m[a[index]];    //on each call : we create a new string and get the associated str for that index in array and iterate through that str using the for loop
+        for(int i=0;i<str.length();i++){    //till the length of this particular stack frame string.
+            path.push_back(str[i]);    //change value
+            solve(a,N,path,res,index+1,m);      //call
+            path.pop_back();      //backtracking
+        }
+        return;
+    }
+    
+    
+    //Function to find list of all words possible by pressing given numbers.
+    vector<string> possibleWords(int a[], int N)
+    {
+        vector<string>res;    //to store all possible strings
+        if(N==0){
+            return res;    //edge case
+        }  
+        string path = "";    //to store the current string formed
+        unordered_map<int,string>m = {    //to mapp each value corresponding to their respective alphabets
+            {2,"abc"},
+            {3,"def"},
+            {4,"ghi"},
+            {5,"jkl"},
+            {6,"mno"},
+            {7,"pqrs"},
+            {8,"tuv"},
+            {9,"wxyz"}
+        };
+        solve(a,N,path,res,0,m);
+        return res;
+    }

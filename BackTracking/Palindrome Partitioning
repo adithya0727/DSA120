@@ -9,11 +9,10 @@ For each substring : we break it into all possible parts and then check if this 
 that isn't a palindrome , we return back. 
 If in the path , all its partitioned elements are palin's we push that as our answer.
 
-time - O(N*2^N*N) : first N : we break down the given substring n times to get all variations of the partitioned string.
-For each of these partitioned string , we either take the string (or) move on and take the string the next value added , this is a 2^N similar operation.
-These are the number of total elements.
-for each element : we check for palindrome : O(N) , therefore : O(N*2^N*N).
-space - O(1) / O(N*2^N) : if recursive call stack it to be considered then we have the latter , otherwise the former.
+time - O(2^N*N) ~ O(2^N): 
+For string , we either take the string (or) move on and take the string the next value added , this is a 2^N similar operation. These are the number of total elements.
+for each element : we check for palindrome : O(N) , therefore : O(N*2^N).
+space - O(1) / O(2^N) : if recursive call stack it to be considered then we have the latter , otherwise the former.
 */
 
 1) bool isPalin(string &str){                        [BACKTRACKING SOLUTION]

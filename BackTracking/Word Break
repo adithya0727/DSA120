@@ -1,0 +1,50 @@
+/* Approach:         [PATTERN : PALINDROME PARTITIONING]
+Given a string s and a dictionary of n words dictionary, find out if "s" can be segmented into a space-separated sequence of dictionary words.
+Return 1 if it is possible to break the s into a sequence of dictionary words, else return 0. 
+Note: From the dictionary dictionary each word can be taken any number of times and in any order.
+n = 6
+s = "ilikesamsung"
+dictionary = { "i", "like", "sam", "sung", "samsung", "mobile"}
+Output:
+1
+Explanation:
+The string can be segmented as "i like samsung" or "i like sam sung".
+1) Literally same as palin partitioning : but here we are going to PARTITION THE STRING BASED ON IF THAT SUBSTR EXISTS IN THE DICTIONARY OR NOT , IF IT DOESN'T
+WE DON'T CONSIDER THAN PATH AND POTENTIALLY BACKTRACK.
+If we reach the end of string pointer , it means all the partitions thus far do exist in the dictionary , therefore make flag true.
+time - O(2^N) : for each partition , or substring of the string , we take it or we take the next appended element , similar to take or not take : 2^N.
+space - O(1) / O(2^N) : no extra space taken , recursive call stack to be considered then at worst case , we'll check all the partitions.
+*/
+
+1) bool DoesExist(string &str,vector<string>& wordDict){    //if word exists or not in the dictionary.
+        auto it = std::find(wordDict.begin(),wordDict.end(),str);
+        if(it==wordDict.end()){
+            return false;
+        }
+        return true;
+    }
+
+    void solve(string &s, int &n,vector<string>& wordDict,int start,bool &flag){
+        if(start == n){  //if index reaches it , it means all partitions uptil now is present as a string in the dictionary , we set the flag to true then.
+            flag = true;
+            return;
+        }
+        string str;    //pass by value for each stack frame.
+        for(int i=start;i<n;i++){  //bfs : to check for all possibilities
+            str += s[i];    //append
+            if(flag){    //to skip iterating the trees any further once we found an answer.
+                return;
+            }
+            if(DoesExist(str,wordDict)){    //if this substr exists in the dictionary only then we consider it and move the iterator forward
+                solve(s,n,wordDict,i+1,flag);
+            }
+        }    //otherwise backtrack and we never hit the base case.
+        return;
+    }
+
+    bool wordBreak(string s, vector<string>& wordDict) {
+        int n = s.length();    //length of string
+        bool flag = false;    //initially set to false
+        solve(s,n,wordDict,0,flag);
+        return flag;
+    }

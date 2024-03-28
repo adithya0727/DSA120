@@ -1,0 +1,55 @@
+/* Approach:
+Given a string s, partition s such that every substring of the partition is a  palindrome. Return all possible palindrome partitioning of s.
+Input: s = "aab"
+Output: [["a","a","b"],["aa","b"]]
+
+1) INTUITION : dfs : cutting operation(RECURSION) , bfs : checking all other possibilities option(FOR LOOP).
+We are going to check for each and every possibility by partitioning the string in all possible ways.
+For each substring : we break it into all possible parts and then check if this path in its entirity has all palindromes in it, if at any point we encounter a substr
+that isn't a palindrome , we return back. 
+If in the path , all its partitioned elements are palin's we push that as our answer.
+
+time - O(N*2^N*N) : first N : we break down the given substring n times to get all variations of the partitioned string.
+For each of these partitioned string , we either take the string (or) move on and take the string the next value added , this is a 2^N similar operation.
+These are the number of total elements.
+for each element : we check for palindrome : O(N) , therefore : O(N*2^N*N).
+space - O(1) / O(N*2^N) : if recursive call stack it to be considered then we have the latter , otherwise the former.
+*/
+
+1) bool isPalin(string &str){
+        int x= str.length();
+        if(x==1){
+            return true;
+        }
+        for(int i=0;i<x;i++){
+            if(str[i] != str[x-i-1]){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    void solve(string &s,int &n,vector<string>&path,vector<vector<string>>&res,int start){
+        if(start==n){  //when the pointer reaches the end of the string
+            res.push_back(path);  //we have a solution : and it is a correct solution , since it has come this far only because all elements are indeed palindromes.
+            return;
+        }
+        string str;    //new string at each call
+        for(int i=start;i<n;i++){    //this will help us check all possibilities by adding up string elements at each stack frame till the end of string , to get various
+            str += s[i];              //partitioned ways of a string. Add the next string element 
+            if(isPalin(str)){    //check and proceed only if its a Palin , otherwise continue the loop until we get a substr that is a palin, if not return altogether.
+                path.push_back(str);  //we got a partitioned palindrome str , so insert that and proceed till the end of str length.
+                solve(s,n,path,res,i+1);//pass i+1 , as we want to continue the loop from where it ended in the for loop and not start everytime.
+                path.pop_back();        //BackTracking
+            }
+        }
+        return;
+    }
+
+    vector<vector<string>> partition(string s) {
+        int n = s.length();    //size of given string.
+        vector<string>path;    //to store each path which has a partitioned elements in various ways till the whole string is present.
+        vector<vector<string>>res;  //final answer : all different ways to partition a string and all of them are palindromes.
+        solve(s,n,path,res,0);
+        return res;
+    }

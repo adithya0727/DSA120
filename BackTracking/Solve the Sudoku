@@ -1,0 +1,61 @@
+/* Approach:        [Matrix pattern]
+Given an incomplete Sudoku configuration in terms of a 9 x 9  2-D square matrix (grid[][]), the task is to find a solved Sudoku.
+For simplicity, you may assume that there will be only one unique solution.
+A sudoku solution must satisfy all of the following rules:[CONSTRAINTS]
+Each of the digits 1-9 must occur exactly once in each row.
+Each of the digits 1-9 must occur exactly once in each column.
+Each of the digits 1-9 must occur exactly once in each of the 9 3x3 sub-boxes of the grid.
+Zeros in the grid indicates blanks, which are to be filled with some number between 1-9. You can not replace the element in the cell which is not blank.
+1) INTUITION : basically , we check all possible combinations through we which we can get a final solution and the sudoku can be solved , until then we keep 
+trying various combiantions using different possibilities using backtracking.
+Refer notes for algorithm.
+time - O(9^N) 
+space - O() 
+*/
+
+1) bool isValid(int grid[N][N],int i,int j,int c){    //here, i and j represent the current row and column values where the choices we are checking for is.
+        for(int k=0;k<9;k++){    //validity
+            if(grid[k][j] == c){    //in this column : check all if that element already exists : if yes , return false
+                return false;
+            }
+            if(grid[i][k] == c){    //in the=is row : check all if that element already exists : if yes, return false
+                return false;
+            }
+            if(grid[3*(i/3) + k/3][3*(j/3)+k%3] == c){  //calculates and moves in that particular sub-matrix and checks if it's repeated already or is it new?
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    bool SolveSudoku(int grid[N][N]) //first level is to traverse the whole matrix : we have to write it in the same function , if we backtrack we'll need the indexes to
+    {                                // change the particular choices into another combination.
+        for(int i=0;i<N;i++){
+            for(int j=0;j<N;j++){
+                if(grid[i][j] == 0){ //CONTROLLED RECURSION : only choices are applicable where there is empty slot.
+                    for(int c=1;c<=9;c++){    //for all CHOICES : we check all possibilities for a valid solution.
+                        if(isValid(grid,i,j,c)){    //if choices isn't repeated anywhere and it follows the suduko rules , then we enter. (second controlled recursion)
+                            grid[i][j] = c;    //update the slot to new CHOICE
+                            if(SolveSudoku(grid))    //until the end , if we get true for all paths , we keep checking all variations and we don't enter the else
+                                return true;        //and finally return true.
+                            else{
+                                grid[i][j] = 0;    //backtracking step : to update for newwer choices
+                            }
+                        }
+                    }
+                    return false;    //if we ran through all choices and found nothing , we say the choices until now : can't give us a valid sudoku , so we start 
+                }                    //BT from the next step again.
+            }
+        }
+        return true;    //edge case , if sudoku is already filled and will be valid , so just return true.
+    }
+    
+    //Function to print grids of the Sudoku.    //traverse the whole matrix.
+    void printGrid (int grid[N][N]) 
+    {
+        for(int i=0;i<N;i++){
+            for(int j=0;j<N;j++){
+                cout<<grid[i][j]<<" ";
+            }
+        }
+    }

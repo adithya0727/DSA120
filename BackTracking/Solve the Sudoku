@@ -9,8 +9,8 @@ Zeros in the grid indicates blanks, which are to be filled with some number betw
 1) INTUITION : basically , we check all possible combinations through we which we can get a final solution and the sudoku can be solved , until then we keep 
 trying various combiantions using different possibilities using backtracking.
 Refer notes for algorithm.
-time - O(9^N) 
-space - O() 
+time - O(9^N) : 9 choices for each of the empty cells in the matrix in the worst case.
+space - O(1) : no extra space , recursive call stack => O(N*M) : maximum size of the matrix for a correct path.
 */
 
 1) bool isValid(int grid[N][N],int i,int j,int c){    //here, i and j represent the current row and column values where the choices we are checking for is.

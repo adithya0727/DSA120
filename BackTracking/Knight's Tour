@@ -1,0 +1,86 @@
+/* Approach:
+Given a square chessboard, the initial position of Knight and position of a target.
+Find out the minimum steps a Knight will take to reach the target position.If it cannot reach the target position return -1.
+1) Regular Backtracking approach: This approach causes TLE cause it's not stopping at the minimum position found, it's finding all possible solutions.
+time - 2^(N*M)
+2) LEVEL ORDER TRAVERSAL APPROACH : Just like in Trees, for each position , we insert in all it's neighbouring 8 positions into the queue and then their neighbour's
+and so on...The first time we hit the base case (target index) will be the minimum as we are checking for all neighbours and then moving onto the next.
+time - O(N^2) : Since we are visitng all the cells only once , at worst case we'll visit all the cells 
+space - O(N^2) : queue to store all the cells in the worst case.
+*/
+
+1) void solve(int xs,int ys,int &xd,int &yd,int count,int &res,int &n,vector<vector<bool>>&visited){      [TLE APPROACH]
+        if(xs==xd && ys==yd){    //base case
+            res = min(res,count);
+            return;
+        }
+        if(xs < 0 || xs >= n || ys<0 || ys>=n || visited[xs][ys]){    //out-of-bounds access
+            return;
+        }
+        if (count >= n * n) {
+        return;
+    }
+        visited[xs][ys] = true;    //all 8 directions with pass by value.
+        solve(xs-1,ys-2,xd,yd,count+1,res,n,visited);
+        solve(xs-1,ys+2,xd,yd,count+1,res,n,visited);
+        solve(xs+1,ys-2,xd,yd,count+1,res,n,visited);
+        solve(xs+1,ys+2,xd,yd,count+1,res,n,visited);
+        solve(xs+2,ys-1,xd,yd,count+1,res,n,visited);
+        solve(xs+2,ys+1,xd,yd,count+1,res,n,visited);
+        solve(xs-2,ys-1,xd,yd,count+1,res,n,visited);
+        solve(xs-2,ys+1,xd,yd,count+1,res,n,visited);
+        visited[xs][ys] = false;  //to visit them only once
+        return;
+    }
+
+
+	int minStepToReachTarget(vector<int>&KnightPos, vector<int>&TargetPos, int N){
+	    int count=0,res=INT_MAX;
+	    int xs = KnightPos[0]-1;
+	    int ys = KnightPos[1]-1;
+	    int xd = TargetPos[0]-1;
+	    int yd = TargetPos[1]-1;
+	    vector<vector<bool>>visited(N,vector<bool>(N,false));
+	    solve(xs,ys,xd,yd,count,res,N,visited);
+	    return res == INT_MAX ? -1 : res;
+	}
+
+
+2) int minStepToReachTarget(vector<int>&KnightPos, vector<int>&TargetPos, int N){    [OPTIMISED SOLUTION]
+	    int dx[] = { -2, -1, 1, 2, -2, -1, 1, 2 };    //storing all directions the knight can move in x and y directions
+        int dy[] = { -1, -2, -2, -1, 1, 2, 2, 1 };
+    
+        vector<vector<bool>> visited(N, vector<bool>(N, false));  //all are false
+        queue<pair<pair<int, int>, int>> q;    //to store : x,y and current distance until this element
+    
+        int sx = KnightPos[0] - 1, sy = KnightPos[1] - 1;    //1-based indexing
+        int tx = TargetPos[0] - 1, ty = TargetPos[1] - 1;
+    
+        q.push({ {sx, sy}, 0 });    //initial state
+        visited[sx][sy] = true;  //make it visited
+    
+        while (!q.empty()) {  //till all cells , all 8 directions are completed traversed
+            auto curr = q.front();    //typical dfs 
+            q.pop();
+        
+            int x = curr.first.first;
+            int y = curr.first.second;
+            int dist = curr.second;
+        
+            if (x == tx && y == ty) {    //if base case hits , we'll break out and return instantly as it's the minimum distance considering level order traversal.
+                return dist;              //visualise the queue , where all elements are sorted by the distance and as move forward the distance increases.
+            }
+        
+            for (int i = 0; i < 8; ++i) {    //all 8 directions are inserted
+                int nx = x + dx[i];
+                int ny = y + dy[i];
+            
+                if (nx >= 0 && nx < N && ny >= 0 && ny < N && !visited[nx][ny]) {    //edge case and out-of-bounds and visited.
+                    visited[nx][ny] = true;
+                    q.push({ {nx, ny}, dist + 1 });
+                }
+            }
+        }
+    
+        return -1;    //if not found.
+	    }

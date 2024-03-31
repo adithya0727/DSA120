@@ -1,0 +1,61 @@
+/* Approach:                  [REFER NOTES]
+The n-queens puzzle is the problem of placing n queens on a (n×n) chessboard such that no two queens can attack each other.
+Given an integer n, find all distinct solutions to the n-queens puzzle. Each solution contains distinct board configurations of the n-queens’ placement
+Input:
+4
+Output:
+[2 4 1 3 ] [3 1 4 2 ]
+Explaination:
+These are the 2 possible solutions.
+1) Problem Breakdown:
+Basically the number of queens is the same as the size of the board , what we have to do is to place these queen's in such a positions where they can't attack
+each other. So , we have to find all possibilities in a ways such that we can place queen's so that they can't attack each other.
+To solve this : we can say that , we just place the queen's in such a way that for each QUEEN we make sure that it's row , column and diagonals left and right :
+there are no queens in the way. to do so:
+a) Using dfs , make sure the place the queens in different rows
+b) using bfs , we now have choices to place the queen's in different ways : 
+Controlled Recursion : we make sure for the checks : col,posdiag,negdiag[REFER NOTES FOR MORE INFO] , there's no other queen standing in the way and then we move forward
+c) When all rows are filled , we know that we have a correct possibility and insert that into res.
+time - n! : for all n elements , as we go each level deeper => we have one lesser possibility (since we can't have the same column again in the next row)
+n*(n-1)*(n-2)*(n-3) and so on...
+space - O(N^2) : at worst case to store N elements of size each N.
+*/
+
+1) class Solution{
+private:
+    unordered_set<int>cols;    //to check for elements in the saem column if already exists
+    unordered_set<int>PosDiag;  //to check for elements in the positive dialog [right->left]
+    unordered_set<int>NegDiag;  //to check for elements in the negative dialog [left->right]
+public:
+    void solve(int &n,int row,vector<int>&path,vector<vector<int>>&res){
+        if(row==n){    //base case : when all rows are filled , and we have controlled recursion , so its a correct path
+            res.push_back(path);
+            return;
+        }
+        for(int col=0;col<n;col++){    //to check for all possible choices to place queen's accross all the rows
+            if(cols.find(col) != cols.end() || PosDiag.find(row+col) != PosDiag.end() || NegDiag.find(row-col) != NegDiag.end()){
+                continue;    //if already present along the lines, skip iteration and check for other possible columns.
+            }
+            cols.insert(col);    //change value
+            PosDiag.insert(row+col);
+            NegDiag.insert(row-col);
+            path[col] = row+1;    //for that particlar column which is treated as row index , what is the current row number +1 [1-Based Indexing]
+            
+            solve(n,row+1,path,res);    //function call
+            
+            cols.erase(col);      //BackTracking Part
+            PosDiag.erase(row+col);
+            NegDiag.erase(row-col);
+            path[col] = 0;
+        }
+        return;
+    }
+
+    vector<vector<int>> nQueen(int n) {
+        vector<int>path(n,0);    //initialise them to 0 since we'll be doing indexing access in the above function.
+        vector<vector<int>>res;  //to store all possible ways to place the queen's co-ordinates
+        solve(n,0,path,res);
+        sort(res.begin(),res.end());  //sort answer
+        return res;
+    }
+};

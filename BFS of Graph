@@ -1,0 +1,35 @@
+/* Approach :              [REFER BOOK FOR IN-DEPTH ALGORITHM ANALYSIS]
+Given a directed graph. The task is to do Breadth First Traversal of this graph starting from 0.
+1) INTUITION : We start traversing from an initial node , firstly we visit all the nodes that have edges connecting to the current node except the already
+visited ones and we push them onto the queue and so on we take the FIFO element and push the neighbours similar to bfs of a tree and we return finally when the queue
+is empty.
+time - O(V + E) : Because we visit each node exactly once and each edge also exactly once [by using the visited array]
+space - O(V) : to store all vertices in the result vector
+*/
+
+1) void bfs(vector<int> adj[],int startnode,vector<bool>&visited,vector<int>&res){
+      queue<int>q;
+      q.push(startnode);
+      visited[startnode] = true;
+      while(!q.empty()){
+         int currentnode = q.front();
+         q.pop();
+         res.push_back(currentnode);
+         for(auto &neighbour : adj[currentnode]){
+             if(!visited[neighbour]){
+                 visited[neighbour] = true;
+                 q.push(neighbour);
+             }
+         }
+      }
+      return;
+  }
+  
+  
+    // Function to return Breadth First Traversal of given graph.
+    vector<int> bfsOfGraph(int V, vector<int> adj[]) {
+        vector<bool>visited(V,false);
+        vector<int>res;
+        bfs(adj,0,visited,res);
+        return res;
+    }

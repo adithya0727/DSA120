@@ -1,0 +1,26 @@
+/* Approach:      ALGO : [RECURSION]
+You are given a connected undirected graph. Perform a Depth First Traversal of the graph.
+1) 
+time - O(V + E)
+space - O(V)
+*/
+
+1) void dfs(vector<int> adj[],int currentnode,vector<bool>&visited,vector<int>&res){
+        visited[currentnode] = true;
+        res.push_back(currentnode);
+        for(auto &neighbour : adj[currentnode]){
+            if(!visited[neighbour]){
+                dfs(adj,neighbour,visited,res);
+            }
+        }
+        return;
+    }
+  
+  
+    // Function to return a list containing the DFS traversal of the graph.
+    vector<int> dfsOfGraph(int V, vector<int> adj[]) {
+        vector<int>res;
+        vector<bool>visited(V,false);
+        dfs(adj,0,visited,res);
+        return res;
+    }

@@ -1,15 +1,16 @@
 /* Approach:      ALGO : [RECURSION]
 You are given a connected undirected graph. Perform a Depth First Traversal of the graph.
-1) 
+1) similar to backtracking , we use a for loop for all the choices : neighbours and recursion for the dfs to find the possibility till the end and then stack unwind
+and find a different path. This is how we go to the Depth in the dfs.
 time - O(V + E)
 space - O(V)
 */
 
 1) void dfs(vector<int> adj[],int currentnode,vector<bool>&visited,vector<int>&res){
-        visited[currentnode] = true;
-        res.push_back(currentnode);
-        for(auto &neighbour : adj[currentnode]){
-            if(!visited[neighbour]){
+        visited[currentnode] = true;                //first mark it true
+        res.push_back(currentnode);                                //store it in our answer.
+        for(auto &neighbour : adj[currentnode]){  //for each of the vertex's neighbours , we perform the dfs traversal till we meet the end and then stack unwind
+            if(!visited[neighbour]){                //no repititions , if found just continue the for loop.
                 dfs(adj,neighbour,visited,res);
             }
         }

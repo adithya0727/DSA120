@@ -5,6 +5,8 @@ visited ones and we push them onto the queue and so on we take the FIFO element 
 is empty.
 time - O(V + E) : Because we visit each node exactly once and each edge also exactly once [by using the visited array]
 space - O(V) : to store all vertices in the result vector
+2) Using a 2d Matrix : same as a backtracking problem.
+time - O(N*M)  space - O(N*M)
 */
 
 1) void bfs(vector<int> adj[],int startnode,vector<bool>&visited,vector<int>&res){
@@ -33,3 +35,63 @@ space - O(V) : to store all vertices in the result vector
         bfs(adj,0,visited,res);
         return res;
     }
+
+
+2) int dRow[] = { -1, 0, 1, 0 };
+int dCol[] = { 0, 1, 0, -1 };
+ 
+// Function to check if a cell
+// is be visited or not
+bool isValid(bool vis[][COL],
+             int row, int col)
+{
+    // If cell lies out of bounds
+    if (row < 0 || col < 0
+        || row >= ROW || col >= COL)
+        return false;
+ 
+    // If cell is already visited
+    if (vis[row][col])
+        return false;
+ 
+    // Otherwise
+    return true;
+}
+ 
+// Function to perform the BFS traversal
+void BFS(int grid[][COL], bool vis[][COL],
+         int row, int col)
+{
+    // Stores indices of the matrix cells
+    queue<pair<int, int> > q;
+ 
+    // Mark the starting cell as visited
+    // and push it into the queue
+    q.push({ row, col });
+    vis[row][col] = true;
+ 
+    // Iterate while the queue
+    // is not empty
+    while (!q.empty()) {
+ 
+        pair<int, int> cell = q.front();
+        int x = cell.first;
+        int y = cell.second;
+ 
+        cout << grid[x][y] << " ";
+ 
+        q.pop();
+ 
+        // Go to the adjacent cells
+        for (int i = 0; i < 4; i++) {
+ 
+            int adjx = x + dRow[i];
+            int adjy = y + dCol[i];
+ 
+            if (isValid(vis, adjx, adjy)) {
+                q.push({ adjx, adjy });
+                vis[adjx][adjy] = true;
+            }
+        }
+    }
+}

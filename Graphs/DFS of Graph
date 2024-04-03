@@ -4,6 +4,10 @@ You are given a connected undirected graph. Perform a Depth First Traversal of t
 and find a different path. This is how we go to the Depth in the dfs.
 time - O(V + E)
 space - O(V)
+
+2) Iterative Approach:
+To reach all the nodes despite the graph being disconnected , we use a stack to perform a dfs.
+same time and space as above.
 */
 
 1) void dfs(vector<int> adj[],int currentnode,vector<bool>&visited,vector<int>&res){
@@ -25,3 +29,49 @@ space - O(V)
         dfs(adj,0,visited,res);
         return res;
     }
+
+
+2) // prints all not yet visited vertices reachable from s
+void Graph::DFSUtil(int s, vector<bool> &visited)
+{
+    // Create a stack for DFS
+    stack<int> stack;
+ 
+    // Push the current source node.
+    stack.push(s);
+ 
+    while (!stack.empty())
+    {
+        // Pop a vertex from stack and print it
+        int s = stack.top();
+        stack.pop();
+ 
+        // Stack may contain same vertex twice. So
+        // we need to print the popped item only
+        // if it is not visited.
+        if (!visited[s])
+        {
+            cout << s << " ";
+            visited[s] = true;
+        }
+ 
+        // Get all adjacent vertices of the popped vertex s
+        // If a adjacent has not been visited, then push it
+        // to the stack.
+        for (auto i = adj[s].begin(); i != adj[s].end(); ++i)
+            if (!visited[*i])
+                stack.push(*i);
+    }
+}
+ 
+// prints all vertices in DFS manner
+void Graph::DFS()
+{
+    // Mark all the vertices as not visited
+    vector<bool> visited(V, false);
+ 
+    for (int i = 0; i < V; i++)
+        if (!visited[i])
+            DFSUtil(i, visited);
+}
+

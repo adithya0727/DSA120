@@ -1,0 +1,62 @@
+/* Approach:                    [USE EITHER BFS OR DFS TO SOLVE THE PROBLEM]
+Given an undirected graph with V vertices. We say two vertices u and v belong to a single province if there is a path from u to v or v to u.
+Your task is to find the number of provinces.
+A province is a group of directly or indirectly connected cities and no other cities outside of the group.
+1) INTUITION : Based on the above definition , we have to actullay FIND THE AMOUNT OF DISCONNECTED COMPONENTS IN THE GRAPH , So we use a visited array for the 
+adjList , each time we come back to the visited and find unvisited indexes , it means they are disconnected thus we increment the count and so on, till the end.
+FUNDA : each node , dfs = O(V) * O(V+2E) but it's wrong because => its only partial dfs we do each time , therefore visiting only partial nodes at each call : So it's the SUM of all nodes by dfs.
+time -  O(V) + O(V+2E) : O(V) : dfs call is made for each node in the worst case but only partial dfs is made for each call since they are DISCONNECTED ELEMENTS.
+so partial dfs + partial dfs + partial dfs + partial dfs = overall DFS.
+O(V + 2E) : Each time dfs call is made , this is the overall time taken.
+So , each time : one V : partial dfs , next v : partial dfs , next v : partial dfs. that's why we add and not multiply.
+OVERALL, im making a dfs call for n nodes. O(V)
+space - O(V) : to store the visited array.
+*/
+
+1) /*   void dfs(vector<int> adjList[],int startnode,vector<bool>&visited){    //DFS  
+        visited[startnode] = true;
+        for(auto &neighbour : adjList[startnode]){
+            if(!visited[neighbour]){
+                dfs(adjList,neighbour,visited);
+            }
+        }
+        return;
+    }       */
+ /*   void bfs(vector<int> adjList[],int startnode,vector<bool>&visited){        //BFS
+        queue<int>q;
+        q.push(startnode);
+        visited[startnode] = true;
+        while(!q.empty()){
+            int currnode = q.front();
+            q.pop();
+            for(auto &neighbour : adjList[currnode]){
+                if(!visited[neighbour]){
+                    visited[neighbour] = true;
+                    q.push(neighbour);
+                }
+            }
+        }
+        return;
+    }        */
+  
+    int numProvinces(vector<vector<int>> adj, int V) {
+        int count=0;      //to return the number of time we came back to the visited array 
+        vector<int> adjList[V];
+        for(int i=0;i<V;i++){    //convert adjaceny matrix to adjaceny list : usually they will ask list : 0-based indexing itself if you observe the matrix.
+            for(int j=0;j<V;j++){
+                if(adj[i][j]==1 && i!=j){    //to avoid self-elements.
+                    adjList[i].push_back(j); 
+                    adjList[j].push_back(i);
+                }
+            }
+        }
+        //converted 0-based adjList 
+        vector<bool>visited(V,false);  //as they are disconnected until the whole list is visited , we won't stop
+        for(int i=0;i<V;i++){
+            if(!visited[i]){
+                count++;    //there's the disconnected edge.
+                bfs(adjList,i,visited);
+            }
+        }
+        return count;
+    }

@@ -1,0 +1,58 @@
+/* Approach:
+Given a grid of dimension nxm where each cell in the grid can have values 0, 1 or 2 which has the following meaning:
+0 : Empty cell
+1 : Cells have fresh oranges
+2 : Cells have rotten oranges
+We have to determine what is the earliest time after which all the oranges are rotten.
+A rotten orange at index [i,j] can rot other fresh orange at indexes [i-1,j], [i+1,j], [i,j-1], [i,j+1] (up, down, left and right) in unit time. 
+1) INTUITION : So , to move all the rotten oranges one level after another level sounds familiar : BFS.
+All the rotten oranges at ONE UNIT TIME should ROT all it's neighbours , we can't possibly rot all of them together in our code , so we use a time variable 
+which will help us to keep track that at which time frame rot had occured.
+we Firstly push all the rotten oranges into our queue and start level order traversal from these rotten oranges with their time frames.
+The maximum time it takes will be the minimum time for all the oranges to rot since : time++ is done at the final fresh orange and it has our answer , anything
+beyond that means it's not a NEIGHBOUR AND THEREFORE OUT OF ROTTEN ORANGE'S REACH.
+time - O(N*M) : in worst case to rotten all the neighbours in the matrix.
+space -  O(N*M) : to store our visited matrix.
+*/
+
+1) int orangesRotting(vector<vector<int>>& grid) {                      [ONLY BFS APPROACH]
+        int row=grid.size(),col=grid[0].size();      //sizes
+        queue<pair<pair<int,int>,int>>q;    //to store matrix indexes with their time frame
+        int freshcount=0,rottencount=0,maxtime=0;      //freshnode and rottennodes for a later reference
+        vector<vector<int>> visited(row, vector<int>(col, 0));      //visited is initialised with 0's.
+        for(int i=0;i<row;i++){    //traverse through the grid : to update the visited to make sure the 2's and 1's are marked : so that we don't try to rot a rotten Orange from the given question.
+            for(int j=0;j<col;j++){
+                if(grid[i][j] == 2){    //fill up all the indexes and time as 0 initially for the rotten oranges
+                    q.push({{i,j},0});
+                    visited[i][j] = 2;    //to not revisit
+                }
+                if(grid[i][j]==1){    //fresh oranges overall
+                    freshcount++;
+                }
+            }
+        }
+        
+        int dx[] = {-1,0,1,0};    //to move in 4 directions
+        int dy[] = {0,1,0,-1};
+        
+        while(!q.empty()){      //BFS
+            int x = q.front().first.first;
+            int y = q.front().first.second;
+            int currtime = q.front().second;
+            maxtime = max(maxtime,currtime);      //we want to maximum time , as it stores time only as long as we rotten a fresh orange in the if() isValid case.
+            q.pop();
+            for(int k=0;k<4;k++){    //each rotten orange is checked for it's neighbours and then their neighbour and so on...
+                int newdx = x + dx[k];
+                int newdy = y + dy[k];
+                if(newdx >= 0 && newdx < row && newdy >=0 && newdy < col &&     //out-of-bounds , it's not already rotten right? , cell should contain a fresh orange
+                    visited[newdx][newdy]!= 2 && grid[newdx][newdy]==1){        //and not a empty cell[0].
+                    visited[newdx][newdy] = 2;    //make it rotten
+                    q.push({{newdx,newdy},currtime+1});    //increase it's time so that we check it's neighbours we'll know the time it takes then
+                    rottencount++;    //how many oranges we have rotten
+                }
+            }
+        }
+        if(rottencount!=freshcount)     //if all fresh oranges are rotten , then we've found our answer.
+            return -1;      //if not : some fresh oranges are not in the NEIGHBOURING of rotten oranges : so we can't rot them and thus we return -1.
+        return maxtime;
+    }

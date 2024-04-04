@@ -7,10 +7,10 @@ Replace the color of all of the above mentioned pixels with the newColor.
 1) INTUITION : [STRAIGHTFORWARD APPROACH]
 with the starting position given , we store the currentcolor in a variable and change this color to newColor using BFS/DFS to all the neighbouring nodes in
 4 directions from the starting positions and replace them.
-time -  
-space - 
+time -  N*M : worst case to convert all values to newColor.
+space - N*M : to store the visited matrix.  + (N*M) : for dfs stack space ~ O(N*M)
 */
-
+[ALWAYS USE A DIFFERENT MATRIX TO CHANGE/EDIT THE VALUES]
 1) void dfs(vector<vector<int>>& image, int sr, int sc,vector<vector<bool>>&visited, int &newColor,          [DFS]
             int &row,int &col,vector<int>&dx,vector<int>&dy,int &currcolor){
         visited[sr][sc] = true;    //firstly mark visited

@@ -1,7 +1,59 @@
-/* Approach:
+/* Approach:                [SAME PATTERN AS NO. OF PROVINCES]
+Given a grid of size n*m (n is the number of rows and m is the number of columns in the grid) consisting of '0's (Water) and '1's(Land).
+Find the number of islands.
+Note: An island is either surrounded by water or boundary of grid and is formed by connecting adjacent lands horizontally or vertically or diagonally 
+i.e., in all 8 directions.
+Input:
+grid = {{0,1,1,1,0,0,0},
+        {0,0,1,1,0,1,0}}
+Output:
+2
+Expanation:
+The grid is-
+0 1 1 1 0 0 0
+0 0 1 1 0 1 0   : we can observe 2 islands surrounded by water or gird range.
+1)INTUITION : We have to find all the connected graphs in the given matrix , similar to BT question : we can perform a bfs/dfs.
+Since they can be disconnected , we traverse throughout the graph , for each starting node we perform bfs/dfs and capture all enighbouring nodes in 8 directions.
 
-1)
 time -  space - 
 */
 
-1) 
+1) void bfs(vector<vector<char>>& grid,int i,int j,vector<vector<bool>>&visited){
+        int row = grid.size(),col = grid[0].size();
+        queue<pair<int,int>>q;    //to store matrix indexes
+        int dx[] = {-1,-1,-1,0,0,1,1,1};    //all 8 directions
+        int dy[] = {-1,0,1,-1,1,-1,0,-1};
+        q.push({i,j});    //initial node inedxes
+        visited[i][j] = true;
+        while(!q.empty()){
+            int i=q.front().first;
+            int j=q.front().second;
+            q.pop();
+            for(int k=0;k<8;k++){    //check a given node position for all 8 directions.
+                int newx = i + dx[k];
+                int newy =  + dy[k];
+                if(newx >=0 && newx < row && newy >=0 && newy < col && grid[newx][newy] == '1' && !visited[newx][newy]){    //isValid() condition to capture all 
+                    visited[newx][newy] = true;                                                                  //neighbouring nodes 
+                    q.push({newx,newy});    //BFS
+                }
+            }
+        }
+        return;
+    }
+  
+    // Function to find the number of islands.
+    int numIslands(vector<vector<char>>& grid) {
+        int row=grid.size();    //range
+        int col=grid[0].size();
+        int count=0;    //answer
+        vector<vector<bool>>visited(row,vector<bool>(col,false));    //initialise 
+        for(int i=0;i<row;i++){
+            for(int j=0;j<col;j++){
+                if(!visited[i][j]  && grid[i][j]=='1' ){    //controlled paths to not visited already visited nodes and it should be an island.
+                    count++;    //new starting node is found each time we get here.
+                    bfs(grid,i,j,visited);
+                }
+            }
+        }
+        return count;
+    }

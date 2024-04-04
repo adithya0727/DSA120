@@ -1,0 +1,73 @@
+/* Approach:          [SAME PATTERN AS NO. OF PROVINCES]
+An image is represented by a 2-D array of integers, each integer representing the pixel value of the image.
+Given a coordinate (sr, sc) representing the starting pixel (row and column) of the flood fill, and a pixel value newColor, "flood fill" the image.
+To perform a "flood fill", consider the starting pixel, plus any pixels connected 4-directionally to the starting pixel of the same color as the starting pixel,
+plus any pixels connected 4-directionally to those pixels (also with the same color as the starting pixel), and so on.
+Replace the color of all of the above mentioned pixels with the newColor.
+1) INTUITION : [STRAIGHTFORWARD APPROACH]
+with the starting position given , we store the currentcolor in a variable and change this color to newColor using BFS/DFS to all the neighbouring nodes in
+4 directions from the starting positions and replace them.
+time -  
+space - 
+*/
+
+1) void dfs(vector<vector<int>>& image, int sr, int sc,vector<vector<bool>>&visited, int &newColor,          [DFS]
+            int &row,int &col,vector<int>&dx,vector<int>&dy,int &currcolor){
+        visited[sr][sc] = true;    //firstly mark visited
+        for(int i=0;i<4;i++){    //CHOICES : all 4 neighbours 
+            int newdx = sr + dx[i];    //new positions
+            int newdy = sc + dy[i];
+            if(newdx >=0 && newdx < row && newdy >=0 && newdy < col && image[newdx][newdy] == currcolor && !visited[newdx][newdy]){  //isValid()
+                visited[newdx][newdy] = true;   //mark as visited             //same as the starting nodes color && it shouldn't already be visited.
+                image[newdx][newdy] = newColor;    //replace with newcolor
+                dfs(image,newdx,newdy,visited,newColor,row,col,dx,dy,currcolor);    //with new positions via a dfs traversal
+            }
+        }
+        return;
+    }
+
+    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int newColor) {
+        int row=image.size(),col=image[0].size();    //sizes
+        int currcolor = image[sr][sc];    //storing the currentcolor so that we know that only when the same pixel value is encountered we replace with newColor.
+        vector<int>dx = {-1,0,1,0};    //4- Directions
+        vector<int>dy = {0,1,0,-1};
+        vector<vector<bool>>visited(row,vector<bool>(col,false));    //2d matrix.
+        image[sr][sc] = newColor;    //replace the current index initially
+        dfs(image,sr,sc,visited,newColor,row,col,dx,dy,currcolor);
+        return image;
+        
+    }
+
+2) void bfs(vector<vector<int>>& image, int sr, int sc,vector<vector<bool>>&visited, int &newColor,      [BFS]
+            int &row,int &col,int &currcolor){              //SIMILAR TO DFS IN BFS.
+        visited[sr][sc] = true;
+        vector<int>dx = {-1,0,1,0};
+        vector<int>dy = {0,1,0,-1};
+        queue<pair<int,int>>q;
+        q.push({sr,sc});
+        while(!q.empty()){
+            int sr = q.front().first;
+            int sc = q.front().second;
+            q.pop();
+            for(int i=0;i<4;i++){
+                int newdx = sr + dx[i];
+                int newdy = sc + dy[i];
+            if(newdx >=0 && newdx < row && newdy >=0 && newdy < col && image[newdx][newdy] == currcolor && !visited[newdx][newdy]){
+                visited[newdx][newdy] = true;
+                image[newdx][newdy] = newColor;
+                q.push({newdx,newdy});
+            }
+        }
+        }
+        return;
+    }
+
+    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int newColor) {
+        int row=image.size(),col=image[0].size();
+        int currcolor = image[sr][sc];
+        vector<vector<bool>>visited(row,vector<bool>(col,false));
+        image[sr][sc] = newColor;
+        bfs(image,sr,sc,visited,newColor,row,col,currcolor);
+        return image;
+        
+    }

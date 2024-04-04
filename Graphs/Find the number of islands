@@ -15,14 +15,15 @@ The grid is-
 1)INTUITION : We have to find all the connected graphs in the given matrix , similar to BT question : we can perform a bfs/dfs.
 Since they can be disconnected , we traverse throughout the graph , for each starting node we perform bfs/dfs and capture all enighbouring nodes in 8 directions.
 
-time -  space - 
+time - O(N^2) Approx. : the visiting each cell to check for 1's will dominate the bfs() calls since it will be lesser only usually.
+space - O(N^2 + N^2) ~ O(N^2) : for visited matrix and queue in worst case to store all node elements.
 */
 
-1) void bfs(vector<vector<char>>& grid,int i,int j,vector<vector<bool>>&visited){
+1) void bfs(vector<vector<char>>& grid,int i,int j,vector<vector<bool>>&visited){                        [BFS]
         int row = grid.size(),col = grid[0].size();
         queue<pair<int,int>>q;    //to store matrix indexes
         int dx[] = {-1,-1,-1,0,0,1,1,1};    //all 8 directions
-        int dy[] = {-1,0,1,-1,1,-1,0,-1};
+        int dy[] = {-1,0,1,-1,1,-1,0,1};
         q.push({i,j});    //initial node inedxes
         visited[i][j] = true;
         while(!q.empty()){
@@ -31,7 +32,7 @@ time -  space -
             q.pop();
             for(int k=0;k<8;k++){    //check a given node position for all 8 directions.
                 int newx = i + dx[k];
-                int newy =  + dy[k];
+                int newy = j + dy[k];
                 if(newx >=0 && newx < row && newy >=0 && newy < col && grid[newx][newy] == '1' && !visited[newx][newy]){    //isValid() condition to capture all 
                     visited[newx][newy] = true;                                                                  //neighbouring nodes 
                     q.push({newx,newy});    //BFS
@@ -52,6 +53,39 @@ time -  space -
                 if(!visited[i][j]  && grid[i][j]=='1' ){    //controlled paths to not visited already visited nodes and it should be an island.
                     count++;    //new starting node is found each time we get here.
                     bfs(grid,i,j,visited);
+                }
+            }
+        }
+        return count;
+    }
+
+
+2) void dfs(vector<vector<char>>& grid,int i,int j,vector<vector<bool>>&visited,int &row,int &col, vector<int>&dx,vector<int>&dy){        [DFS]
+        visited[i][j] = true;
+            for(int k=0;k<8;k++){
+                int newx = i + dx[k];
+                int newy = j + dy[k];
+                if(newx >=0 && newx < row && newy >=0 && newy < col && grid[newx][newy] == '1' && !visited[newx][newy]){
+                    visited[newx][newy] = true;
+                    dfs(grid,newx,newy,visited,row,col,dx,dy);
+                }
+            }
+        return;
+    }
+  
+    // Function to find the number of islands.
+    int numIslands(vector<vector<char>>& grid) {
+        int row=grid.size();
+        int col=grid[0].size();
+        int count=0;
+        vector<int>dx = {-1,-1,-1,0,0,1,1,1};
+        vector<int>dy = {-1,0,1,-1,1,-1,0,1};
+        vector<vector<bool>>visited(row,vector<bool>(col,false));
+        for(int i=0;i<row;i++){
+            for(int j=0;j<col;j++){
+                if(!visited[i][j]  && grid[i][j]=='1' ){
+                    count++;
+                    dfs(grid,i,j,visited,row,col,dx,dy);
                 }
             }
         }

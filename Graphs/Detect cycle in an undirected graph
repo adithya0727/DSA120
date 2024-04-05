@@ -5,7 +5,8 @@ Graph is in the form of adjacency list where adj[i] contains all the nodes ith n
 INTUITION : By using bfs , we travel two different paths by travelling neighbours : we keep track of the parent too so that we don't consider that as re-visiting a node.
 If in any case , there's a repetition : it means there's a cycle , why? : because since we start travelling along two different paths : except the parent there
 shouldn't really be a re-visited node and if someone has already visited that it means there's an intersection point which creates a CYCLE.
-time -  O(V+2E) //Regular bfs complexity.
+time -  O(V+2E) //Regular bfs complexity. : for loop() is there but yet use + : because each node , only partial graph is being traversed and then partial again,
+when the sum the partial graphs together : we get one full complete graph which is O(V+2E).
 space - O(V)
 
 2) [DFS] :
@@ -47,3 +48,6 @@ space -
         }
         return false;
     }
+
+
+2) 

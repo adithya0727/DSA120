@@ -10,9 +10,10 @@ when the sum the partial graphs together : we get one full complete graph which 
 space - O(V)
 
 2) [DFS] :
-INTUITION : 
-time -  
-space - 
+INTUITION : cycle : a path whose starting and ending nodes are the same is called a cycle . Similarly in a dfs , it traverses fully along a path , while doing so
+if at any point it reaches a nodes which is not the previous and it already being visited [same logic as bfs] , there exists a cycle.
+time -  O(V + 2E)                //regular dfs
+space - O(V) 
 */
 
 1) bool bfs(vector<int> adj[],int start,vector<bool>&visited){        [BFS]
@@ -50,4 +51,28 @@ space -
     }
 
 
-2) 
+2) bool dfs(vector<int> adj[],int start,vector<bool>&visited,int parent){
+        visited[start] = true;
+            for(auto &neighbour : adj[start]){
+                if(!visited[neighbour]){ 
+                    if(dfs(adj,neighbour,visited,start)) return true;
+                }
+                else if(neighbour != parent){
+                    return true;
+                }
+            }
+        return false;
+    }
+  
+  
+    // Function to detect cycle in an undirected graph.
+    bool isCycle(int V, vector<int> adj[]) {
+        vector<bool>visited(V,false);
+        for(int i=0;i<V;i++){
+            if(!visited[i]){
+                if(dfs(adj,i,visited,-1))
+                return true;
+            }
+        }
+        return false;
+    }

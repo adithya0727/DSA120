@@ -12,7 +12,7 @@ space - O(V)
 2) [DFS] :
 INTUITION : cycle : a path whose starting and ending nodes are the same is called a cycle . Similarly in a dfs , it traverses fully along a path , while doing so
 if at any point it reaches a nodes which is not the previous and it already being visited [same logic as bfs] , there exists a cycle.
-time -  O(V + 2E)                //regular dfs
+time -  O(V + 2E)   + O(N)  (for loop)           //regular dfs
 space - O(V) 
 */
 

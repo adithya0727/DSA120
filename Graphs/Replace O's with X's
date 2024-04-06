@@ -1,0 +1,69 @@
+/* Approach:                [PATTERN : ROTTEN ORANGES , Nearest cell : BFS]
+Given a matrix mat of size N x M where every element is either 'O' or 'X'. Replace all 'O' or a group of 'O' with 'X' that are surrounded by 'X'.
+A 'O' (or a set of 'O') is considered to be surrounded by 'X' if there are 'X' at locations just below, just above, just left and just right of it.
+1) [BFS] : [OPPOSITE WAY TO GO ABOUT THE PROBLEM].
+INTUITION : Observation : 1) if there is a 'O' at the boundaries , then every 'O' connected to that cannot be visited since all 4 directions will not have a 'X'.
+So , we firstly find out all the boundary 'O''s and perform BFS/DFS to find all connected COMPONENETS TO THAT and make them visited.
+2) If 'O' , is not in boundary and not connected to any boundary , then obviously they are surrounded by "X"'s , therefore all non-visited 'O''s at the end are converted.
+time -  O(M*N) space - O(M*N)
+
+2) [DFS]
+
+time - O(M*N) space - O(M*N)
+*/
+
+1) vector<vector<char>> fill(int n, int m, vector<vector<char>> mat)
+    {
+        vector<vector<char>>res=mat;    //this is our result vector which will intially have all contents are given matrix.
+        queue<pair<int,int>>q;
+        vector<vector<bool>>visited(n,vector<bool>(m,false));    //to check for visited.
+        for(int i=0;i<m;i++){  //all row boundary O's
+            if(mat[0][i] == 'O'){
+                q.push({0,i});
+                visited[0][i] = true;
+            }
+            if(mat[n-1][i] == 'O'){
+                q.push({n-1,i});
+                visited[n-1][i] = true;
+            }
+        }
+        for(int j=0;j<n;j++){    //all coulmn boundary O's.
+            if(mat[j][0] == 'O'){
+                q.push({j,0});
+                visited[j][0] = true;
+            }
+            if(mat[j][m-1] == 'O'){
+                q.push({j,m-1});
+                visited[j][m-1] = true;
+            }
+        }
+        
+        int dx[] = {-1,0,1,0};    //to move along 4 directions
+        int dy[] = {0,1,0,-1};
+        
+        while(!q.empty()){
+            int x = q.front().first;
+            int y = q.front().second;
+            q.pop();
+            for(int k=0;k<4;k++){    //for each boundary O , we perform BFS one by one and mark all of them visited neighbour after neighbour.
+                int newdx = x + dx[k];
+                int newdy = y + dy[k];
+                if(newdx>=0 && newdx < n && newdy >= 0 && newdy < m &&
+                !visited[newdx][newdy] && mat[newdx][newdy]=='O'){
+                    visited[newdx][newdy] = true;
+                    q.push({newdx,newdy});
+                }
+            }
+        }
+        for(int i=0;i<n;i++){      //if it's a O and it's not been visited , then convert it all to X.
+            for(int j=0;j<m;j++){
+                if(mat[i][j] == 'O' && !visited[i][j]){
+                    res[i][j] = 'X';
+                }
+            }
+        }
+        return res;
+    }
+
+
+2) 

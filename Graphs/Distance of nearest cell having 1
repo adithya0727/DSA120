@@ -1,0 +1,49 @@
+/* Appraoch:            [PATTERN : ROTTEN ORANGES]
+Given a binary grid of n*m. Find the distance of the nearest 1 in the grid for each cell.
+The distance is calculated as |i1  - i2| + |j1 - j2|, where i1, j1 are the row number and column number of the current cell, and i2, j2 are the row number 
+and column number of the nearest cell having value 1. There should be atleast one 1 in the grid.
+0 1 1 0        1 0 0 1
+1 1 0 0   =>   0 0 1 1
+0 0 1 1        1 1 0 0  
+
+1) INTUITION : We see NEAREST KEYWORD : BFS ALGORITHM , similar to rotten oranges : instead of unit time , we have direction length here : 
+So we start the queue with all 1's and make them traverse in all 4 directions to look for 0's , if found and not repeated , then replace them with the current 
+distance , then we go to the neighbours with dist+1 and then check for thier neighbours and so on.
+
+time - O(N*M) : nested for loops
+space - O(N*M) : to store result vector 
+*/
+
+1) vector<vector<int>>nearest(vector<vector<int>>grid)
+	{
+	    int row=grid.size(),col = grid[0].size();    //sizes
+	    vector<vector<int>>res=grid;    //to store our answer different and we can use these two only to check for visited or not.
+	    queue<pair<pair<int,int>,int>>q;
+	    for(int i=0;i<row;i++){
+	        for(int j=0;j<col;j++){
+	            if(grid[i][j] == 1){
+	                q.push({{i,j},0});      //capture their x and y positions to traverse from them as starting point.
+	                res[i][j] = 0;    //make the 1's -> 0's as they are closest to themselves
+	            }
+	        }
+	    }
+	    int dx[] = {-1,0,1,0};    //to move along 4 directions
+	    int dy[] = {0,1,0,-1};
+	    
+	    while(!q.empty()){
+	        int x = q.front().first.first;
+	        int y = q.front().first.second;
+	        int dist = q.front().second;
+	        dist++;    //to increase distance each time we perform bfs a step father away from our initial points.
+	        q.pop();
+	        for(int k=0;k<4;k++){
+	            int newx = x + dx[k];
+	            int newy = y + dy[k];
+	            if(newx >=0 && newx < row && newy >=0 && newy < col && grid[newx][newy] == 0 && res[newx][newy]==0){  //isValid() : if it's 0 and it's not yet been replaced.
+	                res[newx][newy] = dist;    //replace with the new distance
+	                q.push({{newx,newy},dist});  //push to check their neighbours next till all are traversed.
+	            }
+	        }
+	    }
+	    return res;
+	}

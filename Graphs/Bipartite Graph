@@ -1,4 +1,4 @@
-/* Approach:          [REFER BOOK FOR THEORY CONCEPTS REGARDING THE TOPIC]
+/* Approach:          [REFER BOOK FOR THEORY CONCEPTS REGARDING THE TOPIC] [PATTERN : DETECT CYCLE IN GRAPH]
 Given an adjacency list of a graph adj of V no. of vertices having 0 based index. Check whether the graph is bipartite or not.
 If you can COLOR the graph with 2 COLORS such that no adjacent nodes have the same color : bipartite graph.
 1) [BFS]

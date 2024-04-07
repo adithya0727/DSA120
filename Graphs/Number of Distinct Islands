@@ -1,0 +1,96 @@
+/* Approach:
+Given a boolean 2D matrix grid of size n * m. You have to find the number of distinct islands where a group of connected 1s (horizontally or vertically)
+forms an island. Two islands are considered to be distinct if and only if one island is not equal to another (not rotated or reflected).
+grid[][] = {{1, 1, 0, 0, 0},
+            {1, 1, 0, 0, 0},
+            {0, 0, 0, 1, 1},
+            {0, 0, 0, 1, 1}}
+Output:
+1   [DFS]
+1) INTUITION : Similar to number of islands : by searching for un-visited 1's at each point we traverse and perform a BFS/DFS. 
+KEY POINT : use a set to keep track of all unique islands : we do this by using our source point as INITIAL POINT and subtract all connected nodes with this point.
+so that we all connected points will have a same base point [0,0] and therefore it its a same island , the set will not store the repetitions.
+time - O(N*M)
+space - O(N*M)
+2) [BFS]
+*/
+
+1) void dfs(vector<vector<int>>& grid,vector<vector<int>>&res,int i,int j,int &row,int &col,vector<int>&dx,        [DFS  ]
+                vector<int>&dy,vector<pair<int,int>>&v,pair<int,int>&base){
+                    res[i][j] = 0;
+                    for(int k=0;k<4;k++){
+                        int newdx = i + dx[k];
+                        int newdy = j + dy[k];
+                        if(newdx >=0 && newdx < row && newdy >=0 && newdy < col && grid[newdx][newdy]==1
+                        && res[newdx][newdy]==1){
+                            res[newdx][newdy] = 0;
+                            v.push_back({newdx-base.first,newdy-base.second});
+                            dfs(grid,res,newdx,newdy,row,col,dx,dy,v,base);
+                        }
+                    }
+                    return;
+                }
+  
+  
+    int countDistinctIslands(vector<vector<int>>& grid) {
+        int row=grid.size(),col=grid[0].size();
+        set<vector<pair<int,int>>>s;
+        vector<int>dx = {-1,0,1,0};
+        vector<int>dy = {0,1,0,-1};
+        vector<vector<int>>res = grid;
+        for(int i=0;i<row;i++){
+            for(int j=0;j<col;j++){
+                if(grid[i][j] == 1 && res[i][j] == 1){
+                    vector<pair<int,int>>v;
+                    pair<int,int>base = {i,j};
+                    dfs(grid,res,i,j,row,col,dx,dy,v,base);
+                    s.insert(v);
+                }
+            }
+        }
+        return s.size();
+    }
+
+
+2) void bfs(vector<vector<int>>& grid,vector<vector<int>>&res,int i,int j,int &row,int &col,vector<int>&dx,      [BFS]
+                vector<int>&dy,vector<pair<int,int>>&v,pair<int,int>&base){
+                    res[i][j] = 0;
+                    queue<pair<int,int>>q;
+                    q.push({i,j});
+                    while(!q.empty()){
+                        int x = q.front().first;
+                        int y = q.front().second;
+                        q.pop();
+                    for(int k=0;k<4;k++){
+                        int newdx = x + dx[k];
+                        int newdy = y + dy[k];
+                        if(newdx >=0 && newdx < row && newdy >=0 && newdy < col && grid[newdx][newdy]==1
+                        && res[newdx][newdy]==1){
+                            res[newdx][newdy] = 0;
+                            v.push_back({newdx-base.first,newdy-base.second});
+                            q.push({newdx,newdy});
+                        }
+                    }
+                    }
+                    return;
+                }
+  
+  
+    int countDistinctIslands(vector<vector<int>>& grid) {
+        int row=grid.size(),col=grid[0].size();
+        set<vector<pair<int,int>>>s;
+        vector<int>dx = {-1,0,1,0};
+        vector<int>dy = {0,1,0,-1};
+        vector<vector<int>>res = grid;
+        for(int i=0;i<row;i++){
+            for(int j=0;j<col;j++){
+                if(grid[i][j] == 1 && res[i][j] == 1){
+                    vector<pair<int,int>>v;
+                    pair<int,int>base = {i,j};
+                    bfs(grid,res,i,j,row,col,dx,dy,v,base);
+                    s.insert(v);
+                }
+            }
+        }
+        return s.size();
+    }

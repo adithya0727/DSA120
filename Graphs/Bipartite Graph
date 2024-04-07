@@ -41,26 +41,26 @@ space - O(V)
 	}
 
 
-2) bool dfs(vector<int>adj[],int &V,vector<int>&color,int start){                
-	    color[start] = 0;
-	        for(auto &neighbour : adj[start]){
-	            if(color[neighbour]==-1){
-	                color[neighbour] = !color[start];
-	                if(dfs(adj,V,color,neighbour)==false) return false;
+2) bool dfs(vector<int>adj[],int &V,vector<int>&color,int start){				[DFS]
+	        for(auto &neighbour : adj[start]){	//for all its neighbours
+	            if(color[neighbour]==-1){	//not yet visited
+	                color[neighbour] = !color[start];	//opposite color
+	                if(dfs(adj,V,color,neighbour)==false) return false;	//at any point we get a false , just keep returning it to the previous stack frame.
 	            }
-	            else if(color[neighbour] == color[start]){
+	            else if(color[neighbour] == color[start]){	//if visited and same as adjacents : return false.
 	                return false;
 	            }
 	        }
-	    return true;
+	    return true;	//if at no point in every stack frame , we hit a false , then finally just return this TRUE.
 	}
 
 
 	bool isBipartite(int V, vector<int>adj[]){
 	    vector<int>color(V,-1);
-	    for(int i=0;i<V;i++){
+	    for(int i=0;i<V;i++){	//disconnected graphs
 	        if(color[i]==-1){
-	            if(dfs(adj,V,color,i)== false) return false;
+	            color[i] = 0;	//initially set the color as visited 
+	            if(dfs(adj,V,color,i)== false) return false;	//if at any connected graph there is a mismatch : return false.
 	        }
 	    }
 	    return true;

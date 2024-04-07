@@ -33,22 +33,22 @@ space - O(N*M)
   
   
     int countDistinctIslands(vector<vector<int>>& grid) {
-        int row=grid.size(),col=grid[0].size();
-        set<vector<pair<int,int>>>s;
-        vector<int>dx = {-1,0,1,0};
+        int row=grid.size(),col=grid[0].size();                        //sizes
+        set<vector<pair<int,int>>>s;      //to store only unique vectors which contains pairs(x,y) for each connected ISLAND                       
+        vector<int>dx = {-1,0,1,0};            //to move along 4 directions
         vector<int>dy = {0,1,0,-1};
-        vector<vector<int>>res = grid;
+        vector<vector<int>>res = grid;            //to use as visited basically.
         for(int i=0;i<row;i++){
-            for(int j=0;j<col;j++){
-                if(grid[i][j] == 1 && res[i][j] == 1){
+            for(int j=0;j<col;j++){             //CONTROLLED BFS/DFS
+                if(grid[i][j] == 1 && res[i][j] == 1){//if its an island and its not being visited , we've found a new island : find its neighbours
                     vector<pair<int,int>>v;
-                    pair<int,int>base = {i,j};
-                    dfs(grid,res,i,j,row,col,dx,dy,v,base);
-                    s.insert(v);
+                    pair<int,int>base = {i,j};            //base value to which we subtract all the (x,y) to store in the vector and thus in the set.
+                    dfs(grid,res,i,j,row,col,dx,dy,v,base);  //all neighbours
+                    s.insert(v);   // we've got one island , which stores pairs which are from their base indexes to make it easier for us to remove DUPLICATES.
                 }
             }
         }
-        return s.size();
+        return s.size();            //all unique occurances of islands will be stored.
     }
 
 

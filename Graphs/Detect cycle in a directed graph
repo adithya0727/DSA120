@@ -1,8 +1,35 @@
-/* Approach:
-
-1) INTUITION : 
-time -  
-space - 
+/* Approach:                            [REFER BOOK FOR EDGE CASES , LOGICAL REASONING AND INTUITION]
+Given a Directed Graph with V vertices (Numbered from 0 to V-1) and E edges, check whether it contains any cycle or not.
+1) INTUITION : Along a SINGLE VISITED CURRENT ONE PATH , if the path starts and ends at the same node : then we say its a cycle in a directed graph.
+We won't visit the parent back usually as its a directed graph , adjList will not consist of the parent edge for it's child mostly , so thats taken care of.
+But ,we may have multiple intersection points but we cant consider them as cycles yet as the directions maybe from different paths and it would've made it visited , 
+so we use a VISITED PATH : to make sure that along a single path itself if the node is being visited twice : only then a TRUE CYCLE EXISTS.
+time -  O(V + E)    //regular dfs
+space - O(V)
 */
 
-1) 
+1) // Function to detect cycle in a directed graph.
+    bool dfs(vector<int> adj[],vector<int>&visited,vector<int>&pathvisited,int start){
+        visited[start] = true;    //node is visited
+        pathvisited[start] = true;  //belongs to the current path
+        for(auto &neighbour : adj[start]){
+            if(!visited[neighbour]){    //if its not yet being visited , visit and DFS
+                if(dfs(adj,visited,pathvisited,neighbour)==true) return true;    //at any point , we return a true , just keep stack unwinding till the end.
+            }
+            else if(pathvisited[neighbour] == true){  //when node is visited and the same node is visited in the same path , only then its valid.
+                return true;
+            }
+        }
+        pathvisited[start] = false;//[V.IMP] : only once the whole for loop runs and it checks all MULTIPLE PATHS IF THERE EXISTS ANY CYCLES FOR THIS NODE , then
+        return false;  //we finally BACKTRACK and make it false.
+    }
+  bool isCyclic(int V, vector<int> adj[]) {
+        vector<int>visited(V,false);    //all visited nodes
+        vector<int>pathvisited(V,false);    //holds the current paths and BACKTRACKS AS AND WHEN ALL NEIGHBOURS ARE BEING FINISHED VISITED.
+        for(int i=0;i<V;i++){  //to check for dis connected graphs too
+            if(!visited[i]){
+                if(dfs(adj,visited,pathvisited,i)) return true;    //if at any connected graph there is a cycle , return.
+            }
+        }
+        return false;
+    }

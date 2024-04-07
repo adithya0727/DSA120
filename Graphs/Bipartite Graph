@@ -1,0 +1,67 @@
+/* Approach:          [REFER BOOK FOR THEORY CONCEPTS REGARDING THE TOPIC]
+Given an adjacency list of a graph adj of V no. of vertices having 0 based index. Check whether the graph is bipartite or not.
+If you can COLOR the graph with 2 COLORS such that no adjacent nodes have the same color : bipartite graph.
+1) [BFS]
+INTUITION : Theoritically => only cycle which has odd number of length can not be a Bipartite Graph , so at the INTERSECTION POINT (Similar to DETECT a CYCLE in graph)
+we get know if it's repeating at that point that means it's an odd length otherwise it's an even length.
+time - O(V+E)      //same time as performing a dfs/bfs traversal , just if else checks in-between.
+space - O(V)
+2) [DFS]
+*/
+
+1) bool bfs(vector<int>adj[],int &V,vector<int>&color,int start){                        [BFS]
+	    queue<int>q;
+	    q.push(start);  //initally push the first node into queue
+	    color[start] = 0;  //mark it visited
+	    while(!q.empty()){
+	        int x = q.front();
+	        q.pop();
+	        for(auto &neighbour : adj[x]){    //check for all it's neighbours
+	            if(color[neighbour]==-1){  //if not colored yet , put the opposite color to all it's neighbours in this stack frame 
+	                color[neighbour] = !color[x];  //opposite color from current node to all it's neighbours
+	                q.push(neighbour);  //check for its neighbours/corresponding edges
+	            }
+	            else if(color[neighbour] == color[x]){  //if it's already been visited : intersection point in cycle (except parent node : detect a cycle)
+	                return false;          //by some node's adjaceny , then check if there is collision if current nodes neighbours also have the same color , if yes
+	            }                      //return false.
+	        }
+	    }
+	    return true;
+	}
+
+
+	bool isBipartite(int V, vector<int>adj[]){
+	    vector<int>color(V,-1);  //color each node , initially its -1.
+	    for(int i=0;i<V;i++){
+	        if(color[i]==-1){    //to check for all disconnected graphs.
+	            if(bfs(adj,V,color,i)== false) return false;
+	        }
+	    }
+	    return true;
+	}
+
+
+2) bool dfs(vector<int>adj[],int &V,vector<int>&color,int start){                
+	    color[start] = 0;
+	        for(auto &neighbour : adj[start]){
+	            if(color[neighbour]==-1){
+	                color[neighbour] = !color[start];
+	                if(dfs(adj,V,color,neighbour)==false) return false;
+	            }
+	            else if(color[neighbour] == color[start]){
+	                return false;
+	            }
+	        }
+	    return true;
+	}
+
+
+	bool isBipartite(int V, vector<int>adj[]){
+	    vector<int>color(V,-1);
+	    for(int i=0;i<V;i++){
+	        if(color[i]==-1){
+	            if(dfs(adj,V,color,i)== false) return false;
+	        }
+	    }
+	    return true;
+	}

@@ -1,0 +1,38 @@
+/* Approach:
+Given a Directed Acyclic Graph (DAG) with V vertices and E edges, Find any Topological Sorting of that Graph.
+Topological Sort : every edge : u - > v must follow where : u always comes before v. 
+for example : 5->6 => 5 comes before 6.
+1) INTUITION : using dfs to visit the child nodes at the depth first and then start inserting them onto the STACK. So we insert all the children for every possible
+node[by visiting all thier neighbours until none are left] and then push onto stack. finally , the correct order will be in the stack from top to bottom , parent->child.
+time - O(V + E)  space - O(V)
+*/
+
+1) void dfs(vector<int> adj[],vector<bool>&visited,vector<int>&res,int start,stack<int>&st){
+	    visited[start] = true;  //make it visited
+	    for(auto &neighbour : adj[start]){    //perform dfs and traverse the depths of each neighbours and firstly psuh all their children into the stack 
+	        if(!visited[neighbour]){
+	            dfs(adj,visited,res,neighbour,st);
+	        }
+	    }
+	    st.push(start);    //push , when no more children/neighbour exists and its like a leaf node. [highly dependent].
+	    return;
+	}
+	
+	
+	//Function to return list containing vertices in Topological order. 
+	vector<int> topoSort(int V, vector<int> adj[]) 
+	{
+	    vector<int>res;    //our final answer
+	    vector<bool>visited(V,false);  
+	    stack<int>st;  //to perform LIFO.
+	    for(int i=0;i<V;i++){    //for undirected graphs
+	        if(!visited[i]){
+	            dfs(adj,visited,res,i,st);
+	        }
+	    }
+	    while(!st.empty()){    //push from top to bottom [LIFO]
+	        res.push_back(st.top());
+	        st.pop();
+	    }
+	    return res;
+	}

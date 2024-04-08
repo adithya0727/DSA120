@@ -1,0 +1,44 @@
+/* Approach:        [PATTERN : DETECT A CYCLE IN A DIRECTED GRAPH]
+A directed graph of V vertices and E edges is given in the form of an adjacency list adj.
+A node is a terminal node if there are no outgoing edges.
+A node is a safe node if every possible path starting from that node leads to a terminal node.
+You have to return an array containing all the safe nodes of the graph. The answer should be sorted in ascending order.
+1) [DFS] , INTUITION : 
+The nodes which have outdegree's connecting a CYCLE cannot be a safe node , since there will be that one path which will never TERMINATE. 
+So basically two things happen while traversing a path : 
+1) Terminate : mark the safe nodes while stack unwinding POST CHECKING ALL PATHS , WHEN THE FOR LOOP ENDS AND ALL THE NEIGHBOURS ARE CHECKED.
+2) Cycle : We JUST KEEP RETURNING TRUE , both visited and pathvisited will not BACKTRACK and all these nodes along this path will be skipped [whole connected graph
+will be skipped as anyway they all will have one path which leads to a cycle].
+time - O(V + E)    //regular dfs
+space - O(V)
+*/
+
+1) bool dfs(vector<int> adj[],vector<int>&visited,vector<int>&pathvisited,int start,vector<int>&res){
+        visited[start] = true;        //mark the node and path as true initially
+        pathvisited[start] = true;  
+        for(auto &neighbour : adj[start]){  //checking all its neighbours
+            if(!visited[neighbour]){    
+                if(dfs(adj,visited,pathvisited,neighbour,res)==true) return true;   //if at any point true returns , we dont backtrack and the whole connected component
+            }                                                                    //is skipped as they all lead to a cycle , push_back will skip.
+            else if(pathvisited[neighbour] == true){  //check for cycles
+                return true;
+            }
+        }
+        res.push_back(start);      //only one line change compared to pattern problem : if all neighbours are checked and it didn't return true , WE END UP HERE.
+        pathvisited[start] = false;  //thus , it means a termination and we've found a safe node. Then we backtrack it as usual.
+        return false;  //no cycle. So , continue checking for other neighbours in the previous stack frame.
+    }
+  
+  
+    vector<int> eventualSafeNodes(int V, vector<int> adj[]) {
+        vector<int>visited(V,false);  //visited array to not revisit
+        vector<int>res;    //store our answer
+        vector<int>pathvisited(V,false);    //current path to check for cycles.
+        for(int i=0;i<V;i++){  
+            if(!visited[i]){    //for disconnected graphs
+                dfs(adj,visited,pathvisited,i,res);    
+            }
+        }
+        sort(res.begin(),res.end());  //sort the final answer.
+        return res;
+    }

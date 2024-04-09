@@ -1,0 +1,36 @@
+/*Approach:
+Given a Directed Acyclic Graph (DAG) with V vertices and E edges, Find any Topological Sorting of that Graph.
+1) INTUITION : Using In-degree's one can determine which is a parent node [U] and children [V] , if a particular node has in-degree =0 , it's definitely a PARENT ,
+because there is no u->v for it , there is only out-degree in that node. Similarly we keep finding the parent and performing FIFO using queue.
+This guarantees us that for each node , that the u always comes before the v.
+
+time - O(V + E) space - O(V)      //regular bfs.
+*/
+
+1) vector<int> topoSort(int V, vector<int> adj[]) 
+	{
+	    vector<int>res;  //to store our answer.
+	    vector<int>InDeg(V,0);    //for each vertex , what is it's current indegree.
+	    for(int i=0;i<V;i++){  //for each adj list
+	        for(auto &var : adj[i]){    //traverse through all its elements (we are just counting the number of in-degree each node has depending on their occurance).
+	            InDeg[var]++;  // go to that node position and increment it's value.  (we check the left side of the list , as thats where we get the indegree).
+	        }
+	    }
+	    queue<int>q;    //bfs
+	    for(int i=0;i<V;i++){    //insert all the nodes with indegree =0 , which means its a parent , it is a U , there cant be any v->u in this since indeg=0.
+	        if(InDeg[i]==0){
+	            q.push(i);
+	        }
+	    }
+	    while(!q.empty()){
+	        int node = q.front();
+	        res.push_back(node);  //we got one answer here
+	        q.pop();
+	        for(auto &neighbour : adj[node]){  //for all elements from this node whose indeg=0 , reduce their neighbour's indeg by 1 , since this current node
+	            InDeg[neighbour]--;    //doesn't exist in the graph and then search for the next parent : at each step there will exist a new parent (indeg=0)
+	            if(InDeg[neighbour]==0)
+	                q.push(neighbour);  //push that parent first to not violate the (u first and v second principle).
+	        }
+	    }
+	    return res;
+	}

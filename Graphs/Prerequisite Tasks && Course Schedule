@@ -2,11 +2,12 @@
 There are a total of N tasks, labeled from 0 to N-1. Some tasks may have prerequisites, for example to do task 0 you have to first complete task 1,
 which is expressed as a pair: [1,0]
 Given the total number of tasks N and a list of prerequisite pairs P, find if it is possible to finish all tasks.
-1) INTUITION : TWO PATTERNS COMBINATION : 
+1) Prerequisite Tasks => INTUITION : TWO PATTERNS COMBINATION : 
 a) (u->v) , u always comes before v : topological sort , b) if possible or not to get a solution ? : Detect a cycle in a directed graph [Kahn's or DFS].
 Combine : kahn's + cycle detection [OR] DFS to detect cycle.
-time -  space - 
-2) 
+time - O(V + E) + O(P) : to convert into adjList space - O(V + E) : to store adjList.
+2) Course Schedule => INTUITION :
+
 
 time -  space - 
 */
@@ -43,3 +44,6 @@ time -  space -
 	    if(count == N)  return true;
 	    return false;
 	}
+
+
+2) 

@@ -1,0 +1,45 @@
+/* Approach:
+There are a total of N tasks, labeled from 0 to N-1. Some tasks may have prerequisites, for example to do task 0 you have to first complete task 1,
+which is expressed as a pair: [1,0]
+Given the total number of tasks N and a list of prerequisite pairs P, find if it is possible to finish all tasks.
+1) INTUITION : TWO PATTERNS COMBINATION : 
+a) (u->v) , u always comes before v : topological sort , b) if possible or not to get a solution ? : Detect a cycle in a directed graph [Kahn's or DFS].
+Combine : kahn's + cycle detection [OR] DFS to detect cycle.
+time -  space - 
+2) 
+
+time -  space - 
+*/
+
+1) bool isPossible(int N,int P, vector<pair<int, int> >& prerequisites) {
+	    vector<int> adj[N];
+	    vector<int>InDeg(N,0);
+	    int count=0;
+	    for(auto &k : prerequisites){
+	        adj[k.first].push_back(k.second);
+	    }
+	    for(int i=0;i<N;i++){
+	        for(auto &var : adj[i]){
+	            InDeg[var]++;
+	        }
+	    }
+	    queue<int>q;
+	    for(int i=0;i<N;i++){
+	        if(InDeg[i]==0){
+	            q.push(i);
+	        }
+	    }
+	    while(!q.empty()){
+	    int node = q.front();
+	    count++;
+	    q.pop();
+	    for(auto &neighbour : adj[node]){
+	        InDeg[neighbour]--;
+	        if(InDeg[neighbour]==0){
+	            q.push(neighbour);
+	        }
+	    }
+	    }
+	    if(count == N)  return true;
+	    return false;
+	}

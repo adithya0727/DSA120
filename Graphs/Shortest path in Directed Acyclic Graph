@@ -1,0 +1,57 @@
+/* Approach:                  [Stack OverFlow Post]
+Given a Directed Acyclic Graph of N vertices from 0 to N-1 and a 2D Integer array(or vector) edges[ ][ ] of length M,
+where there is a directed edge from edge[i][0] to edge[i][1] with a distance of edge[i][2] for all i.
+Find the shortest path from src(0) vertex to all the vertices and if it is impossible to reach any vertex, then return -1 for that vertex.
+1) INTUITION : Topological sort + modified BFS.
+Initially , we use dfs method to store all elements in the stack : Reasoning : once we have a sorted order , it will always follow the "u always before v".
+Therefore whenever we start from a node , we make sure that the shortest path until now till that node is being taken and now we'll continue to add on weights
+to this shortest path. Cause at each point we want the minimum distance from the source vertex to every other vertex.
+For each node , we make sure that all the parents / paths are traversed already and we have the minimum path cost and we can continue along this.
+time - O(N + E)
+space - O(N + E)
+STRONGER INTUITION : Finding the shortest path to a vertex is easy if you already know to shortest path to all the vertices that precede it.
+Processing the vertices in topological order ensures that by the time you get to a vertex , you have already processed all the vertices that precede it.
+Dijkstra's algorithm helps with graphs with cycle in them.
+*/
+1) void dfs(vector<pair<int,int>> adj[],vector<bool>&visited,stack<int>&st,int node){    //regular dfs in a DAG.
+        visited[node] = true;
+        for(auto &neighbour : adj[node]){
+            if(!visited[neighbour.first]){
+                dfs(adj,visited,st,neighbour.first);
+            }
+        }
+        st.push(node);
+        return;
+    }
+    
+  
+     vector<int> shortestPath(int N,int M, vector<vector<int>>& edges){
+        vector<bool>visited(N,false);  //for dfs : disconnected components.
+        vector<pair<int,int>> adj[N];  //edge assocaited with it's corresponding weight.
+        for(auto &vec : edges){  //vector cotaining 3 parts : source , destination and weight.
+            adj[vec[0]].push_back({vec[1],vec[2]});//stored in pairs , where their weight is associated with that edge.
+        }
+        stack<int>st;    //stores the correct topo order.
+        for(int i=0;i<N;i++){
+            if(!visited[i])  
+                dfs(adj,visited,st,i); //always u->v , to make sure all paths are traversed so that minimum value is at node at that current point in time.
+        }
+        vector<int>weight(N,1e9);  //stores all the weights at each index to output it.
+        weight[0] = 0;  //source is always considered 0 as there is no cost to move on 0 to itself.
+        while(!st.empty()){
+            int node = st.top();  //take the top parent 
+            int nodeweight = weight[node];  //store the cost upto this node
+            st.pop();
+            for(auto &neighbour : adj[node]){  //take his neighbour/children 
+                int edge = neighbour.first;  // who is it connected with
+                int currweight = neighbour.second;  //what is the cost of moving from the current node -> this neighbour.
+                weight[edge] = min(weight[edge],(nodeweight+currweight));  //the minimum weight is checked between : the cost at the current edge , v/s 
+            }   // from the current node + cost of moving from current node to edge : minimum is stored.
+         }
+        for(int i=0;i<weight.size();i++){  //if there is no vertex to any particular vertex in the graph , insert -1.
+            if(weight[i]==1e9){
+                weight[i] = -1;
+            }
+        }
+        return weight;
+    }

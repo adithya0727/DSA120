@@ -6,16 +6,14 @@ Given the total number of tasks N and a list of prerequisite pairs P, find if it
 a) (u->v) , u always comes before v : topological sort , b) if possible or not to get a solution ? : Detect a cycle in a directed graph [Kahn's or DFS].
 Combine : kahn's + cycle detection [OR] DFS to detect cycle.
 time - O(V + E) + O(P) : to convert into adjList space - O(V + E) : to store adjList.
-2) Course Schedule => INTUITION :
-
-
-time -  space - 
+2) Course Schedule => INTUITION : SAME AS KAHN'S ALGORITHM FOR FIND ONE POSSIBLE PATH , if not just return an empty vector.
+time - O(V + E) space - O(V + E)
 */
 
-1) bool isPossible(int N,int P, vector<pair<int, int> >& prerequisites) {
+1) bool isPossible(int N,int P, vector<pair<int, int> >& prerequisites) {//Kahn's algorithm : check if cycle exists or not
 	    vector<int> adj[N];
 	    vector<int>InDeg(N,0);
-	    int count=0;
+	    int count=0;	//check the number of times its being called
 	    for(auto &k : prerequisites){
 	        adj[k.first].push_back(k.second);
 	    }
@@ -32,7 +30,7 @@ time -  space -
 	    }
 	    while(!q.empty()){
 	    int node = q.front();
-	    count++;
+	    count++;	//if all the nodes are being called properly there's no cycle
 	    q.pop();
 	    for(auto &neighbour : adj[node]){
 	        InDeg[neighbour]--;
@@ -42,8 +40,45 @@ time -  space -
 	    }
 	    }
 	    if(count == N)  return true;
-	    return false;
+	    return false;		//otherwise cycle exists
 	}
 
 
-2) 
+2) vector<int> findOrder(int n, int m, vector<vector<int>> prerequisites) //Kahn's algorithm : output one correct solution , if cycle : then return empty.
+    {
+        int row=prerequisites.size();
+        vector<int>res;
+        vector<int> adj[n];
+        vector<int>InDeg(n,0);
+        for(auto &v : prerequisites){
+            adj[v[1]].push_back(v[0]);		//convert to adjList
+        }
+        for(int i=0;i<n;i++){
+            for(auto &var : adj[i]){		//paste all indegree each each of the vertexes
+                InDeg[var]++;
+            }
+        }
+        queue<int>q;
+        for(int i=0;i<n;i++){
+            if(InDeg[i]==0){		//initial point
+                q.push(i);
+            }
+        }
+        while(!q.empty()){
+            int node = q.front();
+            res.push_back(node);
+            q.pop();
+            for(auto &neighbour : adj[node]){
+                InDeg[neighbour]--;
+                if(InDeg[neighbour]==0){
+                    q.push(neighbour);
+                }
+            }
+        }
+        if(res.size() == n){	//if all elements are being traversed , no cycle exists so confidently return one possible correct solution
+            return res;}
+        else{
+            vector<int>temp;	//otherwise , cycle exists as we didn't traverse all elements : return an empty vector [INDICATING THAT A CYCLE EXISTS].
+            return temp;
+        }
+    }

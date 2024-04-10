@@ -11,9 +11,16 @@ So basically two things happen while traversing a path :
 will be skipped as anyway they all will have one path which leads to a cycle].
 time - O(V + E)    //regular dfs
 space - O(V)
+2) [BFS-> Using Topo Sort] :
+topo sort : parent -> InDegree==0 , so we reverse the graph , to make terminal nodes from outdeg=0 to indeg=0 and start topo sort from these terminal nodes.
+[Similar to dfs stack unwinding and finding safe states] | if we keep finding new parents after each InDeg-- , these nodes are not connected to any other path 
+ie, a cycle : so its a safe node , if at any point in time :: we don't have a parent , the queue becomes empty and we end with the safe nodes and skip the 
+cycle path.
+time -  O(V + E) 
+space - O(V + E) //Queue + O(V + E)  //RevAdjList
 */
 
-1) bool dfs(vector<int> adj[],vector<int>&visited,vector<int>&pathvisited,int start,vector<int>&res){
+1) bool dfs(vector<int> adj[],vector<int>&visited,vector<int>&pathvisited,int start,vector<int>&res){        [DFS] : MOST OPTIMAL SOLUTION
         visited[start] = true;        //mark the node and path as true initially
         pathvisited[start] = true;  
         for(auto &neighbour : adj[start]){  //checking all its neighbours
@@ -41,4 +48,38 @@ space - O(V)
         }
         sort(res.begin(),res.end());  //sort the final answer.
         return res;
+    }
+
+
+2) vector<int> eventualSafeNodes(int V, vector<int> adj[]) {                [BFS] : More Space complexity and same Time.
+        vector<int>res;
+        vector<int> adjrev[V];
+        vector<int>InDeg(V,0);
+        for(int i=0;i<V;i++){                //reverse all the edges in the graph to start from the terminal nodes.
+            //i -> it
+            //it -> i
+            for(auto &it : adj[i]){
+                adjrev[it].push_back(i);
+                InDeg[i]++;                //insert all the InDeg's.
+            }
+        }
+        queue<int>q;        //perform regular topo sort.
+        for(int i=0;i<V;i++){
+            if(InDeg[i]==0){
+                q.push(i);
+            }
+        }
+        while(!q.empty()){
+            int node = q.front();
+            res.push_back(node);
+            q.pop();
+            for(auto &neighbour : adjrev[node]){
+                InDeg[neighbour]--;
+                if(InDeg[neighbour]==0){
+                    q.push(neighbour);
+                }
+            }
+        }
+        sort(res.begin(),res.end());                
+        return res;        //cycle nodes/unsafe ones are automatically skipped by the topo sort when the queue becomes empty due to CYCLIC DEPENDENCY.
     }

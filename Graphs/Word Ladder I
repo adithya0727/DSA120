@@ -1,0 +1,43 @@
+/* Approach:
+Given two distinct words startWord and targetWord, and a list denoting wordList of unique words of equal lengths.
+Find the length of the shortest transformation sequence from startWord to targetWord.
+Keep the following conditions in mind:
+1)A word can only consist of lowercase characters.
+2)Only one letter can be changed in each transformation.
+3)Each transformed word must exist in the wordList including the targetWord.
+4) startWord may or may not be part of the wordList
+Note: If no possible way to transform sequence from startWord to targetWord : return 0
+1) INTUITION : From the Given startingWord , for each Index we are going to check from a->z all possibilities if it exists in the wordList and perform BFS
+BECAUSE : LEVEL ORDER , the first occurance of the target word will be our minimum length possible , so we use BFS.
+time - O(N*K)*26 : N-> total number of wordList will be inserted in the queue in the worst case , no repetitions , K-> uniform length of each word , 26 : a->z.
+space - O(N*M) : length of the wordList times the size() of each string.
+*/
+
+1) int wordLadderLength(string startWord, string targetWord, vector<string>& wordList) {
+        unordered_set<string>s;  //to search in constant time operation.
+        for(auto &var:wordList){
+            s.insert(var);    //insert all word list in set.
+        }
+        queue<pair<string,int>>q;
+        int length = startWord.length();  //all lengths are uniform.
+        q.push({startWord,1});  //start with the first word in the queue and check for each character all possibilies.
+        s.erase(startWord);  //all are DISTINCT : given , once it is traversed no need to check the same word again.
+        while(!q.empty()){
+            string str = q.front().first;  //word
+            int level = q.front().second;  //current level
+            q.pop();
+            if(str==targetWord) return level;  //if it's the target node return the minimum length.
+            for(int i=0;i<length;i++){
+                char original = str[i];  //so that for this char from a->z is checked , we need to replace it back and check for the next char : rule : only one 
+                for(char j='a';j<='z';j++){  //character can be changed in one transition.
+                    str[i] = j;  //replace that char from a->z
+                    if(s.count(str)){  //check if exists in wordList.
+                        q.push({str,level+1});  //insert in queue and plus one level.
+                        s.erase(str);  //remove repeated.
+                    }
+                }
+                str[i] = original;  //replace back that char to original and check till the word length.
+            }
+        }
+        return 0;
+    }

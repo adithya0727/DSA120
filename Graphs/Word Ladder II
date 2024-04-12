@@ -1,0 +1,59 @@
+/* Approach:          [SAME PATTERN AS WORD LADDER 1 , slight modification]
+Given two distinct words startWord and targetWord, and a list denoting wordList of unique words of equal lengths.
+Find all shortest transformation sequence(s) from startWord to targetWord. You can return them in any order possible.
+Keep the following conditions in mind:
+A word can only consist of lowercase characters.
+Only one letter can be changed in each transformation.
+Each transformed word must exist in the wordList including the targetWord.
+startWord may or may not be part of the wordList.
+Return an empty list if there is no such transformation sequence.
+1) INTUITION : In word ladder 1 , we just returned when we found one solution , but here two changes :
+a) We have to store the whole path b) we have to find all the paths which lead to the endWord at the shortest same level.
+at each level , we store different possibilites : each time we get a word in the wordList , push into queue and search for another word in the same level and store that
+another path as well. Once the whole level is traversed : only then we go ahead and remove the elements in the set , as the same element might occur in the same level
+for multiple paths. we keep traversing till the lastnode of the current vector containing path is equal to endword : until the whole level is finished.
+As this level is the level which has the endword at the shortest length , we complete the level to check for other paths which might as well have the endword.
+time -  O(N*(logN * M * 26))    //n:queue length : maximum is the length of the word list , logN:to search each time in the set(worst case) , m:length of each
+word (nested loops) and 26 : a->z loop.
+space -  O(N * M)  //res : to store words at worst case size N and M uniform size.
+*/
+
+1) vector<vector<string>> findSequences(string beginWord, string endWord, vector<string>& wordList) {
+        unordered_set<string>s(wordList.begin(),wordList.end());  //constant time search operation : Amortized Complexity.
+        vector<vector<string>>res;  //to store all paths.
+        queue<vector<string>>q;  //queue will contain the current path until now.
+        int level=0;  //to keep track of current level the BFS is iterating at.
+        vector<string>usedonlevel;     //to delete the elements which as used in a current level , so that when we go to the next level , we remove these used strings from wordList.
+        usedonlevel.push_back(beginWord);  //base word.
+        int length = beginWord.length();  //uniform length to traverse 
+        q.push({beginWord});  //first vector element.
+        s.erase(beginWord);  //erase it , as we start from the next level
+        while(!q.empty()){
+            vector<string>curr = q.front();  //it's a vector return type.
+            string str = curr[curr.size()-1];  //last element is the current path latest change , we improvise on this to build on till we find the last endWord.
+            q.pop();
+            if(curr.size() > level){  //if vector size is > level : we are at the next level : so increment the level.
+                level++;
+                for(auto &v : usedonlevel){  //all the elements we have pushed until now , previous levels(mostly last level elements) are removed now finally when 
+                    s.erase(v);  //we have moved onto the next level.: to avoid duplicate elements.
+                }   //observe that we also remove the endWord and the next iteration after getting our answer : so there can't be any more right answers.
+            }
+            if(str==endWord){  //if a particular path meets the endword : push_back that whole current path from the queue.
+                res.push_back(curr);
+            }
+            for(int i=0;i<length;i++){  //to check each word for all possibilities
+                char original = str[i];
+                for(char j='a';j<='z';j++){
+                    str[i] = j;
+                    if(s.count(str)){  //if exists in set => 
+                        usedonlevel.push_back(str);  //the str is used in this level now.
+                        curr.push_back(str);  //push to the path.
+                        q.push(curr);  //store this possibility into the queue.
+                        curr.pop_back();  //remove it back again , because we are still checking for various possibilities for the current path. (we want the shortest path)
+                    }
+                }
+                str[i] = original;  //return it back to original form and check for other elements [each transition : only one element can be changed/altered].
+            }
+        }
+        return res;  
+    }

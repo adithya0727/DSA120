@@ -7,13 +7,13 @@ USING PRIORITY QUEUE
 1) INTUITION : We use Min_heap to sort based on the Distance : so the shortest dist in on the top() and then we check for all their neighbours using the 
 tentative shortest distance which will eventually mostly update all the vertices with mostly the shortest distance and its repeating anyways but only stores the min
 distance.
-time - O()
-space - O()
+time - O(E*LogV) : refer book for the theorem
+space - O(V + E)
 USING SET
 2) INTUITION : Literally same approach as previous , we use a set instead of min_heap , set also stores in ascending order so its helpful.
 ONE MODIFICATION : if a vertex has already been visited , and we find a shorter distance to visit it , we erase the larger distance from the set to save some iterations.
-time -
-space -
+time - same as above.
+space - same as above.
 
 */
 

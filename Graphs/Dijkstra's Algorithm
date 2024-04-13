@@ -8,7 +8,7 @@ USING PRIORITY QUEUE
 tentative shortest distance which will eventually mostly update all the vertices with mostly the shortest distance and its repeating anyways but only stores the min
 distance.
 time - O(E*LogV) : refer book for the theorem
-space - O(V + E)
+space - O(V)
 USING SET
 2) INTUITION : Literally same approach as previous , we use a set instead of min_heap , set also stores in ascending order so its helpful.
 ONE MODIFICATION : if a vertex has already been visited , and we find a shorter distance to visit it , we erase the larger distance from the set to save some iterations.

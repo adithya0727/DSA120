@@ -1,0 +1,49 @@
+/* Approach:                [BackTracking Pattern + Modified Bfs + Dijkstra's Pattern]
+Given a n * m matrix grid where each element can either be 0 or 1.
+You need to find the shortest distance between a given source cell to a destination cell. The path can only be created out of a cell if its value is 1.
+Input:
+grid[][] = {{1, 1, 1, 1},
+            {1, 1, 0, 1},            Output:3
+            {1, 1, 1, 1},
+            {1, 1, 0, 0},
+            {1, 0, 0, 1}}
+source = {0, 1}
+destination = {2, 2}
+
+1) INTUITION : Visualise the bfs , where we move in 4 directions at each step (one movement=1 unit Step) : So as soon as we reach the destination point the first
+time , that will only be our shortest distance as we're moving in BFS. Return the length the queue is tracking.
+why no Priority Queue ? : because in bfs , we move level after level , so no need to sort distance considering it is also of UNIT DISTANCE , so it'll be equal.
+time - O(N*M)
+space - O(N*M)
+*/
+
+
+1) int shortestPath(vector<vector<int>> &grid, pair<int, int> source,
+                     pair<int, int> destination) {
+        int row = grid.size(),col=grid[0].size();  //lengths
+        vector<int>dx = {-1,0,1,0};  //move along 4 directions
+        vector<int>dy = {0,1,0,-1};
+        if(grid[destination.first][destination.second]==0)  return -1;  //edge case
+        vector<vector<int>>weight(row,vector<int>(col,INT_MAX));  //initialise them all with max value.
+        weight[source.first][source.second] = 0;  //source length is 0.
+        queue<pair<int,pair<int,int>>>q;  //normal queue to perform bfs-like.
+        q.push({0,{source.first,source.second}});  //start from source.
+        while(!q.empty()){
+            int currlen = q.front().first;  //top of the queue details.
+            int x = q.front().second.first;
+            int y = q.front().second.second;
+            q.pop();
+            if(x==destination.first && y==destination.second)   return currlen;  //if destination is reached , the length it took is the first and therefore minimum too.
+            for(int i=0;i<4;i++){  //move along its 4 directions.
+                int newx = x + dx[i];
+                int newy = y + dy[i];
+                if(newx >=0 && newx < row && newy >=0 && newy < col && grid[newx][newy]==1){  //check for validity.
+                    if(currlen + 1 < weight[newx][newy]){  //Dijkstra's Algo
+                        weight[newx][newy] = currlen +1;  //only when a shorter distance is found , we come in here.
+                        q.push({currlen+1,{newx,newy}});  //and check their neighbours with this new found shorter distance.
+                    }
+                }
+            }
+        }
+        return -1;
+    }

@@ -1,0 +1,43 @@
+/* Approach:        [Dijkstra's Algo]
+You are a hiker preparing for an upcoming hike. You are given heights, a 2D array of size rows x columns,
+where heights[row][col] represents the height of cell (row, col). You are situated in the top-left cell, (0, 0),
+and you hope to travel to the bottom-right cell, (rows-1, columns-1) (i.e., 0-indexed). You can move up, down, left, or right,
+and you wish to find a route that requires the minimum effort.
+A route's effort is the maximum absolute difference in heights between two consecutive cells of the route.
+1) INTUITION : Dijkstra's is used to find the minimum value at the destination , by carrying the maximum of the abs difference for each consecutive cells throughout
+the path , the first time we hit the destination itself will be the minimum of maximum effort since we are using a priority queue , which usually gives us the 
+shortest CORRECT path itself first and we return right then and there as soon as we reach the destination.
+time - O(E*LogV) : edges -> N*M * 4 (directions) * Log(N*M) -> number of nodes. [Dijkstra's Time] ~ O(N*M)
+space - O(N*M) : 2d matrix.
+*/
+
+1) int MinimumEffort(vector<vector<int>>& heights) {
+        int row = heights.size(), col = heights[0].size();    //sizes
+        vector<int> dx = {-1, 0, 1, 0};  //to move along 4 directions
+        vector<int> dy = {0, 1, 0, -1};
+        vector<vector<int>> weight(row, vector<int>(col, INT_MAX));  //initialise them to max.
+        weight[0][0] = 0;  //source is set to 0.
+        priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, greater<pair<int, pair<int, int>>>> q;  //min_heap.
+        q.push({0, {0, 0}});  /start from source and 0 as maxabsdiff.
+        while (!q.empty()) {
+            int maxabsdiff = q.top().first;  //data
+            int x = q.top().second.first;
+            int y = q.top().second.second;
+            q.pop();
+            if (x == row - 1 && y == col - 1) { // Reached destination :  correct shortest path because of priority queue.
+            return maxabsdiff;  //instantly return the minimum of maximum absolute difference.
+        }
+            for (int i = 0; i < 4; i++) {  //directions for each vertex.
+                int newx = x + dx[i];
+                int newy = y + dy[i];
+                if (newx >= 0 && newx < row && newy >= 0 && newy < col) {  //validity.
+                    int newmaxabsdiff = max(maxabsdiff, abs(heights[x][y] - heights[newx][newy]));  //max difference until now and diff btw (current cell with 
+                    if (newmaxabsdiff < weight[newx][newy]) {  //  new neighbouring cell). If the maximum is still lesser than what is there curently , then we update.
+                        weight[newx][newy] = newmaxabsdiff;
+                        q.push({newmaxabsdiff, {newx, newy}});  //push the minimum value and set it to pq.
+                    }
+                }
+            }
+        }
+        return -1; 
+    }

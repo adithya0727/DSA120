@@ -1,0 +1,53 @@
+/* Approach:
+You are given a weighted undirected graph having n vertices numbered from 1 to n and m edges describing there are edges between a to b with some weight,
+find the shortest path between the vertex 1 and the vertex n and if path does not exist then return a list consisting of only -1.
+1) INTUITION : Use Dijkstra's to find the shortest path at each vertex. Also include a parent along with updating shortest vertex value.
+Keep a PARENT VECTOR , which will keep track of the path we moved along to reach the final node , parent is updated only when a shorter 
+vertex cost is found , it makes sure that the parent accurately holds the latest parent of the shortest path at each node location. 
+time - O(E*LogV) : O(M*LogN) : same as Dijkstra's.
+space - O(V + E) : to store adjaceny List.
+*/
+[1- Based Indexing]
+1) vector<int> shortestPath(int n, int m, vector<vector<int>>& edges) {
+        vector<int>res;  //stores the final result with weight at the start and then the shortest path to reach destination(n).
+        vector<int>parent(n+1);  //to store all parents to keep track of where each node is coming from to get the path . [KEY]
+        for(int i=1;i<=n;i++){  //use case for storing each of them as their index value is : if parent[i] = i , is itself , it means its disconnected and we can end there.
+            parent[i] = i;
+        }
+        vector<int>dist(n+1,INT_MAX);  //to store the distance from source to every other vertex. [Dijkstra's Algorithm]
+        dist[1] = 0;    //initialise source as 0.
+        vector<pair<int,int>> adj[n+1];  //to store the undirected graph along with its edges.
+        for(auto &v : edges){  //store edges accordingly.
+            adj[v[0]].push_back({v[1],v[2]});
+            adj[v[1]].push_back({v[0],v[2]});
+        }
+        priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>>minheap;  //to perform dijkstra's
+        minheap.push({0,1});  //begin with distance and source.
+        while(!minheap.empty()){
+            int currdist = minheap.top().first;  //distance until now
+            int node = minheap.top().second;    //node
+            minheap.pop();
+            for(auto &neighbour : adj[node]){  //check for neighbours
+                int edge = neighbour.first;
+                int edgeweight = neighbour.second;
+                if(currdist + edgeweight < dist[edge]){  //if lesser value can be updated :
+                    dist[edge] = currdist + edgeweight;  //update in distance vector.
+                    parent[edge] = node;  //update where is the parent coming from for this shortest distance on this particular edge.
+                    minheap.push({dist[edge],edge});  //check its neighbours next with the current shortest distance.
+                }
+            }
+        }
+        if(dist[n] == INT_MAX){  //if we didn't reach the end at all : it's unreachable , so return -1.
+            res.push_back(-1);
+            return res;
+        }
+        int node = n;  //to backtrack
+        while(parent[node] != node){  //Keep backtracking till we hit 1(source) 
+            res.push_back(node);  //store the path 
+            node = parent[node];  //go from parent to its parent to its parent and so on till source.
+        }  
+        res.push_back(1);  //push source for the path starting.
+        res.push_back(dist[n]);  //weight of the overall path will be stored at the dist[n].
+        reverse(res.begin(),res.end());  //reverse the whole path.
+        return res;
+    }

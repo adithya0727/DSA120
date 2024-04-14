@@ -1,0 +1,42 @@
+/* Approach:                    [BFS + Dijkstra's]
+Given start, end and an array arr of n numbers. At each step, start is multiplied with any number in the array and then mod operation with 100000
+is done to get the new start.
+Your task is to find the minimum steps in which end can be achieved starting from start. If it is not possible to reach end, then return -1.
+Input:
+arr[] = {2, 5, 7}
+start = 3, end = 30
+Output:
+2       : 3->2->5.                   repetition : 3->5->2 : avoid this other 30 which we get using visited.
+           3
+        /  \   \
+      2   5   7
+  /  \  \
+2   5    7    and so on ... repeated again and again. BFS.
+1) INTUITION : From the start node , each time we traverse the array and multiply with each of the array elements as neighbours and then for each neighbour , 
+we again traverse the array for possible solutions. This is how we check for all possibilities using BFS , so that in the minimum number of steps if we can determine 
+if we reached the END. 
+Using visited/dist is useful to keep track if numbers have already been visited to reduce redundacy.
+time - O(10^5)  //the queue will run in the worst case.
+space - O(10^5)  //to store the visited/dist array.
+*/
+
+1) int minimumMultiplications(vector<int>& arr, int start, int end) {
+        vector<int>dist(100000,INT_MAX);    //at max this is numbers we can go uptil till , beyond that mod will be applied.
+        dist[start] = 0;    //initially this number is marked as 0.
+        queue<pair<int,int>>q;  //to store (Steps so far,node).
+        q.push({0,start});
+        while(!q.empty()){
+            int steps = q.front().first;
+            int node = q.front().second;
+            q.pop();
+            if(node==end)  return steps;  //if number is the expected end number , return the first occurance , since it's BFS : it will be the minimum steps.
+            for(auto &neighbour : arr){  //iterate through the array for each element and check their possibilities.
+                int num = (node*neighbour)%100000;  //calculate the newnumber
+                if(steps + 1 < dist[num]){  //if newnumber has already been visited before : either at the same or a previous level : we skip that iteration.
+                    dist[num] = steps+1;  //only if the number has not be visited at all : INT_MAX : then we enter this number : since it's BFS it would have already
+                    q.push({steps+1,num});  //visited if encountered and this will have lesser number of steps clearly.
+                }
+            }
+        }
+        return -1;  //if not foudn , most of the numbers become visited and finally queue also becomes empty() and we return not found.
+    }

@@ -1,0 +1,40 @@
+/* Approach:                    [pattern : Dijkstra's + BFS without PQ].
+There are n cities and m edges connected by some number of flights. You are given an array flights where flights[i] = [fromi, toi, pricei]
+indicates that there is a flight from the city fromi to city toi with cost pricei.
+You are also given three integers src, dst, and k, return the cheapest price from src to dst with at most k stops. If there is no such route, return -1.
+Note: The price from city A to B may be different From the price from city B to A.  [DIRECTED GRAPH]
+1) INTUITION : If we were to use normal PQ and sort based on shortest price as usual : it fails certain edge cases , where at particular vertices we may store the
+shortest price , but we have a limitation of the number of stops , if it doesnt even reach the destination , the whole path is itself not valid and we've ended up
+storing the invalid shortest prices at vertices . To avoid this : 
+PRIORITY : 1) Number of stops : the path with more number of stops available is given first priority [validity]
+2) Using dijkstra's , whichever is the minimum out of these valid ones , we can update the lesser Price ones and finally return the price at destination after all modifications.
+time - O(E*LogV) ~ (E) = Flights.size() : since we didn't use PQ.
+space - O(V + E) : to store adjlist.
+*/
+
+1) int CheapestFLight(int n, vector<vector<int>>& flights, int src, int dst, int K)  {
+        vector<int>dist(n,INT_MAX);  //to store prices.
+        dist[src] = 0;  //initially source is 0.
+        queue<pair<int,pair<int,int>>>q;  //(stops,(node,price)) : we have to keep track of stops : otherwise how will we know when it was inserted.
+        q.push({0,{src,0}});  //initally.
+        vector<pair<int,int>> adj[n];  //convert to a directed adjList.
+        for(auto &v : flights){
+            adj[v[0]].push_back({v[1],v[2]});
+        }
+        while(!q.empty()){
+            int stops = q.front().first;
+            int currprice = q.front().second.second;
+            int node = q.front().second.first;
+            q.pop();
+            for(auto &neighbour : adj[node]){  //check all neighbours.
+                int edge = neighbour.first;
+                int edgeprice = neighbour.second;
+                if(currprice + edgeprice < dist[edge] && stops <= K){  //cheaper price and stops are still valid here.
+                    dist[edge] = currprice + edgeprice;
+                    q.push({stops+1,{edge,currprice + edgeprice}});    //push updated stops now taken with the newwer price.
+                }
+            }
+        }
+        if(dist[dst] != INT_MAX)    return dist[dst];  //finally when the shortest possible price is updated for the valid paths.
+        return -1;
+    }

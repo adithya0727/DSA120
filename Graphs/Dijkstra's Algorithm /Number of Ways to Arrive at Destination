@@ -1,0 +1,50 @@
+/* Approach:                          [REFER BOOK FOR CLARITY].  [Amazing Problem]
+You are in a city that consists of n intersections numbered from 0 to n - 1 with bi-directional roads between some intersections.
+The inputs are generated such that you can reach any intersection from any other intersection and that there is at most one road between any two intersections.
+
+You are given an integer n and a 2D integer array roads where roads[i] = [ui, vi, timei] means that there is a road between intersections ui and vi that takes timei minutes to travel.
+You want to know in how many ways you can travel from intersection 0 to intersection n - 1 in the shortest amount of time.
+
+1) INTUITION :
+To count the number of paths at the destination with each path that have the same minimum value. how? Lets break down the problem.
+a) Because we are using Dijkstra's , the minimum value is the one that's going to hit the destination first.
+b) There can be various paths that reach a node , considering its a graph : so each each node we count the number of paths that possible to reach each node.
+At the destination finally , we update the number of paths by adding the final nodes that have minimum with their counts.
+time - O(ELogV) : Dijkstra's Algorithm
+space - O(V + E) : adjList.
+*/
+
+1) int countPaths(int n, vector<vector<int>>& roads) {
+        vector<pair<int,int>> adj[n];  //To store the adjList.
+        for(auto &v : roads){
+            adj[v[0]].push_back({v[1],v[2]});
+            adj[v[1]].push_back({v[0],v[2]});
+        }
+        vector<long long>dist(n,LONG_LONG_MAX);  //Distance can be huge.
+        dist[0] = 0;
+        const int mod = (int)(1e9 + 7);  //mod the fianl answer as given in the question.
+        vector<int>ways(n,0);  //at each node how many paths are diverging with minimum values.
+        ways[0] = 1;      //initially we start with 1.
+        priority_queue<pair<long long,int>,vector<pair<long long,int>>,greater<pair<long long,int>>>q;
+        q.push({0,0});
+        while(!q.empty()){
+            long long currdist = q.top().first;  //distance travelled until now in this particular path.
+            int node = q.top().second;  //current node.
+            q.pop();
+            for(auto &neighbour : adj[node]){  //traverse all edges.
+                int edge = neighbour.first;
+                long long edgeweight = neighbour.second;
+                if(currdist + edgeweight < dist[edge]){  //if lesser is found : its usually the first time considering its dijkstra's
+                    dist[edge] = currdist + edgeweight;  //we update it
+                    ways[edge] = ways[node] % mod;  //this node will have the same number as its parent : the number of paths its coming from
+                    q.push({dist[edge],edge});
+                }
+                else if(currdist + edgeweight == dist[edge]){  //if it has already been visited before and someone's visiting it again 
+                    ways[edge] += ways[node];  //we add that path's ways count too , becuase they have the same Minimum value yet again.
+                    ways[edge] %= mod;
+                }
+                
+            }
+        }
+        return ways[n-1];  //return count at the destination.
+    }

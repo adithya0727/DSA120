@@ -6,8 +6,8 @@ Note: If the Graph contains a negative cycle then return an array consisting of 
 RELAX ALL THE EDGES [N-1] TIMES SEQUENTIALLY.
 [N-1] ? : At worst case to visit all the nodes from the last to the first along any path in the graph if they are connected to each other : it takes [N-1] time.
 [Negative Cycle] : Do one more extra iteration than [n-1] : if values are still decreasing then : cycle exists and return -1.
-time - 
-space - 
+time - O(V*E)        ??nester for loops.
+space - O(V) : dist array.
 */
 
 1) vector<int> bellman_ford(int V, vector<vector<int>>& edges, int S) {

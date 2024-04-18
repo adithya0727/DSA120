@@ -1,0 +1,37 @@
+/* Approach:
+Given a weighted and directed graph of V vertices and E edges, Find the shortest distance of all the vertex's from the source vertex S.
+If a vertices can't be reached from the S then mark the distance as 10^8.
+Note: If the Graph contains a negative cycle then return an array consisting of only -1.
+1) INTUITION : 
+RELAX ALL THE EDGES [N-1] TIMES SEQUENTIALLY.
+[N-1] ? : At worst case to visit all the nodes from the last to the first along any path in the graph if they are connected to each other : it takes [N-1] time.
+[Negative Cycle] : Do one more extra iteration than [n-1] : if values are still decreasing then : cycle exists and return -1.
+time - 
+space - 
+*/
+
+1) vector<int> bellman_ford(int V, vector<vector<int>>& edges, int S) {
+        vector<int>dist(V,1e8);  //initialise : in-case it can't be reached the case will be automatically handled.
+        dist[S] = 0;  //start from source to every other vertex.
+        for(int i=0;i<V-1;i++){  //V-1 times
+            for(auto &var : edges){  //all the edges.
+                int u = var[0];
+                int v = var[1];
+                int wt = var[2];
+                if(dist[u] != 1e8 && dist[u] + wt < dist[v]){  //edge case : u should be reached first before moving and checking for v.
+                    dist[v] = dist[u] + wt;  //RELAXATION STEP : Store minimum value if exists.
+                }
+            }
+        }
+
+        for(auto &var : edges){  //One extra Iteration in case it still reduces : cycle exists.
+            int u = var[0];  //going over all the edges once.
+            int v = var[1];
+            int wt = var[2];
+            if(dist[u]!= 1e8 && dist[u] + wt < dist[v]){  //relaxation
+                return {-1};
+            }
+        }
+        
+        return dist;
+    }

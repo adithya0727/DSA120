@@ -8,7 +8,7 @@ All the pairs of edges along their current weights are stored in the matrix , we
 which means : For each node : find the shortest path to every other node using the VIA logic : which basically helps us traverse all the given paths to check
 for the minimum along all possibilities.
 time - O(V^3)  //to run through 3 for loops.
-space - O(1)  //if no matrix is used and we have to change in-place.
+space - O(N^2)  //to use and modify the given matrix.
 */
 
 

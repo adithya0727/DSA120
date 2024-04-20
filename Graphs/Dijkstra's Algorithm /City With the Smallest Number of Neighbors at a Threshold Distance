@@ -1,8 +1,58 @@
-/* Approach:
-
-1)
-time - 
-space-  
+/* Approach:                  [REFER FLOYD WARSHALL'S SOLUTION]
+There are n cities labeled from 0 to n-1 with m edges connecting them. Given the array edges where edges[i] = [fromi , toi ,weighti]
+represents a bidirectional and weighted edge between cities fromi and toi, and given the integer distanceThreshold.
+You need to find out a city with the smallest number of cities that are reachable through some path and whose distance is at most Threshold Distance.
+If there are multiple such cities, our answer will be the city with the greatest label.
+1) INTUITION :
+Goal is to find the shortest path for each vertex to see what is the count of cities each city has.
+time - O(V*(ELogV)) : Dijkstra's at each node (V nodes)
+space-  O(V*E)  : to store adjList.
 */
 
-1) 
+1) int findCity(int n, int m, vector<vector<int>>& edges, int distanceThreshold) {
+        vector<pair<int,int>> adj[n];  //  Convert to an adjacency list to perform dijkstra's.
+        vector<int>arr(n,0);    //to store the count of number of cities each city(treated as array index) has within the distancethreshold range : count is stored.
+        int idx=0;  //to keep track of index 
+        for(auto &edge : edges){  
+            adj[edge[0]].push_back({edge[1],edge[2]});
+            adj[edge[1]].push_back({edge[0],edge[2]});
+        }
+        priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>>q;  //to perform dijkstra's.
+        for(int i=0;i<n;i++){  //on each node/CITY , we apply dijkstra's to get the shortest dist() to all its corresponding cities.
+        q.push({0,i});
+        vector<int>dist(n,INT_MAX);
+        dist[i] = 0;
+        while(!q.empty()){    //dijkstra's Algo
+            int currdist = q.top().first;
+            int node = q.top().second;
+            q.pop();
+            for(auto &neighbour : adj[node]){
+                int edgeweight = neighbour.second;
+                int edge = neighbour.first;
+                if( currdist + edgeweight < dist[edge]){
+                    dist[edge] = currdist + edgeweight;
+                    q.push({dist[edge],edge});
+                }
+            }
+        }
+        
+        for(int i=0;i<dist.size();i++){  //using the distance array : we fill the count of neighbouring cities to this current city which follows all constraints.
+            if(dist[i] <= distanceThreshold){
+                arr[idx]++;
+            }
+        }
+        idx++;  //moving to the next city 
+        }
+        
+        
+        int minCities = INT_MAX;
+        int resultCity = -1;
+        for (int i = 0; i < n; i++) {
+            if (arr[i] <= minCities) {    //store the city with minimum neighbouring cities within range and the highest label.
+                resultCity = i;
+                minCities = arr[i];
+            }
+        }
+
+    return resultCity;
+    }

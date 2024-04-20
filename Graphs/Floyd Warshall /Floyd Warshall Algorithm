@@ -1,0 +1,46 @@
+/* Approach:                  [REFER BOOK]
+The problem is to find the shortest distances between every pair of vertices in a given edge-weighted directed graph.
+The graph is represented as an adjacency matrix of size n*n. Matrix[i][j] denotes the weight of the edge from i to j.
+If Matrix[i][j]=-1, it means there is no edge from i to j.
+Do it in-place.
+1)INTUITION : To find the shortest distance between every pair in a given matrix.
+All the pairs of edges along their current weights are stored in the matrix , we now will move anc check the minimum weight for each pair VIA every single Node.
+which means : For each node : find the shortest path to every other node using the VIA logic : which basically helps us traverse all the given paths to check
+for the minimum along all possibilities.
+time - O(V^3)  //to run through 3 for loops.
+space - O(1)  //if no matrix is used and we have to change in-place.
+*/
+
+
+1) void shortest_distance(vector<vector<int>>&matrix){
+	    int row=matrix.size(),col=matrix[0].size();  //sizes.
+	    int no_of_nodes=row;
+	    for(int i=0;i<row;i++){  //to convert -1 to INT_MAX so that conversions become more easier.
+	        for(int j=0;j<col;j++){
+	            if(matrix[i][j] == -1)  matrix[i][j] = 1e9;
+	            if(i==j)    matrix[i][j] = 0;  //along the diagonal : all the elements are supposed to be 0 as there can't be a more minimum cost btw a element with itself.
+	        }
+	    }
+	    
+	    for(int via=0;via<no_of_nodes;via++){  //outer loop : to check via each node path 
+	        for(int i=0;i<row;i++){  //For each pair (i,j)
+	            for(int j=0;j<col;j++){
+	                matrix[i][j] = min(matrix[i][j],(matrix[i][via] + matrix[via][j]));  //and store the minimum value possible.
+	            }
+	        }
+	    }
+	    
+	    for(int i=0;i<row;i++){
+	        for(int j=0;j<col;j++){
+	            if(matrix[i][j] == 1e9)  matrix[i][j] = -1;  //revert it back just in case , there is no path to some edges.
+	        }
+	    }
+	}
+
+
+
+IN-CASE CYCLES EXIST : 
+The diagonal elements which are supposed to be 0 will be in minus , as there is a negative cycle , it keeps decrementing and it goes under 0. To check this : 
+for(int i=0;i<row;i++){
+  if(matrix[i][i]<0)   return Cycle Exists!
+}

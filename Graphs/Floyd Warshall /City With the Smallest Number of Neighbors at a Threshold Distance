@@ -1,0 +1,52 @@
+/* Approach:
+There are n cities labeled from 0 to n-1 with m edges connecting them. Given the array edges where edges[i] = [fromi , toi ,weighti]
+represents a bidirectional and weighted edge between cities fromi and toi, and given the integer distanceThreshold.
+You need to find out a city with the smallest number of cities that are reachable through some path and whose distance is at most Threshold Distance.
+If there are multiple such cities, our answer will be the city with the greatest label.
+1) INTUITION : 
+So basically , the question is asking us from each particular node : check the nearest other cities which are within this particular distanceThreshold RANGE , 
+Return us the city which has the least number of cities within that threshold. So , from each node : we find the shortest path to every other node ,
+then we check the count with the minimum paths : how many cities can each city visit.
+time - O(V^3)   : three for loops to perform floyd warshall.
+space - O(V^2)  : To store the matrix.
+*/
+
+1) int findCity(int n, int m, vector<vector<int>>& edges, int distanceThreshold) {
+        vector<vector<int>>matrix(n,vector<int>(n,INT_MAX));  //to store our answer.
+        for(auto &v : edges){  //bi-directional
+            matrix[v[0]][v[1]] = v[2];
+            matrix[v[1]][v[0]] = v[2];
+        }
+
+        for(int i=0;i<n;i++)    matrix[i][i] = 0;  //initialise the diagonal to 0's.
+        //FLOYD WARSHALL'S ALGORITHM.
+        for(int via=0;via<n;via++){  
+            for(int i=0;i<n;i++){
+                for(int j=0;j<n;j++){
+                    if(matrix[i][via] == INT_MAX || matrix[via][j] == INT_MAX)  //if its not reachable don't update
+                        continue;
+                    matrix[i][j] = min(matrix[i][j],matrix[i][via] + matrix[via][j]);  //store minimum path.
+                }
+            }
+        }
+        
+        vector<int> arr(n, 0);  //Array indexes are treated as Node vertexes and their corresponding array values are the count of number of cities
+        for (int i = 0; i < n; i++) {  //that are within that threshold value to reach other cities.
+            for (int j = 0; j < n; j++) {
+                if (matrix[i][j] <= distanceThreshold) {
+                    arr[i]++;
+                }
+            }
+        }
+        
+        int minCities = INT_MAX;
+        int resultCity = -1;
+        for (int i = 0; i < n; i++) {
+            if (arr[i] <= minCities) {  //the largest number with the least amount of cities within threshold can be returned.
+                resultCity = i;
+                minCities = arr[i];
+            }
+        }
+
+    return resultCity;
+    }

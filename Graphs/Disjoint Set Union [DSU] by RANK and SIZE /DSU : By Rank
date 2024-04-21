@@ -1,32 +1,32 @@
-class DisjointSet{            //User-Defined Data Structure for UNION BY RANK.
+class DisjointSet{            //User-Defined Data Structure for UNION BY RANK.  [REFER BOOK]
   private:
-  vector<int> rank,parent;
+  vector<int> rank,parent;    
   public:
   DisjointSet(int n){
-      rank.resize(n+1,0);
+      rank.resize(n+1,0);  //based on user input : set the sizes accordingly.  [BY RANK]
       parent.resize(n+1);
-      for(int i=0;i<=n;i++){
+      for(int i=0;i<=n;i++){  //parents are initialised to themselves initially.
           parent[i] = i;
       }
   }
-  int FindUPar(int node){
+  int FindUPar(int node){  //recursively return and store the parent. [PATH COMPRESSSION]  : O(1) operation.
       if(parent[node] == node){
           return node;
       }
       return parent[node] = FindUPar(parent[node]);
   }
-  void UnionByRank(int u, int v){
-      ulp_u = FindUPar(u);
+  void UnionByRank(int u, int v){  //to unite based on the rank conditions 
+      ulp_u = FindUPar(u);  //find their ultimate parents. O(1)
       ulp_v = FindUPar(v);
-      if(ulp_u == ulp_v)    return;
-      if(rank[ulp_u] < rank[ulp_v]){
+      if(ulp_u == ulp_v)    return;  //if same parent : no need skip iteration.
+      if(rank[ulp_u] < rank[ulp_v]){  //smallest attaches itself to the larger rank.
           parent[ulp_u] = ulp_v;
       }
       else if(rank[ulp_u] > rank[ulp_v]){
           parent[ulp_v] = ulp_u;
       }
-      else{
-          parent[ulp_v] = ulp_u;
+      else{      //if equal : do anyone and update the rank accordingly.
+          parent[ulp_v] = ulp_u;  
           rank[ulp_u]++;
       }
   }
@@ -34,9 +34,9 @@ class DisjointSet{            //User-Defined Data Structure for UNION BY RANK.
 
 
 int main(){
-    DisjointSet ds(3);
-    ds.UnionByRank(1,2);
-    ds.UnionByRank(2,3);
+    DisjointSet ds(3);  //one OBJECT : represent ONE GRAPH , which can be divied into various components.
+    ds.UnionByRank(1,2);    //we can check in O(1) , they two nodes are connected in the same component or not.
+    ds.UnionByRank(2,3);  //at any particular step.
     ds.UnionByRank(1,3);
 }
 

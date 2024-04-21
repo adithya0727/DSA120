@@ -1,0 +1,36 @@
+/* Approach:
+Given a weighted, undirected and connected graph of V vertices and E edges. The task is to find the sum of weights of the edges of the Minimum Spanning Tree.
+Given adjacency list adj as input parameters .
+Here adj[i] contains vectors of size 2, where the first integer in that vector denotes the end of the edge and the second integer denotes the edge weight.
+1) INTUITION : 
+Question : from a given graph find the minimum costing spanning tree. 
+So , similar to Dijkstra's , we use a min_heap and sort them based on the cost. 
+Logic : Shortest cost/weight is traversed first(min_heap) and we fill the spanning tree in minimum order of cost of edges and we use visited to not revisit 
+already visited nodes , since we only have [n-1] edges available and all nodes are to be connected.
+time - 
+space - 
+*/
+
+1) int spanningTree(int V, vector<vector<int>> adj[])
+    {
+        priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>>q;  //min_heap to sorting based on cheapest edge.
+        vector<bool>visited(V,false);  //to not revisit nodes.
+        int sum=0;  //overall sum of MST.
+        q.push({0,0});  //always start from source 0.
+        while(!q.empty()){
+            int currweight = q.top().first;  //check the weight of the current node
+            int node = q.top().second;  // current node.
+            q.pop();
+            if(visited[node])   continue;  //if already been visited . then skip this iteration and move on.
+            visited[node] = true;  //else visit it
+            sum += currweight;  //and add it to our overall sum
+            for(auto &neighbour : adj[node]){  //check its neighbours
+                int edge = neighbour[0];
+                int weight = neighbour[1];
+                if(!visited[edge]){  //if not yet visited , then push into queue.
+                q.push({weight,edge});
+                }
+            }
+        }
+    return sum;  //return overall sum of MST.
+    }

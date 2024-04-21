@@ -7,8 +7,9 @@ Question : from a given graph find the minimum costing spanning tree.
 So , similar to Dijkstra's , we use a min_heap and sort them based on the cost. 
 Logic : Shortest cost/weight is traversed first(min_heap) and we fill the spanning tree in minimum order of cost of edges and we use visited to not revisit 
 already visited nodes , since we only have [n-1] edges available and all nodes are to be connected.
-time - 
-space - 
+time - O(ElogE + ElogE) ~ O(ElogE) : (while loop will run for all the edges and to find min_heap.top()) + (Internal for loop in worst case for each node will connect
+to all the edge and logE to push into min_heap).
+space - O(E) : min_heap at worst case.
 */
 
 1) int spanningTree(int V, vector<vector<int>> adj[])

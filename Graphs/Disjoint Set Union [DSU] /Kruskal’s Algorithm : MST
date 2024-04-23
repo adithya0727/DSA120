@@ -1,0 +1,73 @@
+/* Approach:
+Given a weighted, undirected and connected graph of V vertices and E edges. The task is to find the sum of weights of the edges of the Minimum Spanning Tree.
+Given adjacency list adj as input parameters .
+Here adj[i] contains vectors of size 2, where the first integer in that vector denotes the end of the edge and the second integer denotes the edge weight.
+
+1)
+time - 
+space - 
+*/
+
+1) class DisjointSet{
+  private:
+  vector<int>rank,parent;
+  public:
+  DisjointSet(int n){
+      rank.resize(n+1,0);
+      parent.resize(n+1);
+      for(int i=0;i<=n;i++){
+          parent[i] = i;
+      }
+  }
+  
+  int FindUPar(int node){
+      if(parent[node] == node){
+          return node;
+      }
+      return parent[node] = FindUPar(parent[node]);
+  }
+  
+  void UnionByRank(int u , int v ){
+      int ulp_u = FindUPar(u);
+      int ulp_v = FindUPar(v);
+      if(ulp_u == ulp_v)    return;
+      if(rank[ulp_u] > rank[ulp_v]){
+          parent[ulp_v] = ulp_u;
+      }
+      else if(rank[ulp_u] < rank[ulp_v]){
+          parent[ulp_u] = ulp_v;
+      }
+      else{
+          parent[ulp_v] = ulp_u;
+          rank[ulp_u]++;
+      }
+  }
+};
+
+
+class Solution
+{
+	public:
+	//Function to find sum of weights of edges of the Minimum Spanning Tree.
+    int spanningTree(int V, vector<vector<int>> adj[])
+    {
+        vector<pair<int,pair<int,int>>>edges;
+        for(int i=0;i<V;i++){
+            for(auto &vec : adj[i]){
+                edges.push_back({vec[1],{i,vec[0]}});
+            }
+        }
+        sort(edges.begin(),edges.end());
+        int sum=0;
+        DisjointSet ds(V);
+        for(auto &edge : edges){
+            int weight = edge.first;
+            int u = edge.second.first;
+            int v = edge.second.second;
+            if(ds.FindUPar(u) == ds.FindUPar(v))    continue;
+            ds.UnionByRank(u,v);
+            sum += weight;
+        }
+        return sum;
+    }
+};

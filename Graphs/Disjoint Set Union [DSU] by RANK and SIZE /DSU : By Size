@@ -1,41 +1,41 @@
 /* Approach:
-1) INTUITION : 
-time - 
-space -
+1) INTUITION : For each particular node , we store the size of the number of nodes its holding , this way also we can determine which is the greater tree
+and attach the smaller to greater to reduce the time complexity , usually we use the parent and path compression method as well. 
+TIME : 4*Alpha ~ O(1)
 */
 
 
 1) class DisjointSet{
   private:
-  vector<int> size,parent;
+  vector<int> size,parent;  //to store the number of nodes.
   public:
   DisjointSet(int n){
-      size.resize(n+1,0);
+      size.resize(n+1,0);  //redefine sizes based on user inputs.
       parent.resize(n+1);
-      for(int i=0;i<=n;i++){
+      for(int i=0;i<=n;i++){  //initialise the parent array.
           parent[i] = i;
       }
   }
-  int FindUPar(int node){
+  int FindUPar(int node){  //PATH COMPRESSION.
       if(parent[node] == node){
           return node;
       }
-      return parent[node] = FindUPar(parent[node]);
+      return parent[node] = FindUPar(parent[node]);  //Breaks down the tree.
   }
   void UnionBySize(int u, int v){
       ulp_u = FindUPar(u);
       ulp_v = FindUPar(v);
-      if(ulp_u == ulp_v)    return;
-      if(size[ulp_u] < size[ulp_v]){
+      if(ulp_u == ulp_v)    return;  //if already exists , ignore it.
+      if(size[ulp_u] < size[ulp_v]){  //attach smaller size to larger.
           parent[ulp_u] = ulp_v;
-          size[ulp_v] += size[ulp_u];
+          size[ulp_v] += size[ulp_u];  //update size array of the parent which is greater and add the number of nodes the smaller one already had.
       }
       else if(size[ulp_u] > size[ulp_v]){
           parent[ulp_v] = ulp_u;
-          size[ulp_u] += size[ulp_v];
+          size[ulp_u] += size[ulp_v];  //update size of the greater parent with the size of smaller parent.
       }
       else{
-          parent[ulp_v] = ulp_u;
+          parent[ulp_v] = ulp_u;  //do the same thing again when they are equal.
           size[ulp_u] += size[ulp_v];
       }
   }

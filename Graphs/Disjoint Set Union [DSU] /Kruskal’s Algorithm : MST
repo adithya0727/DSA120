@@ -1,14 +1,22 @@
-/* Approach:
+/* Approach:				[LOGIC : Similar to Prim's]
 Given a weighted, undirected and connected graph of V vertices and E edges. The task is to find the sum of weights of the edges of the Minimum Spanning Tree.
 Given adjacency list adj as input parameters .
 Here adj[i] contains vectors of size 2, where the first integer in that vector denotes the end of the edge and the second integer denotes the edge weight.
-
-1)
+Lets learn by comparing with prim's to get a better / deeper understanding of the solution => 
+1) INTUITION : 
+1a) So initially we sort the array based on the weights : so that we always consider the weights that are the minimum first to visit the unvisited nodes with 
+minimum weight firstly.
+1b) In prim's : We use a min_heap to do the following , by traversing through each neighbour : we would also consider the min weight first for the unvisited neighbours.
+2a) We use DisjointSet : to check the nodes have same ultimate parent or not : if YES : then the nodes are already visited and we don't need to waste an edge and 
+thereby consider it's weight , if no : then we make a connection using DSU by rank and count the weight.
+2b) In this approach: we used a visited array to track this : if already visited we skipped that iteration , if not we add the minimum weight we get acc to min_heap
+and continue to check minimum weighted neighbours.
+3) Return the sum : it will always be the MST : since we consider all the minimum weight edges first and make them visited thereby taking only [N-1] edges.
 time - 
 space - 
 */
 
-1) class DisjointSet{
+1) class DisjointSet{	//DSU By Rank.
   private:
   vector<int>rank,parent;
   public:
@@ -51,22 +59,22 @@ class Solution
 	//Function to find sum of weights of edges of the Minimum Spanning Tree.
     int spanningTree(int V, vector<vector<int>> adj[])
     {
-        vector<pair<int,pair<int,int>>>edges;
-        for(int i=0;i<V;i++){
-            for(auto &vec : adj[i]){
+        vector<pair<int,pair<int,int>>>edges;	//to store in such a way so that we can sort on the basis of weight and we traverse edges by edges for the DSU
+        for(int i=0;i<V;i++){	//so that at each point , we can check for the connectedness of the graph which helps us determine visited or not.
+            for(auto &vec : adj[i]){	//convert into {weight,{u,v}}
                 edges.push_back({vec[1],{i,vec[0]}});
             }
         }
-        sort(edges.begin(),edges.end());
-        int sum=0;
-        DisjointSet ds(V);
-        for(auto &edge : edges){
-            int weight = edge.first;
+        sort(edges.begin(),edges.end());	//sort based on weights.
+        int sum=0;	//final sum of MST.
+        DisjointSet ds(V);	//create a object and initialise the size to V.
+        for(auto &edge : edges){	//traverse through each of the edge.
+            int weight = edge.first;	//store corresponding values.
             int u = edge.second.first;
             int v = edge.second.second;
-            if(ds.FindUPar(u) == ds.FindUPar(v))    continue;
-            ds.UnionByRank(u,v);
-            sum += weight;
+            if(ds.FindUPar(u) == ds.FindUPar(v))    continue;	//if they are connected : [VISITED] => Skip this edge iteration.
+            ds.UnionByRank(u,v);	//else connect the edges by DSU BY RANK.
+            sum += weight;	//add the weight to the overall sum of the MST.
         }
         return sum;
     }

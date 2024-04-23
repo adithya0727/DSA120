@@ -12,8 +12,8 @@ thereby consider it's weight , if no : then we make a connection using DSU by ra
 2b) In this approach: we used a visited array to track this : if already visited we skipped that iteration , if not we add the minimum weight we get acc to min_heap
 and continue to check minimum weighted neighbours.
 3) Return the sum : it will always be the MST : since we consider all the minimum weight edges first and make them visited thereby taking only [N-1] edges.
-time - 
-space - 
+time - O(MLogM) : to sort all the edges in the graph. O(M*4*Alpha) ~ O(M) : Overall : O(MlogM + M)
+space - O(M + M + M) : to store parent and rank and edges vector : each with size same as edges.
 */
 
 1) class DisjointSet{	//DSU By Rank.

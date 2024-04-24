@@ -1,0 +1,74 @@
+/* Approach:
+You are given a graph with n vertices and m edges.
+You can remove one edge from anywhere and add that edge between any two vertices in one operation.
+Find the minimum number of operations that will be required to make the graph connected.
+If it is not possible to make the graph connected, return -1.
+1) INTUITION : We don't actually have to attach them : Find out the 1) total number of ExtraEdges we can get from the graph.
+2) Find out the total number of disconnected componenets in the graph after performing UnionByRank. 
+LOGIC : To connect all these disconnected components : we need at minimum (n-1) edges.
+3) If we have sufficient extraedges to connect them , then its fine : return (n-1) as they are the minimum edges required || otherwise , if not enough extraedges : return -1.
+time - O(M)  : to traverse through all the edges.
+space - O(N + N) : parent and rank.
+*/
+
+1) class DisjointSet{
+  private:
+  vector<int>rank,parent;
+  public:
+  DisjointSet(int n){
+      rank.resize(n+1,0);
+      parent.resize(n+1);
+      for(int i=0;i<=n;i++){
+          parent[i] = i;
+      }
+  }
+  
+  int FindUPar(int node){
+      if(parent[node] == node){
+          return node;
+      }
+      return parent[node] = FindUPar(parent[node]);
+  }
+  
+  void UnionByRank(int u , int v ){
+      int ulp_u = FindUPar(u);
+      int ulp_v = FindUPar(v);
+      if(ulp_u == ulp_v)    return;
+      if(rank[ulp_u] > rank[ulp_v]){
+          parent[ulp_v] = ulp_u;
+      }
+      else if(rank[ulp_u] < rank[ulp_v]){
+          parent[ulp_u] = ulp_v;
+      }
+      else{
+          parent[ulp_v] = ulp_u;
+          rank[ulp_u]++;
+      }
+  }
+};
+
+
+class Solution {
+  public:
+    int Solve(int n, vector<vector<int>>& edge) {
+        DisjointSet ds(n);  //create an object
+        int extraedges = 0, no_of_dis_comp = 0;  //to count to check for sufficiencies.
+        for(auto &ed : edge){
+            if(ds.FindUPar(ed[0]) == ds.FindUPar(ed[1])){  //if they are already having the same parent : then its an extra edge : it doesn't necessarily have to be there.
+                extraedges++;  //the graph is already connected without it even.
+                continue;  //count it and skip the iteration.
+            }
+            ds.UnionByRank(ed[0],ed[1]);  // join the graph.
+        }
+        for(int i=0;i<n;i++){  
+            if(ds.FindUPar(i) == i){  //check for unique ultimate parents to get the number of disconnected components.
+                no_of_dis_comp++;
+            }
+        }
+        if(extraedges >= no_of_dis_comp-1){  //if sufficient exists : return min steps.
+            return no_of_dis_comp-1;
+        }
+        else{  //if not : -1 which says we can't make the graph fully connected as there isn't sufficient edges.
+            return -1;
+        }
+    }

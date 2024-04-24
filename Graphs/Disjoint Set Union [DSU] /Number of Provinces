@@ -4,8 +4,8 @@ Your task is to find the number of provinces.
 Note: A province is a group of directly or indirectly connected cities and no other cities outside of the group.
 1) INTUITION : Basically we have to find out how many DISCONNECTED COMPONENTS ARE THERE : for that , we can count how many UNIQUE ULTIMATE PARENTS ARE THERE.
 Pattern : if Ultimateparent[Node] == Node : then we've found one ultimate parent : each time we pass through this case : that's the amount of ulps we find and thus the count.
-time - O(N^2) : to traverse through the matrix.
-space - O(N + N) : to store rank and parent array.
+time - O(V^2) : to traverse through the matrix.
+space - O(V + V) : to store rank and parent array.
 */
 
 1) class DisjointSet{

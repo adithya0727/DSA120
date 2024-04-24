@@ -1,0 +1,67 @@
+/* Approach:          
+Given an undirected graph with V vertices. We say two vertices u and v belong to a single province if there is a path from u to v or v to u.
+Your task is to find the number of provinces.
+Note: A province is a group of directly or indirectly connected cities and no other cities outside of the group.
+1) INTUITION : Basically we have to find out how many DISCONNECTED COMPONENTS ARE THERE : for that , we can count how many UNIQUE ULTIMATE PARENTS ARE THERE.
+Pattern : if Ultimateparent[Node] == Node : then we've found one ultimate parent : each time we pass through this case : that's the amount of ulps we find and thus the count.
+time - O(N^2) : to traverse through the matrix.
+space - O(N + N) : to store rank and parent array.
+*/
+
+1) class DisjointSet{
+  private:
+  vector<int>rank,parent;
+  public:
+  DisjointSet(int n){
+      rank.resize(n+1,0);
+      parent.resize(n+1);
+      for(int i=0;i<=n;i++){
+          parent[i] = i;
+      }
+  }
+  
+  int FindUPar(int node){
+      if(parent[node] == node){
+          return node;
+      }
+      return parent[node] = FindUPar(parent[node]);
+  }
+  
+  void UnionByRank(int u , int v ){
+      int ulp_u = FindUPar(u);
+      int ulp_v = FindUPar(v);
+      if(ulp_u == ulp_v)    return;
+      if(rank[ulp_u] > rank[ulp_v]){
+          parent[ulp_v] = ulp_u;
+      }
+      else if(rank[ulp_u] < rank[ulp_v]){
+          parent[ulp_u] = ulp_v;
+      }
+      else{
+          parent[ulp_v] = ulp_u;
+          rank[ulp_u]++;
+      }
+  }
+};
+
+
+
+class Solution {
+  public:
+    int numProvinces(vector<vector<int>> adj, int V) {
+        DisjointSet ds(V);  //create an object of size V.
+        for(int i=0;i<V;i++){
+            for(int j=0;j<V;j++){
+                if(adj[i][j] == 1 && i!=j){
+                    ds.UnionByRank(i,j);  //directly using matrix : start performing union in ds.
+                }
+            }
+        }
+        int count = 0;
+        for(int i=0;i<V;i++){
+            if(ds.FindUPar(i) == i){  //to find all the bosses : all the unique ultimate parents.
+                count++;
+            }
+        }
+        return count;
+    }

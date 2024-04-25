@@ -57,36 +57,36 @@ space -
 class Solution{
   public:
     vector<vector<string>> accountsMerge(vector<vector<string>> &accounts) {
-        int n = accounts.size();
-        DisjointSet ds(n);
-        unordered_map<string,int>mp;
-        vector<string> mergedmails[n];
+        int n = accounts.size();  //these are the number of overall indeces initially.
+        DisjointSet ds(n);  //initialise the nodes and thier parents to point to themselves.
+        unordered_map<string,int>mp;  //mainly for tracking repeated mail id's.
+        vector<string> mergedmails[n];  //to store all the mail id's in their corresponding places once they have been merged.
         vector<vector<string>>ans;
         
         for(int i=0;i<n;i++){
-            for(int j=1;j<accounts[i].size();j++){
+            for(int j=1;j<accounts[i].size();j++){  //edge case : except the name : we have to start from the next mail ids.
                 string str = accounts[i][j];
                 if(mp.find(str) != mp.end()){
-                    ds.UnionByRank(i,mp[str]);
+                    ds.UnionByRank(i,mp[str]);  //if already exists : make a union among the nodes to denote who the ultimate parent is.
                     continue;
                 }
-                mp[str] = i;
+                mp[str] = i;  //else , insert mail ids with their indeces. 
             }
         }
         
-        for(auto &var : mp){
-            int ulp = ds.FindUPar(var.second);
+        for(auto &var : mp){  //traverse through the map to store in the correct merged manner.
+            int ulp = ds.FindUPar(var.second);    //merge base on the ultimate parent for each mail id.
             mergedmails[ulp].push_back(var.first);
         }
-        for(int i=0;i<n;i++){
-            if(mergedmails[i].size() == 0)  continue;
-            sort(mergedmails[i].begin(),mergedmails[i].end());
+        for(int i=0;i<n;i++){  // to store in sorted order + having the name first. : (Since use can't use push_front() in a vector).
+            if(mergedmails[i].size() == 0)  continue;  //Skip if an array is empty (When it has been merged to a parent).
+            sort(mergedmails[i].begin(),mergedmails[i].end());  //sort them.
             vector<string>temp;
-            temp.push_back(accounts[i][0]);
-            for(auto &str : mergedmails[i]){
+            temp.push_back(accounts[i][0]);  //push the name for that particular index.
+            for(auto &str : mergedmails[i]){  //then the rest sorted elements.
                 temp.push_back(str);
             }
-            ans.push_back(temp);
+            ans.push_back(temp);    
         }
         return ans;
     }

@@ -13,8 +13,8 @@ Breakdown :
 4) and we continue and connect all those different accounts which may have even at least one same mail id.
 5) Based on the connections : we use the ultimate parent to form the merged array : which contains the fianl merged mail id's for each user.
 6) Now we have to restore the name of the user first in each of the array and their mail id's must be stored in sorted order : so use another ans to store it this way.
-time - 
-space - 
+time - O(N*M*4Alpha)
+space - O(N*M) : to store all the edges.
 */
 
 1) class DisjointSet{

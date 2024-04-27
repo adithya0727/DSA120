@@ -23,8 +23,8 @@ TIME : 4*Alpha ~ O(1)
       return parent[node] = FindUPar(parent[node]);  //Breaks down the tree.
   }
   void UnionBySize(int u, int v){
-      ulp_u = FindUPar(u);
-      ulp_v = FindUPar(v);
+      int ulp_u = FindUPar(u);
+      int ulp_v = FindUPar(v);
       if(ulp_u == ulp_v)    return;  //if already exists , ignore it.
       if(size[ulp_u] < size[ulp_v]){  //attach smaller size to larger.
           parent[ulp_u] = ulp_v;

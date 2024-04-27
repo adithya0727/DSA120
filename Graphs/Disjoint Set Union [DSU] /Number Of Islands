@@ -20,8 +20,8 @@ perform UnionByRank and we label each cell of a matrix with numbers in an order.
       3b) c) it is not a seperate Island in and of itself , so we decrement the count for number of Total Islands.
 4)At each cell when all directions are being traversed : we now insert the current number of Islands that at time and so on for each operation iteration in the loop.
 
-time - 
-space - 
+time - O(N*M)   //to travsere whole matrix in worst case while checking for all its neighbours in 4 directions : internals operations are all : O(1).
+space - O(N*M)   //to store the visited matrix.
 */
 
 1) class DisjointSet{
@@ -68,12 +68,6 @@ class Solution {
         int count=0,cnt=0;  //to keep track of the number of Islands.  
         vector<int>ans;
         DisjointSet ds(n*m);  //Initialise all the parents to themselves.
-        vector<vector<int>> matrix(n, vector<int>(m));  //to label them with their numbers accordingly.
-        for(int i=0;i<n;i++){
-            for(int j=0;j<m;j++){
-                matrix[i][j] = cnt++;
-            }
-        }
         vector<vector<bool>>visited(n,vector<bool>(m,false));  //to check for neighbours.
         vector<int>dx = {-1,0,1,0};    //to move along 4 directions.
         vector<int>dy = {0,1,0,-1};

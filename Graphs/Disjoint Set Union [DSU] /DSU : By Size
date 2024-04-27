@@ -10,7 +10,7 @@ TIME : 4*Alpha ~ O(1)
   vector<int> size,parent;  //to store the number of nodes.
   public:
   DisjointSet(int n){
-      size.resize(n+1,0);  //redefine sizes based on user inputs.
+      size.resize(n+1,1);  //redefine sizes based on user inputs.
       parent.resize(n+1);
       for(int i=0;i<=n;i++){  //initialise the parent array.
           parent[i] = i;

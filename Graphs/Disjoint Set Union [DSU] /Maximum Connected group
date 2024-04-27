@@ -1,0 +1,100 @@
+/* Approach:            [PATTERN : Number Of Islands]
+You are given an n x n binary grid. A grid is said to be binary if every value in grid is either 1 or 0.
+You can change at most one cell in grid from 0 to 1.
+You need to find the largest group of connected  1's.
+Two cells are said to be connected if both are adjacent to each other and both have same value.
+[Refer book for proper algorithm analysis]
+1) INTUITION : Firstly we connect all the connected components together like the similar pattern problem.
+We check through each 0 and convert the maximum size we can get and we trail and error till the end and return the maximum possible size we get.
+time - O(N*N) : to traverse throughout the matrix in the worst case.
+space - O(N*N) : to store each cell uniquely in the DisjointSet.
+*/
+
+1) class DisjointSet{  //Union By Size : for convience to get the size at each ultimate parent : so that we can sum up all to get the overall maximum size/count of nodes.
+  public:
+  vector<int> size,parent; 
+  DisjointSet(int n){
+      size.resize(n+1,1); 
+      parent.resize(n+1);
+      for(int i=0;i<=n;i++){  
+          parent[i] = i;
+      }
+  }
+  int FindUPar(int node){ 
+      if(parent[node] == node){
+          return node;
+      }
+      return parent[node] = FindUPar(parent[node]); 
+  }
+  void UnionBySize(int u, int v){
+      int ulp_u = FindUPar(u);
+      int ulp_v = FindUPar(v);
+      if(ulp_u == ulp_v)    return; 
+      if(size[ulp_u] < size[ulp_v]){  
+          parent[ulp_u] = ulp_v;
+          size[ulp_v] += size[ulp_u]; 
+      }
+      else if(size[ulp_u] > size[ulp_v]){
+          parent[ulp_v] = ulp_u;
+          size[ulp_u] += size[ulp_v]; 
+      }
+      else{
+          parent[ulp_v] = ulp_u;  
+          size[ulp_u] += size[ulp_v];
+      }
+  }
+};
+
+
+
+class Solution {
+  public:
+    int MaxConnection(vector<vector<int>>& grid) {
+        int n = grid.size();  //n*n matrix size.
+        DisjointSet ds(n*n);    //each cell is treated uniquely with its own number of each of them.
+        vector<int>dx = {-1,0,1,0};  //to move along 4 directions.
+        vector<int>dy = {0,1,0,-1};
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                if(grid[i][j] == 1){  //first connect all the 1's together using UnionBySize
+                    for(int k=0;k<4;k++){
+                        int newi = i + dx[k];
+                        int newj = j + dy[k];
+                        if(newi >=0 && newi < n && newj >=0 && newj < n && grid[newi][newj]==1){  //check for validity and only if another connecting neighbour exists.
+                            int gridno = i * n + j,directionno = newi * n + newj;  //find their cell number.
+                            if(ds.FindUPar(gridno) != ds.FindUPar(directionno)){  //if they arent connected yet , connect them in DisjointSet.
+                                ds.UnionBySize(gridno,directionno);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        int max_size=INT_MIN;  //to store the final maximum value of connected 1's.
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                if(grid[i][j] == 0){  //to check what would be the max size if we convert at most one 0 each time.
+                    unordered_set<int>s;  //so that we don't consider repeated components.
+                    int sizes=0;
+                    for(int k=0;k<4;k++){
+                        int newi = i + dx[k];  //to check along all 4 directions.
+                        int newj = j + dy[k];
+                        if(newi >=0 && newi < n && newj >= 0 && newj < n && grid[newi][newj] == 1){  //if valid and a component exists to its neighbour.
+                            int directionno = newi * n + newj;  
+                            s.insert(ds.FindUPar(directionno));  //Store its UNIQUE ultimate parents.
+                        }
+                    }
+                    for(auto &ulp : s){  //add up all these unique parents.
+                        sizes += ds.size[ulp];
+                    }
+                    max_size = max(max_size,sizes+1);  and then check for maximum : +1 for the node itself which is being converted from 0->1.
+                }
+            }
+        }
+        for(int cell = 0;cell<n*n;cell++){  //edge case : in-case no 0's only exist , that time we consider the maximum possible value for the ultimate parent.
+            max_size = max(max_size,ds.size[ds.FindUPar(cell)]);
+        }
+        
+    return max_size;
+    }
+};

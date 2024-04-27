@@ -1,0 +1,102 @@
+/* Approach:
+You are given a n,m which means the row and column of the 2D matrix and an array of  size k denoting the number of operations.
+Matrix elements is 0 if there is water or 1 if there is land. Originally, the 2D matrix is all 0 which means there is no land in the matrix.
+The array has k operator(s) and each operator has two integer A[i][0], A[i][1] means that you can change the cell matrix[A[i][0]][A[i][1]] from sea to island.
+Return how many island are there in the matrix after each operation.You need to return an array of size k.
+Note : An island means group of 1s such that they share a common side.
+Pattern : At each point after every operation check the number of Islands : clearly a DSU pattern.
+1) INTUITION : Traverse through all operations and at each operation : check its neighbours and see how many isands are there : can be done using DSU which at constant
+time tells us how many islands are there.
+Problem Breakdown :
+1) N*M is the number of elements based on 0-based indexing we'll use to represent the cells : each cell is represented by a number which makes it easier for us to
+perform UnionByRank and we label each cell of a matrix with numbers in an order. Intially all the numbers are parents to themselves in the DisjointSet.
+2) Using a visited array so avoid repetitions and it will help us while checking for neighbours at each cell if they can be connected or not.
+3) Now we traverse through all the operations one by one : 
+   3a) Check if that cell has been visited before : if not , initially we'll consider it as one whole Island in and of itself and increase the count.
+   3b) From that cell , we now check for it's neighbours in 4 directions and at each direction :
+      3b) a) Check for validity in the matrix and see if it has a neighbour that's already been visited before : If YES => 
+      3b) b) Calculate the Numbering of that cell and the numbering of the neighbour cell which has been visited : so that we can check if these numbers are being 
+             connected if they have the same ultimate parent [DSU] in constant time : if they are connected : just Ignore , if NOT => 
+      3b) c) it is not a seperate Island in and of itself , so we decrement the count for number of Total Islands.
+4)At each cell when all directions are being traversed : we now insert the current number of Islands that at time and so on for each operation iteration in the loop.
+
+time - 
+space - 
+*/
+
+1) class DisjointSet{
+  private:
+  vector<int>rank,parent;
+  public:
+  DisjointSet(int n){
+      rank.resize(n+1,0);
+      parent.resize(n+1);
+      for(int i=0;i<=n;i++){
+          parent[i] = i;
+      }
+  }
+  
+  int FindUPar(int node){
+      if(parent[node] == node){
+          return node;
+      }
+      return parent[node] = FindUPar(parent[node]);
+  }
+  
+  void UnionByRank(int u , int v ){
+      int ulp_u = FindUPar(u);
+      int ulp_v = FindUPar(v);
+      if(ulp_u == ulp_v)    return;
+      if(rank[ulp_u] > rank[ulp_v]){
+          parent[ulp_v] = ulp_u;
+      }
+      else if(rank[ulp_u] < rank[ulp_v]){
+          parent[ulp_u] = ulp_v;
+      }
+      else{
+          parent[ulp_v] = ulp_u;
+          rank[ulp_u]++;
+      }
+  }
+};
+
+
+
+class Solution {
+  public:
+    vector<int> numOfIslands(int n, int m, vector<vector<int>> &operators) {
+        int count=0,cnt=0;  //to keep track of the number of Islands.  
+        vector<int>ans;
+        DisjointSet ds(n*m);  //Initialise all the parents to themselves.
+        vector<vector<int>> matrix(n, vector<int>(m));  //to label them with their numbers accordingly.
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                matrix[i][j] = cnt++;
+            }
+        }
+        vector<vector<bool>>visited(n,vector<bool>(m,false));  //to check for neighbours.
+        vector<int>dx = {-1,0,1,0};    //to move along 4 directions.
+        vector<int>dy = {0,1,0,-1};
+        for(auto &edge : operators){  //through each cell in matrix position.
+            int x = edge[0];
+            int y = edge[1];
+            if(!visited[x][y]){  //consider it as a Island in and of itself.
+                visited[x][y] = true;
+                count++;
+            }
+            for(int i=0;i<4;i++){    //check the cell for it's neighbours.
+                int newx = x + dx[i];
+                int newy = y + dy[i];
+                if(newx >=0 && newx < n && newy >=0 && newy < m && visited[newx][newy]){  //if exists and its visited.
+                    int matrixno = (x*m + y),directionno = (newx*m + newy);  //calculate the number       [REFER BOOK]
+                    if(ds.FindUPar(matrixno) != ds.FindUPar(directionno)){  //check their ultimate parents : if not equal : connect them and make them into a single
+                        count--;    //Island and decrement the count of number of Islands.
+                        ds.UnionByRank(matrixno,directionno);  //movinf forward connect these two to indicate that they belong to the same parent.
+                    }
+                }
+            }  
+            ans.push_back(count);  //at each operationc= check the number of Islands.
+        }
+        return ans;
+    }
+};

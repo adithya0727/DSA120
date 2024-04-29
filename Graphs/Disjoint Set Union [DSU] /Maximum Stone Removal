@@ -1,0 +1,80 @@
+/* Approach:
+There are n stones at some integer coordinate points on a 2D plane. Each coordinate point may have at most one stone. You need to remove some stones. 
+A stone can be removed if it shares either the same row or the same column as another stone that has not been removed.
+Given an array stones of length n where stones[i] = [xi, yi] represents the location of the ith stone, return the maximum possible number of stones that you can remove.
+1) INTUITION : We basically do numbering on the rows and cols and we attach the rows and cols which have stones in them using DSU.
+We get the total count of components and subtract that from n(total weights) : LOGIC : REFER BOOK FOR DERIVATION.
+Breakdown :
+1) Find the size of the grid which has stones in the row and column wise : that is our kinda layout where our answers will exist.
+2) Label the rows as same nodes and for the columns we start from (totalRows + 1) for the node indexing. TotalRows + TotalCols + 1 = Number of nodes in DisjointSet.
+3) We now connect all the rows and cols that are connected to each other based on the stones(which consists row and col: newly calculated based on node in DS).
+4) We use a map to find out all the ultimate parents to get the total count of number of components.
+5) LOGIC : to remove maximum stones : in every component we remove all elements except 1 at the last since it will have no corresponding row/col with stones.
+N - [1 + 1 + 1 + 1] = max we can remove.
+time - O(N + K) : to traverse through rows and cols in the map. 
+space - O(K) : to store in the DisjointSet.
+*/
+
+
+1) class DisjointSet{
+  private:
+  vector<int>rank,parent;
+  public:
+  DisjointSet(int n){
+      rank.resize(n+1,0);
+      parent.resize(n+1);
+      for(int i=0;i<=n;i++){
+          parent[i] = i;
+      }
+  }
+  
+  int FindUPar(int node){
+      if(parent[node] == node){
+          return node;
+      }
+      return parent[node] = FindUPar(parent[node]);
+  }
+  
+  void UnionByRank(int u , int v ){
+      int ulp_u = FindUPar(u);
+      int ulp_v = FindUPar(v);
+      if(ulp_u == ulp_v)    return;
+      if(rank[ulp_u] > rank[ulp_v]){
+          parent[ulp_v] = ulp_u;
+      }
+      else if(rank[ulp_u] < rank[ulp_v]){
+          parent[ulp_u] = ulp_v;
+      }
+      else{
+          parent[ulp_v] = ulp_u;
+          rank[ulp_u]++;
+      }
+  }
+};
+
+class Solution {
+  public:
+    int maxRemove(vector<vector<int>>& stones, int n) {
+        int maxRow = 0,maxCol=0;  //to get the layout in precision. To avoid unneccasary nodes which don't have any stones in them.
+        for(auto &vec : stones){  
+            maxRow = max(maxRow,vec[0]);
+            maxCol = max(maxCol,vec[1]);
+        }
+        DisjointSet ds(maxRow + maxCol + 1);  //total number of nodes.
+        unordered_map<int,int>stone;  //to find ultimate parents.
+        for(auto &v : stones){  //performing unionbyrank.
+            int row = v[0];  
+            int col = v[1] + maxRow + 1;  //as per how it's stored in our DisjointSet the col numbers.
+            ds.UnionByRank(row,col);
+            stone[row] = 1;  //to indicate their presence.
+            stone[col] = 1;
+        }
+        int no_of_connected_compo = 0;
+        for(auto &it : stone){
+            if(ds.FindUPar(it.first) == it.first){  //count ulp to get the count of number of components.
+                no_of_connected_compo++;
+            }
+        }
+        return n-no_of_connected_compo;  //total stones - (+1 node we have to remove at each component)
+    }
+};

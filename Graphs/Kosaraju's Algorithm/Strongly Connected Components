@@ -1,0 +1,59 @@
+/* Approach:
+Given a Directed Graph with V vertices (Numbered from 0 to V-1) and E edges, Find the number of strongly connected components in the graph.
+SCC : in a component in a graph : there should be a path from every vertex to every other vertex (OR) btw all pairs of vertices they must be reachable to each other
+A->B and B->A.
+1) INTUITION : Firstly we capture the right order of movement , reverse the whole graph : components will remain the same and then isolate each component 
+as we move from the right order in the reverse graph and get the count.
+time - 3*(V + E) ~ (V + E) : for the dfs's we have performed and stack traversal.
+space - (V + E) : to store transpose of adjList -> AdjListT
+*/
+
+1) private:
+    void dfsone(vector<vector<int>>& adj,vector<int>&visited,stack<int>&st,int node){  //to store elements in the finishing time of the dfs.
+        visited[node] = 1;
+        for(auto &neighbour : adj[node]){
+            if(!visited[neighbour]){
+                dfsone(adj,visited,st,neighbour);
+            }
+        }
+        st.push(node);
+    }
+    
+    void dfs(vector<int>adjT[],vector<int>&visited,int node){  //regular dfs to visit all nodes in the transpose
+        visited[node] = 1;
+        for(auto &neighbour : adjT[node]){
+            if(!visited[neighbour]){
+                dfs(adjT,visited,neighbour);
+            }
+        }
+    }
+    
+	public:
+	//Function to find number of strongly connected components in the graph.
+    int kosaraju(int V, vector<vector<int>>& adj)
+    {
+        vector<int>visited(V,0);
+        stack<int>st;
+        for(int i=0;i<V;i++){  //for all components
+            if(!visited[i]){
+                dfsone(adj,visited,st,i);
+            }
+        }
+        vector<int>adjT[V];
+        for(int i=0;i<V;i++){  //reverse the graph and store here.
+            visited[i] = 0;
+            for(auto &neighbour : adj[i]){
+                adjT[neighbour].push_back(i);
+            }
+        }
+        int count = 0;
+        while(!st.empty()){  //until all nodes are visited and stack is empty.
+            int node = st.top();
+            st.pop();
+            if(!visited[node]){  
+                count++;  //each time we finish one component and return again , this keeps the count of components.
+                dfs(adjT,visited,node);
+            }
+        }
+    return count;
+    }

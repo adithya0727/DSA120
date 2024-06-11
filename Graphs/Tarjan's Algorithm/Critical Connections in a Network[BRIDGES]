@@ -1,0 +1,54 @@
+/* Approach :
+There are n servers numbered from 0 to n - 1 connected by undirected server-to-server connections forming a network where connections[i] = [ai, bi]
+represents a connection between servers ai and bi. Any server can reach other servers directly or indirectly through the network.
+A critical connection is a connection that, if removed, will make some servers unable to reach some other server.
+Return all critical connections in the network in any order.
+
+1) INTUITION : Using the TimeIn to calculate at what step we reach a node and LowTime to calculate at each node what is the lowest step that we can reach at it ,
+except the parent node path.
+LowTime[neighbour] > TimeIn[node] : Helps us determine if there is a path other than parent where the neighbour can reach with a shorter or equal time : then there's
+no bridge in it , but if it is a bridge : the lowest possible time among all its adjacent neighbours is still greater than the timeIn of parent.
+time - O(V + 2E)
+space - O(V + 2E)
+*/
+
+1) class Solution {
+private:
+    int timer=1;    //to track movement post each step.
+private:
+    void dfs(int node,int parent,vector<int> adj[],vector<int>&visited,int TimeIn[],
+            int LowTime[],vector<vector<int>>&critical){
+                visited[node] = 1;  //visit it.
+                TimeIn[node] = timer;    //set initail values for unvisited nodes.
+                LowTime[node] = timer;
+                timer++;
+                for(auto &neighbour : adj[node]){  
+                    if(neighbour == parent) continue;  //skip parent
+                    if(visited[neighbour] == 0){  //not visited 
+                        dfs(neighbour,node,adj,visited,TimeIn,LowTime,critical);  //visit using dfs all neighbours
+                        LowTime[node] = min(LowTime[neighbour],LowTime[node]);  //once stack unwinding : update to the lowest Timestep amongst all neighbours
+                        if(LowTime[neighbour] > TimeIn[node]){  //check if lowest is still greater than timeIn of parent : then bridge
+                            critical.push_back({neighbour,node});  //store the bridge
+                        }
+                    }
+                    else{
+                        LowTime[node] = min(LowTime[neighbour],LowTime[node]);  //if already visited : its in the same path : so take the lowest.
+                    }
+                }
+            }
+
+public:
+    vector<vector<int>> criticalConnections(int n, vector<vector<int>>& connections) {
+        vector<vector<int>>critical;
+        vector<int> adj[n];  //adjList
+        for(auto &it : connections){
+            adj[it[0]].push_back(it[1]);
+            adj[it[1]].push_back(it[0]);
+        }
+        int TimeIn[n];    //step time at each step.
+        int LowTime[n];  //lowest possible step time considering neighbours except parent itself.
+        vector<int>visited(n,0);
+        dfs(0,-1,adj,visited,TimeIn,LowTime,critical);
+        return critical;    //all edges with bridges.
+    }  
+};

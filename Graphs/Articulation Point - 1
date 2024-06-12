@@ -1,0 +1,58 @@
+/* Approach:      [PATTERN : SIMILAR TO BRIDGES]
+Given an undirected connected graph with V vertices and adjacency list adj.You are required to find all the vertices removing which (and edges through it)
+disconnects the graph into 2 or more components and return it in sorted manner.
+
+1) INTUITION : Similar to bridge , subtle changes : 
+a) we handle parent differently : if it has multiple children : its bound to be broken into seperated components if parent node is removed.
+b) low[it] >= timein[node] : because we are removing the whole node itself , even if we reach at the same time : it is considered as an articulation point.
+It has to reach Earlier only : only then an alternative path exists other the path where we remvoe the whole node itself.
+c) min(LowTime[node],TimeIn[neighbour]) : if we are coming along the same path : we take the timein and not the lowest time since : if there is a possibility 
+where we reomve the node itself , then there's no way to reach the other compoenent : so that we can correctly recognise the B) condition to hit.
+time - O( V + E)
+space - O( V + E)
+*/
+
+1) private:
+        int timer = 1;
+        void dfs(int node, int parent, vector<int>adj[], vector<int>&visited,
+                    int TimeIn[],int LowTime[],vector<int>&mark){
+                        visited[node] = 1;
+                        TimeIn[node] = LowTime[node] = timer++;
+                        int child =0;
+                        for(auto &neighbour : adj[node]){
+                            if(neighbour == parent)    continue;
+                            if(visited[neighbour] == 0){
+                                dfs(neighbour,node,adj,visited,TimeIn,LowTime,mark);
+                                LowTime[node] = min(LowTime[node],LowTime[neighbour]);
+                                if(LowTime[neighbour] >= TimeIn[node] && parent != -1)    //exclude parent , only lesser is considered as not an articulation point.
+                                    mark[node] = 1;
+                                child++;
+                            }
+                            else{
+                                LowTime[node] = min(LowTime[node],TimeIn[neighbour]);  //if visited : take the TIMEIN.
+                            }
+                            if(child > 1 && parent == -1)    //Parent node and more children : point for sure.
+                                mark[node] = 1;
+                        }
+                    }
+    
+    
+  public:
+    vector<int> articulationPoints(int V, vector<int>adj[]) {
+        vector<int>ans;  
+        int TimeIn[V];
+        int LowTime[V];
+        vector<int>visited(V,0);
+        vector<int>mark(V,0);
+        for(int i=0;i<V;i++){    //for disconnected components
+            if(!visited[i]){
+                dfs(i,-1,adj,visited,TimeIn,LowTime,mark);
+            }
+        }  
+        for(int i=0;i<V;i++){  //convert where ever the we've found an articulation point.
+            if(mark[i])
+                ans.push_back(i);
+        }
+        if(ans.size() == 0) return {-1};  //if none.
+        return ans;
+    }

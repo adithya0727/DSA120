@@ -1,0 +1,28 @@
+/* Approach:      [PATTERN : FIBONACCI SERIES]
+You are climbing a staircase. It takes n steps to reach the top.
+Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?
+1) INTUITION : Using recursion as base we find all possibilities to climb with 1 and 2 stairs : Using memoization - each time we finish one sub problem we store its possible number of stairs in an array.
+When we encounter the same sub problem : we just know that at this n value : how many stairs can be reached : so we dont recompute [REDUNDANCY] and just return the solution from dp[of that n].
+time - O(N) - stack frame. : once we get to the depth : rest all are just O(1) : since subproblems are mostly already solved.
+space - O(N) : array.
+*/
+
+1) class Solution {
+private:
+    int stair(int n , vector<int>&dp){
+        if(n==0 || n==1)    return 1;  //base case
+        if(dp[n] != -1) return dp[n];  //if this sub problem has already been visited : we just end this part of recursion and return the solution to this particular sub problem
+        int left = stair(n-1,dp);  //else we calculate 
+        int right = stair(n-2,dp);
+        return dp[n] = left + right;  //store the solution in the array for the next time.
+    }
+
+
+public:
+    int climbStairs(int n) {
+        if(n==0 || n==1)    return n;
+        vector<int>dp(n+1,-1);  //one extra space for the nth value
+        stair(n,dp);
+        return dp[n];
+    }
+};

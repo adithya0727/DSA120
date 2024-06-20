@@ -8,6 +8,7 @@ paths and fianlly we end up with the least cost path.
 time - O(N)
 space - O(N)
 2) Convert to bottom up approach
+3) Space Optimized
 */
 
 1) Memoization :
@@ -44,4 +45,19 @@ int minimumEnergy(vector<int>& height, int n) {
             dp[i] = min(first,second);
         }
         return dp[n-1];
+    }
+
+3) Space Optimized : 
+int minimumEnergy(vector<int>& height, int n) {
+        if(n==0 || n==1)    return 0;
+        int prev1i=0,prev2i=0;
+        for(int i=1;i<n;i++){
+            int first = prev1i + abs(height[i] - height[i-1]);
+            int second=INT_MAX;
+            if(i > 1)
+                second = prev2i + abs(height[i] - height[i-2]);
+            prev2i = prev1i;
+            prev1i = min(first,second);
+        }
+        return prev1i;
     }

@@ -1,0 +1,33 @@
+/* Approach:      [Similar to Geek Jump]
+Question : Instead of frog being able to make 2 jumps , it can make K number of jumps : to solve this recursively :
+At each stack frame we need to figure out the least cost (Considering all possibilities of Jumps from the 0->till current stack frame) and then return the min cost to
+the prev stack frame and so on till we reach N.  : We use the Recursion + For Loop combination to solve this like BT.
+1) Recursion Solution.
+2) Memoization.
+time - 
+space - 
+*/
+
+1) private:
+        int cal(vector<int>& height, int n,vector<int>&dp,int &k){
+            if(n==0)    return 0;
+            int min_steps = INT_MAX;  //in this stack frame , we start with INT_MAX for ease of comparison
+            for(int i=1;i<=k;i++){  //for up to this n value : check all varieties of jumps till this stack frame 
+                if(n-i < 0) continue;  //if jump is beyond n : keep skipping it.
+                int num = cal(height,n-i,dp,k) + abs(height[n] - height[n-i]);  //keep addinh up the cost till now
+                min_steps = min(num,min_steps);  //update the minimum value for each path the frog comes in till this stage on n value.
+            }
+            return min_steps;  //return the minimum cost upto this n value : so we continue along this minimum cost value : to ultimately get the minimum cost from
+        }  // 0->N by choosing minimum cost at each stage on N=>(0,1,2,3,4,...) all the way till N.
+    
+    
+  public:
+    int minimumEnergy(vector<int>& height, int n) {
+        if(n==0 || n==1)    return 0;
+        vector<int>dp(n+1,-1);
+        cal(height,n,dp,k);
+        return dp[n-1];
+    }
+
+
+2) 

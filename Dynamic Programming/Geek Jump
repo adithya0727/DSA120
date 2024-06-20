@@ -1,0 +1,47 @@
+/* Approach:        [REFER BOOK]
+ Geek wants to climb from the 0th stair to the (n-1)th stair. At a time the Geek can climb either one or two steps. A height[N] array is also given.
+Whenever the geek jumps from stair i to stair j, the energy consumed in the jump is abs(height[i]- height[j]), where abs() means the absolute difference.
+return the minimum energy that can be used by the Geek to jump from stair 0 to stair N-1.
+
+1) INTUITION : Using recursion find all possible paths , on overlapping sub problems : use dp and save complexity : at each step recursively choose the minimum of the
+paths and fianlly we end up with the least cost path.
+time - O(N)
+space - O(N)
+2) Convert to bottom up approach
+*/
+
+1) Memoization :
+private:
+        int cal(vector<int>& height, int n,vector<int>&dp){
+            if(n==0)    return 0;
+            if(dp[n] != -1) return dp[n];
+            int left = cal(height,n-1,dp) + abs(height[n] - height[n-1]);
+            int right = INT_MAX;
+            if(n> 1)
+                right = cal(height,n-2,dp) + abs(height[n] - height[n-2]);
+            return dp[n] = min(left,right);
+        }
+    
+    
+  public:
+    int minimumEnergy(vector<int>& height, int n) {
+        if(n==0 || n==1)    return 0;
+        vector<int>dp(n+1,-1);
+        cal(height,n,dp);
+        return dp[n-1];
+    }
+
+2) Tabulation :
+int minimumEnergy(vector<int>& height, int n) {
+        if(n==0 || n==1)    return 0;
+        vector<int>dp(n,-1);
+        dp[0] = 0;
+        for(int i=1;i<n;i++){
+            int first = dp[i-1] + abs(height[i] - height[i-1]);
+            int second = INT_MAX;
+            if(i > 1)
+                second = dp[i-2] + abs(height[i] - height[i-2]);
+            dp[i] = min(first,second);
+        }
+        return dp[n-1];
+    }

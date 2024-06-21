@@ -1,0 +1,45 @@
+/* Approach:
+
+1) Recursion 
+2) Memoization
+3) Tabulation 
+4) Space Optimized
+time - O(N) 
+space - O(N) and O(1) 
+*/
+
+1) private:
+    int cal(int arr[] , int n){
+        if(n == 0)  return arr[0];
+        if(n < 0)   return 0;
+        int pick = arr[n] + cal(arr,n-2);
+        int notpick = 0 + cal(arr,n-1);
+        return max(pick,notpick);
+    }
+
+public:	
+	// calculate the maximum sum with out adjacent
+	int findMaxSum(int *arr, int n) {
+	    int result = cal(arr,n-1);
+	    return result;
+	}
+
+2) private:
+    int cal(int arr[] , vector<int>&dp , int n){
+        if(n == 0)  return arr[0];
+        if(n < 0)   return 0;
+        if(dp[n] != -1)     return dp[n];
+        int pick = arr[n] + cal(arr,dp,n-2);
+        int notpick = 0 + cal(arr,dp,n-1);
+        return dp[n] = max(pick,notpick);
+    }
+
+public:	
+	// calculate the maximum sum with out adjacent
+	int findMaxSum(int *arr, int n) {
+	    vector<int>dp(n,-1);
+	    int result = cal(arr,dp,n-1);
+	    return result;
+	}
+
+3) 

@@ -43,3 +43,19 @@ public:
 	}
 
 3) 
+	int findMaxSum(int *arr, int n) {
+	    vector<int>dp(n,-1);
+	    dp[0] = arr[0];
+	    for(int i=1;i<n;i++){
+	        int pick = INT_MIN;
+	        if(i-2 >= 0)
+	            pick = arr[i] + dp[i-2];
+	        else
+	            pick = arr[i] + 0;
+	       int notpick = INT_MIN;
+	        if(i-1 >= 0)
+	            notpick = 0 + dp[i-1];
+	        dp[i] = max(pick,notpick);
+	    }
+	    return dp[n-1];
+	}

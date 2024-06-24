@@ -1,0 +1,58 @@
+/* Approach:
+Geek is going for n day training program. He can perform any one of these three activities Running, Fighting, and Learning Practice.
+Each activity has some point on each day. As Geek wants to improve all his skills, he can't do the same activity on two consecutive days.
+Help Geek to maximize his merit points as you are given a 2D array of points points, corresponding to each day and activity.
+INTUITION : 
+1) Memoization
+2)Tabulation
+*/
+
+1) private:
+    int cal(vector<vector<int>>& points,vector<vector<int>>&dp, int n,int last){
+        if(n==0){
+            int maxi = 0;
+            for(int i=0;i<=2;i++){
+                if(i != last)
+                    maxi = max(maxi,points[0][i]);
+            }
+            return dp[0][0] = maxi;
+        }
+        if(dp[n][last] != -1)   return dp[n][last];
+        int mxi=0,point=0;
+        for(int i=0;i<=2;i++){
+            if(i != last){
+                point = points[n][i] + cal(points,dp,n-1,i);
+                mxi = max(mxi,point);
+            }
+        }
+        return dp[n][last] = mxi;
+    }
+    
+  public:
+    int maximumPoints(vector<vector<int>>& points, int n) {
+        int options = 4;
+        vector<vector<int>>dp(n,vector<int>(options,-1));
+        return cal(points,dp,n-1,3);
+    }
+
+2)  public:
+    int maximumPoints(vector<vector<int>>& points, int n) {
+        vector<vector<int>>dp(n,vector<int>(4,-1));
+        dp[0][0] = max(points[0][1],points[0][2]);      //dp[day][last]
+        dp[0][1] = max(points[0][0],points[0][2]);
+        dp[0][2] = max(points[0][0],points[0][1]);
+        dp[0][3] = max(points[0][0],max(points[0][2],points[0][1]));
+        for(int days = 1;days<n;days++){
+            for(int last = 0;last<4;last++){
+                int maxi=0;
+                for(int task = 0;task<3;task++){
+                    if(task != last){
+                        int point = points[days][task] + dp[days-1][task];
+                        maxi = max(maxi,point);
+                    }
+                }
+                dp[days][last] = maxi; 
+            }
+        }
+        return dp[n-1][3];
+    }

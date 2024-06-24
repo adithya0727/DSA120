@@ -2,14 +2,16 @@
 Geek is going for n day training program. He can perform any one of these three activities Running, Fighting, and Learning Practice.
 Each activity has some point on each day. As Geek wants to improve all his skills, he can't do the same activity on two consecutive days.
 Help Geek to maximize his merit points as you are given a 2D array of points points, corresponding to each day and activity.
-INTUITION : 
-1) Memoization
-2)Tabulation
+INTUITION : We have to find all possibly ways to determine the maximum points with constraint in mind -> recursion is the only way.
+1) Memoization - From top-bottom : from the (n-1)th day , for all subproblems and for all varieties of last values we find answers : going deeper in the recursion calls
+for all possibilities.
+2)Tabulation - we build from bottom - up : we build the whole subproblem : day0 : all possible ways with all last values we can get and find the maximum points 
+at each level and only then move on to the next day and solve further : using the initial sub problem and so on : we build the next ones and move on in that manner.
 */
 
 1) private:
     int cal(vector<vector<int>>& points,vector<vector<int>>&dp, int n,int last){
-        if(n==0){
+        if(n==0){        //base case : we need the maximum value : since its the base case : we wont go any below : we just need the max value considering the constraint.
             int maxi = 0;
             for(int i=0;i<=2;i++){
                 if(i != last)
@@ -17,20 +19,20 @@ INTUITION :
             }
             return dp[0][0] = maxi;
         }
-        if(dp[n][last] != -1)   return dp[n][last];
-        int mxi=0,point=0;
-        for(int i=0;i<=2;i++){
-            if(i != last){
-                point = points[n][i] + cal(points,dp,n-1,i);
+        if(dp[n][last] != -1)   return dp[n][last];    //Memoization.
+        int mxi=0,point=0;    //to determine max_points
+        for(int i=0;i<=2;i++){    //for all activities
+            if(i != last){    //if its not equal to last in this particular recursive call path , check for the rest all to get maximum.
+                point = points[n][i] + cal(points,dp,n-1,i);    //for each activity check for a variety of last values as to which could give us a maximum.
                 mxi = max(mxi,point);
             }
         }
-        return dp[n][last] = mxi;
-    }
+        return dp[n][last] = mxi;    //store maximum value for this sub problem and move on : if encountered again : we know what maximum value is had : we re-use it.
+    }    //Sub-Problem : combination => (Day + Last choice)
     
   public:
     int maximumPoints(vector<vector<int>>& points, int n) {
-        int options = 4;
+        int options = 4;        //2D - DP : N day * 4 Last options.
         vector<vector<int>>dp(n,vector<int>(options,-1));
         return cal(points,dp,n-1,3);
     }
@@ -39,20 +41,20 @@ INTUITION :
     int maximumPoints(vector<vector<int>>& points, int n) {
         vector<vector<int>>dp(n,vector<int>(4,-1));
         dp[0][0] = max(points[0][1],points[0][2]);      //dp[day][last]
-        dp[0][1] = max(points[0][0],points[0][2]);
-        dp[0][2] = max(points[0][0],points[0][1]);
+        dp[0][1] = max(points[0][0],points[0][2]);    //First we completely solve the 0th Sub-Problem , for all possible cases we could encounter and re-use.
+        dp[0][2] = max(points[0][0],points[0][1]);    //and only then move onto the next day.
         dp[0][3] = max(points[0][0],max(points[0][2],points[0][1]));
-        for(int days = 1;days<n;days++){
-            for(int last = 0;last<4;last++){
+        for(int days = 1;days<n;days++){    //from 1->(N-1) days.
+            for(int last = 0;last<4;last++){    //we check all possible combinations that could come for all kinds of prev values considered.
                 int maxi=0;
-                for(int task = 0;task<3;task++){
+                for(int task = 0;task<3;task++){    //we check all tasks now , except the last one ofc.
                     if(task != last){
                         int point = points[days][task] + dp[days-1][task];
-                        maxi = max(maxi,point);
+                        maxi = max(maxi,point);    //get the maximum post iterating through all the tasks.
                     }
                 }
-                dp[days][last] = maxi; 
-            }
-        }
-        return dp[n-1][3];
+                dp[days][last] = maxi;     //store the maximum value we got assuming we took this particular last value . we Find the solution like this for 
+            }    //considering all the possible last values for this particular day and then we truly fully finish this day with all possibilities and then move 
+        }    //to the next day.
+        return dp[n-1][3];    //when we reach the last day : where 3-no prev choice is selected : we would have our maximum value here.
     }

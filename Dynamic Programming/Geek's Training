@@ -7,6 +7,8 @@ INTUITION : We have to find all possibly ways to determine the maximum points wi
 for all possibilities.
 2)Tabulation - we build from bottom - up : we build the whole subproblem : day0 : all possible ways with all last values we can get and find the maximum points 
 at each level and only then move on to the next day and solve further : using the initial sub problem and so on : we build the next ones and move on in that manner.
+3) Alternative Tabulation.
+4) Space Optimization.
 */
 
 1) private:
@@ -87,4 +89,29 @@ public:
         return ans;
     }
 
-4) 
+4) public:
+    int maximumPoints(vector<vector<int>>& points, int n) {        //using a 1D vector to solve the problem : keep overwritting it once one whole day is completed
+        vector<int>prev(3,0);                    //since all we need is the previous day values : we just need to store in a vector of size 3 (total no. of activities).
+        prev[0] = max(points[0][1],points[0][2]);      //prev[day][last]
+        prev[1] = max(points[0][0],points[0][2]);    //firstly we'll store the 0th day values.
+        prev[2] = max(points[0][0],points[0][1]);
+        for(int days = 1;days<n;days++){
+            vector<int>temp(3,0);    //temporary var : to store current day's all values : becoz we dont want to tamper and store in prev[] until the whole day 
+            for(int last = 0;last<3;last++){    //is calculated using prev vector which should strictly store only yesterday's value.
+                int maxi=0;
+                for(int task = 0;task<3;task++){
+                    if(task != last){
+                        int point = points[days][task] + prev[task];
+                        maxi = max(maxi,point);
+                    }
+                }
+                temp[last] = maxi;     //at Today Level : store all maximum values for all sub-problems.
+            }
+            prev = temp;    //once today is fully calculated for all sub-problems : we replace it was our prev 1-D array & continue so on...
+        }
+        int ans=0;
+        for(auto &vec : prev){        //at the last day : calculate the maximum possibility at each sub-problem.
+            ans = max(ans,vec);
+        }
+        return ans;
+    }

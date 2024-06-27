@@ -1,7 +1,8 @@
 /* Approach:
 
-1) Recursion
-2) memoization
+1) Recursion -  Time - 2^(M*N) space - O(M + N) : worst case path length.
+2) memoization - Time - (M*N) space - O(M + N) : 2D - DP.
+3) Tabulation - 
 */
 
 1) private:
@@ -23,4 +24,24 @@
         return ans;
     }
 
-2)
+2) private:
+        int sum(vector<vector<int>>&mat,int row,int col , int a , int b,vector<vector<int>>&dp){
+            if(row == a-1 && col == b-1)    return 1;
+            if(row >= a || col >= b)    return 0;
+            if(dp[row][col] != -1)  return dp[row][col];
+            int right = sum(mat,row+1,col,a,b,dp);
+            int down = sum(mat,row,col+1,a,b,dp);
+            return dp [row][col] = right + down;
+        }
+    
+    public:
+    //Function to find total number of unique paths.
+    int NumberOfPath(int a, int b)
+    {
+        vector<vector<int>>mat(a,vector<int>(b,0));
+        vector<vector<int>>dp(a,vector<int>(b,-1));
+        int ans = sum(mat,0,0,a,b,dp);
+        return ans;
+    }
+
+3) 

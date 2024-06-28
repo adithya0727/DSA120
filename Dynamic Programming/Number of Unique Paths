@@ -3,7 +3,7 @@
 1) Recursion -  Time - 2^(M*N) space - O(M + N) : worst case path length.
 2) memoization - Time - (M*N) space - O(M + N) : 2D - DP + Recursive Stack Space.
 3) Tabulation - Time - (M*N) space - O(M + N) : 2D - DP.
-4) Space Optimization - Time - (M*N) space - O(1).
+4) Space Optimization - Time - (M*N) space - O(N).
 */
 
 1) private:

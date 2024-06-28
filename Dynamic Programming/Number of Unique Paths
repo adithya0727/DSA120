@@ -66,16 +66,17 @@
         return dp[0][0];
     }
 
-4) public:
-    //Function to find total number of unique paths.
-    int NumberOfPath(int a, int b)
+4) int NumberOfPath(int a, int b)                [REFER BOOK]
     {
         vector<int>prev(b,0);
         prev[b-1] = 1;
         for(int row=a-1;row>=0;row--){
-            vector<int>temp = prev;
+            vector<int>temp(b,0);
             for(int col=b-1;col>=0;col--){
-                if(row==a-1 && col==b-1)    continue;
+                if(row==a-1 && col==b-1){
+                    temp[b-1] = 1;
+                    continue;
+                }
                 int right = 0,down=0;
                 if(col < b-1)
                     right = temp[col+1];

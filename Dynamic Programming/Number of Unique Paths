@@ -39,7 +39,6 @@
     //Function to find total number of unique paths.
     int NumberOfPath(int a, int b)
     {
-        vector<vector<int>>mat(a,vector<int>(b,0));
         vector<vector<int>>dp(a,vector<int>(b,-1));
         int ans = sum(mat,0,0,a,b,dp);
         return ans;
@@ -49,7 +48,6 @@
     //Function to find total number of unique paths.
     int NumberOfPath(int a, int b)
     {
-        vector<vector<int>>mat(a,vector<int>(b,0));
         vector<vector<int>>dp(a,vector<int>(b,-1));
         dp[a-1][b-1] = 1;
         for(int row=a-1;row>=0;row--){

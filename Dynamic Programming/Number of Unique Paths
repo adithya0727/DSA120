@@ -1,9 +1,9 @@
 /* Approach:
 
 1) Recursion -  Time - 2^(M*N) space - O(M + N) : worst case path length.
-2) memoization - Time - (M*N) space - O(M + N) : 2D - DP.
-3) Tabulation - 
-4) Space Optimization - 
+2) memoization - Time - (M*N) space - O(M + N) : 2D - DP + Recursive Stack Space.
+3) Tabulation - Time - (M*N) space - O(M + N) : 2D - DP.
+4) Space Optimization - Time - (M*N) space - O(1).
 */
 
 1) private:
@@ -64,4 +64,25 @@
             }
         }
         return dp[0][0];
+    }
+
+4) public:
+    //Function to find total number of unique paths.
+    int NumberOfPath(int a, int b)
+    {
+        vector<int>prev(b,0);
+        prev[b-1] = 1;
+        for(int row=a-1;row>=0;row--){
+            vector<int>temp = prev;
+            for(int col=b-1;col>=0;col--){
+                if(row==a-1 && col==b-1)    continue;
+                int right = 0,down=0;
+                if(col < b-1)
+                    right = temp[col+1];
+                down =  prev[col];
+                temp[col] = right + down;
+            }
+            prev = temp;
+        }
+        return prev[0];
     }

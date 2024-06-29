@@ -1,0 +1,28 @@
+/* Approach:
+Given a triangle array, return the minimum path sum to reach from top to bottom.
+For each step, you may move to an adjacent number of the row below. More formally, if you are on index i on the current row, you may move to either index i
+or index i + 1 on the next row.
+
+1) Memoization :
+2) Tabulation : 
+3) Space Optimization : 
+*/
+
+1) private :
+        int cal(vector<vector<int>>& triangle,int row,int col,int &n, vector<vector<int>>&dp){
+            if(row == n-1)  return triangle[n-1][col];
+            if(dp[row][col] != -1)  return dp[row][col];
+            int down=0,downright=0;
+            down = cal(triangle,row+1,col,n,dp) + triangle[row][col];
+            downright = cal(triangle,row+1,col+1,n,dp) + triangle[row][col];
+            return dp[row][col] = min(down,downright);
+        }
+    
+  public:
+    int minimizeSum(int n, vector<vector<int>>& triangle) {
+        vector<vector<int>>dp(n,vector<int>(n,-1));
+        int ans = cal(triangle,0,0,n,dp);
+        return ans;
+    }
+
+2) 

@@ -4,10 +4,10 @@ For each step, you may move to an adjacent number of the row below. More formall
 or index i + 1 on the next row.
 
 1) Memoization : Starting point is fixed and ending is variable since we can get minimum value at any point in the last row : that's why we use starting point 
-(0,0) as our initial point and go through all possibilities and get back the minimum.
+(0,0) as our initial point and go through all possibilities and get back the minimum. time - O(M*N) space - O(M*N) + O(M + N).
 2) Tabulation : Since (0,0) is our initial point : we start building from the bottom-up approach : so we initialise the dp with all the variable last rows in dp
-and then build upwards from there : all the way to the top.
-3) Space Optimization : Same pattern
+and then build upwards from there : all the way to the top. time - O(M*N) space - O(M*N).
+3) Space Optimization : Same pattern.  time - O(M*N) space - O(N).
 */ 
 
 1) private :

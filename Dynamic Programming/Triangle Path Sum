@@ -7,7 +7,7 @@ or index i + 1 on the next row.
 (0,0) as our initial point and go through all possibilities and get back the minimum.
 2) Tabulation : Since (0,0) is our initial point : we start building from the bottom-up approach : so we initialise the dp with all the variable last rows in dp
 and then build upwards from there : all the way to the top.
-3) Space Optimization : 
+3) Space Optimization : Same pattern
 */ 
 
 1) private :
@@ -31,9 +31,12 @@ and then build upwards from there : all the way to the top.
     int minimizeSum(int n, vector<vector<int>>& triangle) {
         if(n==1)    return triangle[0][0];
         vector<vector<int>>dp(n,vector<int>(n,-1));
-        for(int i=0;i<n;i++)    dp[n-1][i] = triangle[n-1][i];
-        for(int row=n-2;row>=0;row--){
+        for(int row=n-1;row>=0;row--){
             for(int col=n-1;col>=0;col--){
+                if(n-1 == row){
+                    dp[n-1][col] = triangle[n-1][col];
+                    continue;
+                }
                 int down=0,downright=0;
                 down = triangle[row][col] + dp[row+1][col];
                 downright = triangle[row][col] + dp[row+1][col+1];
@@ -41,4 +44,25 @@ and then build upwards from there : all the way to the top.
             }
         }
         return dp[0][0];
+    }
+3) public:
+    int minimizeSum(int n, vector<vector<int>>& triangle) {
+        if(n==1)    return triangle[0][0];
+        vector<int>dp(n,0);
+        for(int i=0;i<n;i++)    dp[i] = triangle[n-1][i];
+        for(int row=n-1;row>=0;row--){
+            vector<int>temp(n,0);
+            for(int col=n-1;col>=0;col--){
+                if(n-1 == row){
+                    temp[col] = triangle[n-1][col];
+                    continue;
+                }
+                int down=0,downright=0;
+                down = triangle[row][col] + dp[col];
+                downright = triangle[row][col] + dp[col+1];
+                temp[col] = min(down,downright);
+            }
+            dp = temp;
+        }
+        return dp[0];
     }

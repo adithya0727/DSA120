@@ -1,7 +1,7 @@
 /* Approach :
 Pattern : Variable Starting point and Variable Ending Points
 1) Memoization : Since its vairable : we start from the bottom and run a for loop : to check for minimum number at each fixed point in the last row and finally
-return the minimum against them all. : time - O(N*N*M) : outer loop to check for each fixed point in the final row. space - O(N*M) + O(N*M) : dp and stack space.
+return the minimum against them all. : time - O(N*M) : outer loop to check for each fixed point in the final row. space - O(N*M) + O(N) : dp and stack space.
 2) Tabulation : Since we build from the first row , we go through the whole matrix and fully solve the grid : so we just have to find the minimum among all solved
 sub-problems from the last row. time - O(N*M) space - O(N*M).
 3) Space Optimization : time - O(N*M) space - O(N).

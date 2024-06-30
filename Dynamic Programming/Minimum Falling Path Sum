@@ -30,4 +30,20 @@ public:
         return mini;
     }
 
-2) 
+2) public:
+    int minFallingPathSum(vector<vector<int>>& matrix) {
+        int n = matrix.size(),mini=INT_MAX;
+        vector<vector<int>>dp(n,vector<int>(n,-1));
+        for(int i=0;i<n;i++)    dp[0][i] = matrix[0][i];    //base case
+            for(int row=1;row<n;row++){
+                for(int col=0;col<n;col++){
+                    int up=0,upleft=1e9,upright=1e9;
+                    up = matrix[row][col] + dp[row-1][col];
+                    if(col-1 >= 0)  upleft = matrix[row][col] + dp[row-1][col-1];
+                    if(col+1 < n)  upright = matrix[row][col] + dp[row-1][col+1];
+                    dp[row][col] = min(up,min(upleft,upright));
+                }
+            }
+            for(int i=0;i<n;i++)    mini = min(dp[n-1][i],mini);
+        return mini;
+    }

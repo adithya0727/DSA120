@@ -1,0 +1,33 @@
+/* Approach :
+Pattern : Variable Starting point and Variable Ending Points
+1) Memoization : Since its vairable : we start from the bottom and run a for loop : to check for minimum number at each fixed point in the last row and finally
+return the minimum against them all.
+2) Tabulation : 
+3) Space Optimization :  
+*/
+
+1) private:
+    int cal(vector<vector<int>>& matrix,int row,int col,int &n,vector<vector<int>>&dp){
+        if(row == 0){
+            return matrix[0][col];    //Base case when you reach the top , return their respective values.
+        }
+        if(dp[row][col] != -1)  return dp[row][col];  //Optimise Complexity using DP.
+        int up=0,upleft=1e9,upright=1e9;  //in-case for out-of-bounds access.
+        up = matrix[row][col] + cal(matrix,row-1,col,n,dp);
+        if(col-1 >= 0)  upleft = matrix[row][col] + cal(matrix,row-1,col-1,n,dp);
+        if(col+1 < n)  upright = matrix[row][col] + cal(matrix,row-1,col+1,n,dp);
+        return dp[row][col] = min(up,min(upleft,upright));
+    }
+
+public:
+    int minFallingPathSum(vector<vector<int>>& matrix) {
+        int n = matrix.size(),mini=INT_MAX;
+        vector<vector<int>>dp(n,vector<int>(n,-1));
+        for(int i=0;i<n;i++){
+            int ans = cal(matrix,n-1,i,n,dp);  //start at each endpoint as fixed point for each element in the last row.
+            mini = min(mini,ans);  //take minimum value amongst all of them.
+        }
+        return mini;
+    }
+
+2) 

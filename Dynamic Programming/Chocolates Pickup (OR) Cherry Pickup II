@@ -16,7 +16,7 @@ we need to know at which row number we are looking at those columns : therefore 
 TC : O(N*M*M) * 9 SC : O(N*M*M) + O(N) 
 2) Tabulation : Convert and start from the base case : bulid the 2d dp step by step considering all possibilities and store the maximum at each cell : considering
 its previously built sum + all 9 possibilities maximum value. 
-TC : O(N*M*M) * 9 SC : O(N*M*M)
+TC : O(N*M*M) * 9 SC : O(N*M*M) 
 */
 
 1) class Solution {

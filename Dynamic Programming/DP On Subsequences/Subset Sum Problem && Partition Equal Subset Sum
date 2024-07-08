@@ -68,3 +68,31 @@ public:
         }
         return dp[sum];
     }
+
+
+
+Partition Equal Subset Sum : same as above problem :
+1)
+private:
+        bool cal(vector<int>&arr,int n,int target,vector<vector<int>>&dp){
+            if(target == 0)     return true;
+            if(n == 0)      return (arr[0] == target);
+            if(dp[n][target] != -1)     return dp[n][target];
+            bool notpick = cal(arr,n-1,target,dp);
+            bool pick = false;
+            if(arr[n] <= target)    
+                pick = cal(arr,n-1,target-arr[n],dp);
+            return dp[n][target] = pick or notpick;
+        }
+
+public:
+    bool canPartition(vector<int>& nums) {
+        int N = nums.size();
+        long long int sum = 0;
+        for(int i=0;i<N;i++){
+            sum += nums[i];
+        }
+        if(sum%2 != 0)  return 0;
+        vector<vector<int>>dp(N,vector<int>(sum/2 +1,-1));
+        return cal(nums,N-1,sum/2,dp);
+    }

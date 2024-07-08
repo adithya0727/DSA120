@@ -1,0 +1,31 @@
+/* Approach :
+Given an array of non-negative integers, and a value sum, determine if there is a subset of the given set with sum equal to given sum. 
+1) Memoization : 
+TC : O(N*SUM) SC : O(N*SUM) + O(N)
+2) Tabulation : 
+TC : O(N*SUM) SC : O(N*SUM)
+3) Space Optimise :
+TC : O(N*SUM) SC : O(SUM)
+*/
+
+1) private:
+    bool cal(vector<int>&arr,int n, int sum,vector<vector<int>>&dp){
+        if(sum == 0)    return true;
+        if(n == 0)    return (arr[0] == sum);
+        if(dp[n][sum] != -1)    return dp[n][sum];
+        bool notpick = cal(arr,n-1,sum,dp);
+        bool pick = false;
+        if(arr[n] <= sum)
+            pick = cal(arr,n-1,sum-arr[n],dp);
+        return dp[n][sum] = notpick or pick;
+    }
+    
+    
+public:
+    bool isSubsetSum(vector<int>arr, int sum){
+        int n = arr.size();
+        vector<vector<int>>dp(n,vector<int>(sum+1,-1));
+        return cal(arr,n-1,sum,dp);
+    }
+
+2) 

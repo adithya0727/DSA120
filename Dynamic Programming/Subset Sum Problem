@@ -1,10 +1,12 @@
 /* Approach :
 Given an array of non-negative integers, and a value sum, determine if there is a subset of the given set with sum equal to given sum. 
-1) Memoization : 
+1) Memoization : From the bottom (n-1,tar) we solve all the way till up and check for all possibilities using pick and non-pick method : even if one path gives
+us true : we start recursively returning that true part till the end of stack unwinding.
 TC : O(N*SUM) SC : O(N*SUM) + O(N)
-2) Tabulation : 
+2) Tabulation : Do opposite of memoization and build on from the base case till the end and we get our answer true if at given level for given sum if there was a 
+possibility somewhere where we got 0.
 TC : O(N*SUM) SC : O(N*SUM)
-3) Space Optimise :
+3) Space Optimise : Since we need only previous row : we just use a 1D dp to optimise it further on.
 TC : O(N*SUM) SC : O(SUM)
 */
 
@@ -28,4 +30,41 @@ public:
         return cal(arr,n-1,sum,dp);
     }
 
-2) 
+2) public:
+    bool isSubsetSum(vector<int>arr, int sum){
+        int n = arr.size();
+        vector<vector<bool>>dp(n,vector<bool>(sum+1,false));
+        for(int i=0;i<n;i++)    dp[i][0] = true;
+        dp[0][arr[0]] = true;
+        for(int i=1;i<n;i++){
+            for(int tar=1;tar<=sum;tar++){
+                bool notpick = dp[i-1][tar];
+                bool pick = false;
+                if(arr[i] <= tar)
+                    pick = dp[i-1][tar-arr[i]];
+                dp[i][tar] = pick or notpick; 
+            }
+        }
+        return dp[n-1][sum];
+    }
+
+3) public:
+    bool isSubsetSum(vector<int>arr, int sum){
+        int n = arr.size();
+        vector<bool>dp(sum+1,false);
+        dp[0] = true;
+        dp[arr[0]] = true;
+        for(int i=1;i<n;i++){
+            vector<bool>temp(sum+1,false);
+            temp[0] = true;
+            for(int tar=1;tar<=sum;tar++){
+                bool notpick = dp[tar];
+                bool pick = false;
+                if(arr[i] <= tar)
+                    pick = dp[tar-arr[i]];
+                temp[tar] = pick or notpick; 
+            }
+            dp = temp;
+        }
+        return dp[sum];
+    }

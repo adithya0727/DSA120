@@ -1,6 +1,9 @@
 /* Approach:          [PATTERN : SUBSET SUM TABULATION]
+Given an array arr of size n containing non-negative integers, the task is to divide it into two sets S1 and S2 such that the absolute difference
+between their sums is minimum and find the minimum difference.
 
-1) Tabulation : 
+1) Tabulation : Same way as subset sum fill the tabulation : using the last row which consists of all the possible answer for each target value : we find s2 
+and iterate throughout to find the minimum value.
 TC : O(N*SUM) + O(SUM) : final array traversal SC : O(N*SUM)
 2) Space Optimise :
 TC : O(N*SUM) + O(SUM) : final array traversal SC : O(SUM)

@@ -2,6 +2,8 @@
 
 1) Tabulation : 
 TC : O(N*SUM) + O(SUM) : final array traversal SC : O(N*SUM)
+2) Space Optimise :
+TC : O(N*SUM) + O(SUM) : final array traversal SC : O(SUM)
 */
 
 1) public:
@@ -24,6 +26,35 @@ TC : O(N*SUM) + O(SUM) : final array traversal SC : O(N*SUM)
         int mini = 1e9;
         for(int s1=0;s1<=sum/2;s1++){
             if(dp[n-1][s1] == true){
+                mini = min(mini,abs(s1 - (sum-s1)));
+            }
+        }
+        return mini;
+	} 
+
+
+2) public:
+	int minDifference(int arr[], int n)  { 
+	    int sum = 0;
+	    for(int i=0;i<n;i++)    sum += arr[i];
+	    vector<bool>dp(sum+1,false);
+        dp[0] = true;
+        dp[arr[0]] = true;
+        for(int i=1;i<n;i++){
+            vector<bool>temp(sum+1,false);
+            temp[0] = true;
+            for(int tar=1;tar<=sum;tar++){
+                bool notpick = dp[tar];
+                bool pick = false;
+                if(arr[i] <= tar)
+                    pick = dp[tar-arr[i]];
+                temp[tar] = pick or notpick; 
+            }
+            dp = temp;
+        }
+        int mini = 1e9;
+        for(int s1=0;s1<=sum/2;s1++){
+            if(dp[s1] == true){
                 mini = min(mini,abs(s1 - (sum-s1)));
             }
         }

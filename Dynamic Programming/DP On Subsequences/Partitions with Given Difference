@@ -1,4 +1,7 @@
-/* Approach :
+/* Approach :            [PATTERN : Perfect Sum Problem]
+Given an array arr, partition it into two subsets(possibly empty) such that each element must belong to only one subset.
+Let the sum of the elements of these two subsets be S1 and S2. 
+Given a difference d, count the number of partitions in which S1 is greater than or equal to S2 and the difference between S1 and S2 is equal to d. 
 
 1) Memoization :
 TC : SC : 
@@ -7,3 +10,33 @@ TC : SC :
 3) Space :
 TC : SC : 
 */
+
+1) private:
+    int cal(vector<int>& arr,vector<vector<int>>&dp,int n, int sum,int MOD){
+            if(n==0){
+            if(sum==0 && arr[0]==0) return 2;
+            if(arr[0]==sum || sum==0) return 1;
+            return 0;
+            }
+            if(dp[n][sum] != -1)    return dp[n][sum];
+            int notpick = cal(arr,dp,n-1,sum,MOD);
+            int pick = 0;
+            if(arr[n] <= sum)   pick = cal(arr,dp,n-1,sum-arr[n],MOD);
+            return dp[n][sum] = (pick + notpick)%MOD;
+        }
+        
+  public:
+    int countPartitions(int n, int d, vector<int>& arr) {
+        const int MOD = 1e9 + 7;
+        int totalsum=0,sum=0;
+        for(int i=0;i<n;i++)    totalsum += arr[i];
+        if(totalsum - d < 0)   return 0;
+        if((totalsum-d)% 2 != 0) return 0;
+        sum = (totalsum-d)/2;
+        vector<vector<int>>dp(n,vector<int>(sum+1,-1));
+        return cal(arr,dp,n-1,sum,MOD)%MOD;
+    }
+
+2) 
+
+

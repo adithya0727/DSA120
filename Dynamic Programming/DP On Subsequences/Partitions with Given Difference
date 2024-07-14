@@ -4,11 +4,11 @@ Let the sum of the elements of these two subsets be S1 and S2.
 Given a difference d, count the number of partitions in which S1 is greater than or equal to S2 and the difference between S1 and S2 is equal to d. 
 
 1) Memoization :
-TC : SC : 
+TC : O(N*SUM)  SC : O(N*SUM) + O(N)  
 2) Tabulation : 
-TC : SC : 
+TC : O(N*SUM)  SC : O(N*SUM)
 3) Space :
-TC : SC : 
+TC : O(N*SUM)  SC : O(SUM)
 */
 
 1) private:

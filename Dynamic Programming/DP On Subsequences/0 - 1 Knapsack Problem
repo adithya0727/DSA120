@@ -4,11 +4,11 @@ Note that we have only one quantity of each item.
 In other words, given two integer arrays val[0..N-1] and wt[0..N-1] which represent values and weights associated with N items respectively.
 Also given an integer W which represents knapsack capacity, find out the maximum value subset of val[] such that sum of the weights of this subset is smaller than 
 or equal to W. You cannot break an item, either pick the complete item or dont pick it (0-1 property).
-1) Memoization : 
+1) Memoization : Similarly using pick and non-pick method
 TC : O(N*SUM)     SC : O(N*SUM) + O(N)   
-2) Tabulation : 
+2) Tabulation : Reverse of Memoization Traversal
 TC : O(N*SUM)     SC : O(N*SUM)  
-3) Space Optimization : 
+3) Space Optimization : use only 2 seperate vectors.
 TC : O(N*SUM)     SC : O(SUM)  
 */
 
@@ -37,4 +37,46 @@ TC : O(N*SUM)     SC : O(SUM)
        return cal(n-1,W,wt,val,dp);
     }
 
-2) 
+2) public:
+    //Function to return max value that can be put in knapsack of capacity W.
+    int knapSack(int W, int wt[], int val[], int n) 
+    { 
+        vector<vector<int>>dp(n,vector<int>(W+1,0));
+        for(int i=0;i<=W;i++){       //Base Case
+            if(i >= wt[0]){
+                dp[0][i] =  val[0];
+            }
+        }
+        for(int i=1;i<n;i++){
+            for(int weight = 0;weight<=W;weight++){
+                int notpick = 0 + dp[i-1][weight];
+                int pick = INT_MIN;
+                if(wt[i] <= weight)  pick = val[i] + dp[i-1][weight-wt[i]];
+                dp[i][weight] = max(notpick,pick);
+            }
+        }
+        return dp[n-1][W];
+    }
+
+3) public:
+    //Function to return max value that can be put in knapsack of capacity W.
+    int knapSack(int W, int wt[], int val[], int n) 
+    { 
+        vector<int>dp(W+1,0);
+        for(int i=0;i<=W;i++){       //Base Case
+            if(i >= wt[0]){
+                dp[i] =  val[0];
+            }
+        }
+        for(int i=1;i<n;i++){
+            vector<int>temp(W+1,0);
+            for(int weight = 0;weight<=W;weight++){
+                int notpick = 0 + dp[weight];
+                int pick = INT_MIN;
+                if(wt[i] <= weight)  pick = val[i] + dp[weight-wt[i]];
+                temp[weight] = max(notpick,pick);
+            }
+            dp = temp;
+        }
+        return dp[W];
+    }

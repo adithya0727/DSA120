@@ -3,11 +3,11 @@ Given a list of coins of distinct denominations arr and the total amount of mone
 Output -1 if that money cannot be made up using given coins. You may assume that there are infinite numbers of coins of each type.
 
 1) Memoization :
-TC : SC : 
+TC : O(N*SUM) SC : O(N*SUM) + O(SUM)  => worst case 
 2) Tabulation :
-
+TC : O(N*SUM) SC : O(N*SUM)
 3) Space Optimization :
-
+TC : O(N*SUM) SC : O(SUM)
 
 */
 

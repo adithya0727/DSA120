@@ -1,0 +1,39 @@
+/* Approach:
+Given a list of coins of distinct denominations arr and the total amount of money. Find the minimum number of coins required to make up that amount.
+Output -1 if that money cannot be made up using given coins. You may assume that there are infinite numbers of coins of each type.
+
+1) Memoization :
+TC : SC : 
+2) Tabulation :
+
+3) Space Optimization :
+
+
+*/
+
+1) private:
+        int cal(int n,int amount,vector<int>&nums,vector<vector<int>>&dp){
+            if(amount == 0) return 0;
+            if(n == 0){
+                if(amount % nums[0] == 0)
+                    return (amount/nums[0]);
+                else
+                    return 1e9;
+            }
+            if(dp[n][amount] != -1)     return dp[n][amount];
+            int notpick = cal(n-1,amount,nums,dp);
+            int pick = 1e9;
+            if(nums[n] <= amount)   pick = 1 + cal(n,amount-nums[n],nums,dp);
+            return dp[n][amount] = min(notpick,pick);
+        }
+    
+    
+	public:
+	int MinCoin(vector<int>nums, int amount)
+	{
+	    int n = nums.size();
+	    vector<vector<int>>dp(n,vector<int>(amount+1,-1));
+	    int ans = cal(n-1,amount,nums,dp);
+	    if(ans == 1e9)  return -1;
+	    return ans;
+	}

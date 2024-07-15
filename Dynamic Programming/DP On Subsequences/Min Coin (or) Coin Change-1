@@ -59,3 +59,28 @@ TC : O(N*SUM) SC : O(SUM)
         if(dp[n-1][amount] == 1e9)  return -1;
         return dp[n-1][amount];
 	}
+
+3) public:
+	int MinCoin(vector<int>nums, int amount)
+	{
+	    int n = nums.size();
+	    vector<int>dp(amount+1,1e9);
+	    dp[0] = 0;
+        for(int i=1;i<=amount;i++){
+            if(i % nums[0] == 0)
+                dp[i] = (i/nums[0]);
+        }
+        for(int i=1;i<n;i++){
+            vector<int>temp(amount+1,1e9);
+            temp[0] = 0;
+            for(int amt=1;amt<=amount;amt++){
+                int notpick = dp[amt];
+                int pick = 1e9;
+                if(nums[i] <= amt)   pick = 1 + temp[amt-nums[i]];
+                temp[amt] = min(notpick,pick);
+            }
+            dp = temp;
+        }
+        if(dp[amount] == 1e9)  return -1;
+        return dp[amount];
+	}

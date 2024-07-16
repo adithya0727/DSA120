@@ -1,4 +1,35 @@
 /* Approach:
+Given an integer array coins[ ] of size N representing different denominations of currency and an integer sum, find the number of ways you can make sum by using
+different combinations from coins[ ].  
+Note: Assume that you have an infinite supply of each type of coin. And you can use any coin as many times as you want.
 
+1) Memoization :
+TC : O(N*SUM) SC : O(N*SUM) + O(SUM)  => worst case 
+2) Tabulation :
+TC : O(N*SUM) SC : O(N*SUM)
+3) Space Optimization :
+TC : O(N*SUM) SC : O(SUM)
 
 */
+
+1) private:
+        long long int cal(int n,int sum,int coins[],vector<vector<long long int>>&dp){
+            if(sum == 0) return 1;
+            if(n == 0){
+                if(sum % coins[0] == 0)
+                    return 1;
+                else
+                    return 0;
+            }
+            if(dp[n][sum] != -1)     return dp[n][sum];
+            long long int notpick = cal(n-1,sum,coins,dp);
+            long long int pick = 0;
+            if(coins[n] <= sum)   pick = cal(n,sum-coins[n],coins,dp);
+            return dp[n][sum] = notpick + pick;
+        }
+    
+  public:
+    long long int count(int coins[], int N, int sum) {
+	    vector<vector<long long int>>dp(N,vector<long long int>(sum+1,-1));
+	    return cal(N-1,sum,coins,dp);
+    }

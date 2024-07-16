@@ -33,3 +33,45 @@ TC : O(N*SUM) SC : O(SUM)
 	    vector<vector<long long int>>dp(N,vector<long long int>(sum+1,-1));
 	    return cal(N-1,sum,coins,dp);
     }
+
+
+2) public:
+    long long int count(int coins[], int N, int sum) {
+	    vector<vector<long long int>>dp(N,vector<long long int>(sum+1,0));
+	    for(int i=0;i<N;i++)     dp[i][0] = 1;
+	    for(int i=0;i<=sum;i++){
+	        if(i % coins[0] == 0)
+                dp[0][i] = 1;
+	    }
+	    for(int i=1;i<N;i++){
+	        for(int tar=0;tar<=sum;tar++){
+	            long long int notpick = dp[i-1][tar];
+                long long int pick = 0;
+                if(coins[i] <= tar)   pick = dp[i][tar-coins[i]];
+                dp[i][tar] = notpick + pick;
+	        }
+	    }
+	    return dp[N-1][sum];
+    }
+
+
+3) public:
+    long long int count(int coins[], int N, int sum) {
+	    vector<long long int>dp(sum+1,0);
+        dp[0] = 1;
+	    for(int i=0;i<=sum;i++){
+	        if(i % coins[0] == 0)
+                dp[i] = 1;
+	    }
+	    for(int i=1;i<N;i++){
+	        vector<long long int>temp(sum+1,0);
+	        for(int tar=0;tar<=sum;tar++){
+	            long long int notpick = dp[tar];
+                long long int pick = 0;
+                if(coins[i] <= tar)   pick = temp[tar-coins[i]];
+                temp[tar] = notpick + pick;
+	        }
+	        dp = temp;
+	    }
+	    return dp[sum];
+    }

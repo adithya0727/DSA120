@@ -79,4 +79,21 @@ public:
         return dp[W];
     }
 
-4) 
+4) public:
+    int knapSack(int N, int W, int val[], int wt[])
+    {
+        vector<int>dp(W+1,0);
+        for(int i=0;i<=W;i++){
+            if(i >= wt[0])
+                dp[i] = (i/wt[0])*val[0];
+        }
+        for(int i=1;i<N;i++){
+            for(int weight=0;weight<=W;weight++){
+                int notpick = dp[weight];
+                int pick = INT_MIN;
+                if(weight >= wt[i])  pick = val[i] + dp[weight-wt[i]];
+                dp[weight] = max(notpick,pick);
+            }
+        }
+        return dp[W];
+    }

@@ -14,4 +14,23 @@ TC : O(N*N+1)     SC : O(N+1)
 
 */
 
-1) 
+1) private:
+        int cal(int idx,int rodlen,int price[],vector<vector<int>>&dp){
+            if(rodlen == 0)    return 0;
+            if(idx == 0){
+                return (rodlen*price[0]);
+            }
+            if(dp[idx][rodlen] != -1)    return dp[idx][rodlen];
+            int notpick = cal(idx-1,rodlen,price,dp);
+            int pick = INT_MIN;
+            if(rodlen >= idx+1)     pick = price[idx] + cal(idx,rodlen-(idx+1),price,dp);
+            return dp[idx][rodlen] = max(notpick,pick);
+        }
+    
+  public:
+    int cutRod(int price[], int n) {
+        vector<vector<int>>dp(n,vector<int>(n+1,-1));
+        return cal(n-1,n,price,dp);
+    }
+
+2) 

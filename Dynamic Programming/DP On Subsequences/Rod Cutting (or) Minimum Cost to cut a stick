@@ -50,4 +50,23 @@ TC : O(N*N+1)     SC : O(N+1)
         return dp[n-1][n];
     }
 
-3) 
+3) public:
+    int cutRod(int price[], int n) {
+        vector<int>dp(n+1,0);
+        for(int i=0;i<=n;i++){
+            dp[i] = i*price[0];
+        }
+        for(int idx=1;idx<n;idx++){
+            vector<int>temp(n+1,0);
+            for(int rodlen = 0;rodlen<=n;rodlen++){
+                int notpick = dp[rodlen];
+                int pick = INT_MIN;
+                if(rodlen >= idx+1)     pick = price[idx] + temp[rodlen-(idx+1)];
+                temp[rodlen] = max(notpick,pick);
+            }
+            dp = temp;
+        }
+        return dp[n];
+    }
+
+4) 

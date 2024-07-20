@@ -10,7 +10,7 @@ TC : O(N * M) SC : O(N*M) + O(N + M)
 TC : O(N * M) SC : O(N*M)
 4) Space Optimization :
 TC : O(N * M) SC : O(M) 
-
+5) Print LCS.
 */
 
 1)  private:
@@ -72,3 +72,25 @@ TC : O(N * M) SC : O(M)
         }
         return dp[m];
     }
+
+
+5) // PRINT LONGEST COMMON SUBSEQUENCE : 
+public:
+    int lcs(int n, int m, string str1, string str2) {
+        vector<int>dp(m+1,0);
+        string ans = "";
+        for(int i=1;i<=n;i++){
+            vector<int>temp(m+1,0);
+            for(int j=1;j<=m;j++){
+                if(str1[i-1] == str2[j-1]){
+                    temp[j] = 1 + dp[j-1];
+                    ans += str1[i-1];        //We concatinate at the exact point where we see a common element on both strings : that's where we capture the common string.
+                }
+                else
+                    temp[j] = max(dp[j],temp[j-1]);
+            }
+            dp = temp;
+        }
+        cout<<ans<<endl;
+        return dp[m];
+    } 

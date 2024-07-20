@@ -1,6 +1,13 @@
 /* Approach :
 
-1)
+1) Recursion 
+
+2) Memoization 
+
+3) Tabulation
+
+4) Space Optimization
+
 
 */
 
@@ -17,3 +24,5 @@
     int lcs(int n, int m, string str1, string str2) {
         return cal(n-1,m-1,str1,str2);
     }
+
+2) 

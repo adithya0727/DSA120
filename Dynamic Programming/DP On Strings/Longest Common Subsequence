@@ -5,11 +5,11 @@ A subsequence is a sequence that can be derived from the given string by deletin
 1) Recursion :
 TC : O(2^N * 2^M) SC : O(N + M) 
 2) Memoization :
-TC : O(2^N * 2^M) SC : O(N + M) 
+TC : O(N * M) SC : O(N*M) + O(N + M) 
 3) Tabulation :
-
+TC : O(N * M) SC : O(N*M)
 4) Space Optimization :
-
+TC : O(N * M) SC : O(M) 
 
 */
 

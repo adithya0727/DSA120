@@ -3,7 +3,7 @@ Given two strings str1 & str 2 of length n & m respectively, return the length o
 A subsequence is a sequence that can be derived from the given string by deleting some or no elements without changing the order of the remaining elements. For example, "abe" is a subsequence of "abcde".
 
 1) Recursion :
-
+TC : O(2^N * 2^M) SC : O(M) 
 2) Memoization :
 
 3) Tabulation :
@@ -27,4 +27,17 @@ A subsequence is a sequence that can be derived from the given string by deletin
         return cal(n-1,m-1,str1,str2);
     }
 
-2) 
+2) private:
+        int cal(int n, int m, string str1, string str2, vector<vector<int>>&dp){
+            if(n < 0 || m < 0)  return 0;
+            if(dp[n][m] != -1)  return dp[n][m];
+            if(str1[n] == str2[m])
+                return 1 + cal(n-1,m-1,str1,str2,dp);
+            return dp[n][m] = max(cal(n-1,m,str1,str2,dp),cal(n,m-1,str1,str2,dp));
+        }
+    
+  public:
+    int lcs(int n, int m, string str1, string str2) {
+        vector<vector<int>>dp(n,vector<int>(m+1,-1));
+        return cal(n-1,m-1,str1,str2,dp);
+    }

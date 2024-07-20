@@ -3,9 +3,9 @@ Given two strings str1 & str 2 of length n & m respectively, return the length o
 A subsequence is a sequence that can be derived from the given string by deleting some or no elements without changing the order of the remaining elements. For example, "abe" is a subsequence of "abcde".
 
 1) Recursion :
-TC : O(2^N * 2^M) SC : O(M) 
+TC : O(2^N * 2^M) SC : O(N + M) 
 2) Memoization :
-
+TC : O(2^N * 2^M) SC : O(N + M) 
 3) Tabulation :
 
 4) Space Optimization :
@@ -28,16 +28,47 @@ TC : O(2^N * 2^M) SC : O(M)
     }
 
 2) private:
-        int cal(int n, int m, string str1, string str2, vector<vector<int>>&dp){
+        int cal(int n, int m, string &str1, string &str2, vector<vector<int>>&dp){
             if(n < 0 || m < 0)  return 0;
             if(dp[n][m] != -1)  return dp[n][m];
             if(str1[n] == str2[m])
-                return 1 + cal(n-1,m-1,str1,str2,dp);
+                return dp[n][m] = 1 + cal(n-1,m-1,str1,str2,dp);
             return dp[n][m] = max(cal(n-1,m,str1,str2,dp),cal(n,m-1,str1,str2,dp));
         }
     
   public:
     int lcs(int n, int m, string str1, string str2) {
-        vector<vector<int>>dp(n,vector<int>(m+1,-1));
+        vector<vector<int>>dp(n,vector<int>(m,-1));
         return cal(n-1,m-1,str1,str2,dp);
+    }
+
+3) public:
+    int lcs(int n, int m, string str1, string str2) {
+        vector<vector<int>>dp(n+1,vector<int>(m+1,0));
+        for(int i=1;i<=n;i++){
+            for(int j=1;j<=m;j++){
+                if(str1[i-1] == str2[j-1])
+                    dp[i][j] = 1 + dp[i-1][j-1];
+                else
+                    dp[i][j] = max(dp[i-1][j],dp[i][j-1]);
+            }
+        }
+        return dp[n][m];
+    }
+
+
+4) public:
+    int lcs(int n, int m, string str1, string str2) {
+        vector<int>dp(m+1,0);
+        for(int i=1;i<=n;i++){
+            vector<int>temp(m+1,0);
+            for(int j=1;j<=m;j++){
+                if(str1[i-1] == str2[j-1])
+                    temp[j] = 1 + dp[j-1];
+                else
+                    temp[j] = max(dp[j],temp[j-1]);
+            }
+            dp = temp;
+        }
+        return dp[m];
     }

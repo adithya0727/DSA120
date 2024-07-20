@@ -1,12 +1,14 @@
 /* Approach :
+Given two strings str1 & str 2 of length n & m respectively, return the length of their longest common subsequence. If there is no common subsequence then, return 0. 
+A subsequence is a sequence that can be derived from the given string by deleting some or no elements without changing the order of the remaining elements. For example, "abe" is a subsequence of "abcde".
 
-1) Recursion 
+1) Recursion :
 
-2) Memoization 
+2) Memoization :
 
-3) Tabulation
+3) Tabulation :
 
-4) Space Optimization
+4) Space Optimization :
 
 
 */

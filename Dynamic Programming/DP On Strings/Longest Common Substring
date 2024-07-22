@@ -1,7 +1,8 @@
 /* Approach :
 Given two strings. The task is to find the length of the longest common substring.
-1) Tabulation : 
-TC :   SC : 
+1) Tabulation : Slight modification to subsequence : we just break it to 0 : if there's no consecutive elements and and move forward : we need the maximum we got in 
+the matrix at any given point.
+TC : O(N*M)  SC : O(N*M)
 */
 
 1) int longestCommonSubstr (string S1, string S2, int n, int m)

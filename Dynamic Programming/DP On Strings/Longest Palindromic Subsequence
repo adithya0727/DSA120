@@ -1,0 +1,25 @@
+/* Approach :          [Same as LCS]
+Given a String, find the longest palindromic subsequence.
+NOTE: Subsequence of a given sequence is a sequence that can be derived from the given sequence by deleting some or no elements without changing the order of the remaining elements
+
+1) Memoization : Slight modification : string A is given and used as is and then string B is the reverse of string A and regular LCS code for all variations.
+TC : O(N*M) SC : O(N*M) : is optimized in the same way as LCS.
+*/
+
+1) private:
+        int cal(int n, int m, string &str1, string &str2, vector<vector<int>>&dp){
+            if(n < 0 || m < 0)  return 0;
+            if(dp[n][m] != -1)  return dp[n][m];
+            if(str1[n] == str2[m])
+                return dp[n][m] = 1 + cal(n-1,m-1,str1,str2,dp);
+            return dp[n][m] = max(cal(n-1,m,str1,str2,dp),cal(n,m-1,str1,str2,dp));
+        }
+    
+  public:
+    int longestPalinSubseq(string A) {
+        int n = A.length();
+        string B = A;
+        reverse(B.begin(),B.end());
+        vector<vector<int>>dp(n,vector<int>(n,-1));
+        return cal(n-1,n-1,A,B,dp);
+    }

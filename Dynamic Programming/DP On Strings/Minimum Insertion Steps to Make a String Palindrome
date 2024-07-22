@@ -1,0 +1,24 @@
+/* Approach :   [Same as LPS]
+Given a string, find the minimum number of characters to be inserted to convert it to a palindrome.
+1) Memoization : 
+TC : O(N^2) SC : O(N^2)  
+*/
+
+1) private:
+        int cal(int n, int m, string &str1, string &str2, vector<vector<int>>&dp){
+            if(n < 0 || m < 0)  return 0;
+            if(dp[n][m] != -1)  return dp[n][m];
+            if(str1[n] == str2[m])
+                return dp[n][m] = 1 + cal(n-1,m-1,str1,str2,dp);
+            return dp[n][m] = max(cal(n-1,m,str1,str2,dp),cal(n,m-1,str1,str2,dp));
+        }
+    
+  public:
+    int countMin(string str){
+        int n = str.length();
+        string B = str;
+        reverse(B.begin(),B.end());
+        vector<vector<int>>dp(n,vector<int>(n,-1));
+        int max_palin_part = cal(n-1,n-1,str,B,dp);
+        return (n-max_palin_part);
+    }

@@ -4,8 +4,30 @@ A string s is a subsequence of string t if deleting some number of characters fr
 Input: str1 = "abac", str2 = "cab"
 Output: "cabac"
  
-1) 
+1) GFG Solution to get only count 
+
+2) Leetcode Solution :
 
 */
 
-1) 
+1)  public:
+    //Function to find length of shortest common supersequence of two strings.
+    int shortestCommonSupersequence(string X, string Y, int m, int n)
+    {
+        vector<int>dp(n+1,0);
+        for(int i=1;i<=m;i++){
+            vector<int>temp(n+1,0);
+            for(int j=1;j<=n;j++){
+                if(X[i-1] == Y[j-1])
+                    temp[j] = 1 + dp[j-1];
+                else
+                    temp[j] = max(dp[j],temp[j-1]);
+            }
+            dp = temp;
+        }
+        int lcs = dp[n];
+        int ans = lcs + (m - lcs) + (n - lcs);
+        return ans;
+    }
+
+2) 

@@ -1,6 +1,7 @@
 /* Approach :   [Same as LPS]
 Given a string, find the minimum number of characters to be inserted to convert it to a palindrome.
-1) Memoization : 
+1) Memoization : By Keeping the LPS intact : we have to insert or remove the other extra elements. so 
+overall string length - LPS = gives us our minimum steps to insert or delete to get our answer.
 TC : O(N^2) SC : O(N^2)  
 */
 

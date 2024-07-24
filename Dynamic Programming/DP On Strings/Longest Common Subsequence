@@ -77,20 +77,33 @@ TC : O(N * M) SC : O(M)
 5) // PRINT LONGEST COMMON SUBSEQUENCE : 
 public:
     int lcs(int n, int m, string str1, string str2) {
-        vector<int>dp(m+1,0);
-        string ans = "";
+        vector<vector<int>>dp(n+1,vector<int>(m+1,0));
         for(int i=1;i<=n;i++){
-            vector<int>temp(m+1,0);
             for(int j=1;j<=m;j++){
-                if(str1[i-1] == str2[j-1]){
-                    temp[j] = 1 + dp[j-1];
-                    ans += str1[i-1];        //We concatinate at the exact point where we see a common element on both strings : that's where we capture the common string.
-                }
+                if(str1[i-1] == str2[j-1])
+                    dp[i][j] = 1 + dp[i-1][j-1];
                 else
-                    temp[j] = max(dp[j],temp[j-1]);
+                    dp[i][j] = max(dp[i-1][j],dp[i][j-1]);
             }
-            dp = temp;
         }
-        cout<<ans<<endl;
-        return dp[m];
+        //Post we get the Length of our Longest Common Subsequence.
+	    string S = "";
+	    int lcs_len = dp[n][m];
+	    int index = lcs_len-1;
+	    for(int i=0;i<lcs_len;i++)  S += "$";       //Dummy Values.
+	    int i=m,j=n;
+	    while(i > 0 && j > 0){
+	        if(str1[i-1] == str2[j-1]){
+	            S[index--] = str1[i-1];
+	            i--;
+	            j--;
+	        }
+	        else if(dp[i-1][j] > dp[i][j-1]){
+	            i--;
+	        }
+	        else{
+	            j--;
+	        }
+	    }
+	    return S;
     } 

@@ -86,7 +86,7 @@ public:
                     dp[i][j] = max(dp[i-1][j],dp[i][j-1]);
             }
         }
-        //Post we get the Length of our Longest Common Subsequence.
+        //Post we get the Length of our Longest Common Subsequence.   TC : O(N + M )
 	    string S = "";
 	    int lcs_len = dp[n][m];
 	    int index = lcs_len-1;

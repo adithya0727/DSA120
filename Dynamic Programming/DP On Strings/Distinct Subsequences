@@ -1,0 +1,31 @@
+/* Approach:
+Given two strings s and t of length n and m respectively. Find the count of distinct occurrences of t in s as a sub-sequence modulo 109 + 7.
+1) Memoization : 
+TC : O(N*M) SC : O(N*M) + O(N + M)
+2) Tabulation :
+TC : O(N*M) SC : O(N*M) 
+3) Space Optimize :
+TC : O(N*M) SC : O(M) 
+4) 1-D array optimize : 
+TC : O(N*M) SC : O(M) 
+*/
+
+1) private:
+        int cal(int i, int j,string &s, string &t,vector<vector<int>>&dp,int &MOD){
+            if(j < 0)   return 1;
+            if(i < 0)   return 0;
+            if(dp[i][j] != -1)  return dp[i][j];
+            if(s[i] == t[j])
+                return dp[i][j] = (cal(i-1,j-1,s,t,dp,MOD) + cal(i-1,j,s,t,dp,MOD))%MOD;
+            else
+                return dp[i][j] = cal(i-1,j,s,t,dp,MOD)%MOD;
+        }
+    
+    
+    public:
+    int subsequenceCount(string s, string t)
+    {
+      int n = s.length(),m = t.length(),MOD = 1e9 + 7;
+      vector<vector<int>>dp(n,vector<int>(m,-1));
+      return cal(n-1,m-1,s,t,dp,MOD);
+    }

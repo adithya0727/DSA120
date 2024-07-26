@@ -1,13 +1,18 @@
 /* Approach:
+Given two strings 'str' and a wildcard pattern 'pattern' of length N and M respectively, You have to return '1' if the wildcard pattern is matched with str
+else return '0' . All characters of the string str and pattern always belong to the Alphanumeric characters.
+The wildcard pattern can include the characters ‘?’ and ‘*’
+‘?’ – matches any single character.
+‘*’ – Matches any sequence of characters (including the empty sequence).
 
-1)
-
-2)
-
-3)
-
-4)
-
+1) Memoization : 
+TC : O(N*M) SC : O(N*M) + O(N + M)
+2) Tabulation :
+TC : O(N*M) SC : O(N*M) 
+3) Space Optimize :
+TC : O(N*M) SC : O(M) 
+4) 1-D array optimize : 
+TC : O(N*M) SC : O(M) 
 */
 
 1) private:

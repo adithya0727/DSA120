@@ -31,7 +31,7 @@ TC : O(N*M) SC : O(M)
                 return dp[idx1][idx2] = cal(idx1-1,idx2-1,pattern,str,dp);
             if(pattern[idx1] == '*')
                 return dp[idx1][idx2] = cal(idx1-1,idx2,pattern,str,dp) or cal(idx1,idx2-1,pattern,str,dp);
-            return false;
+            return false;                //doesn't match the whole string in its entirity : so we return false
         }
     
     
@@ -42,3 +42,6 @@ TC : O(N*M) SC : O(M)
         vector<vector<int>>dp(n,vector<int>(m,-1));
         return cal(n-1,m-1,pattern,str,dp);
     }
+
+
+2) 

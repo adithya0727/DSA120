@@ -8,7 +8,7 @@ In case there's no profit the driver code will print the string "No Profit" for 
 1) Question : pick all the green candles or bull in the graph whenever there is a spike and keep adding it to maximize profit and ignore all the dips in the graphs.
 TC : O(N)  SC : O(1)
 */
-
+[GREEDY APPROACH]
 1) public:
     //Function to find the days of buying and selling stock for max profit.
     vector<vector<int> > stockBuySell(vector<int> A, int n){
@@ -28,3 +28,6 @@ TC : O(N)  SC : O(1)
             res.push_back({buy,sell});
         return res;
     }
+
+
+2) 

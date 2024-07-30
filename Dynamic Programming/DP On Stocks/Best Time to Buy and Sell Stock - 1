@@ -4,7 +4,7 @@ You want to maximize your profit by choosing a single day to buy one stock and c
 Return the maximum profit you can achieve from this transaction. If you cannot achieve any profit, return 0.
 
 1) for loop : traverse the ith day and consider it as selling value and at the same time keep the minimum possible buy value in a variable and subtract all the 
-sell values with that point minimum_biy value.
+sell values with that point minimum_buy value.
 TC : O(N)  SC : O(1)
 */
 

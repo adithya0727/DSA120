@@ -93,3 +93,17 @@ public:
         return dp[1];
     }
 
+5) Only using 4 Variables Approach :
+
+public:
+    int maxProfit(vector<int>& prices) {
+        int n = prices.size();
+        int aheadbuy=0,aheadnotbuy=0,currnotbuy,currbuy;
+        for(int i=n-1;i>=0;i--){
+            currbuy = max(-prices[i] + aheadnotbuy, 0 + aheadbuy);
+            currnotbuy = max(prices[i] + aheadbuy, 0 + aheadnotbuy);
+            aheadbuy = currbuy;
+            aheadnotbuy = currnotbuy;
+        }
+        return aheadbuy;
+    }

@@ -1,0 +1,30 @@
+/* Approach :
+The cost of stock on each day is given in an array A[] of size N. Find all the segments of days on which you buy and sell the stock
+such that the sum of difference between sell and buy prices is maximized. Each segment consists of indexes of two elements, first is index of day on which
+you buy stock and second is index of day on which you sell stock.
+Note: Since there can be multiple solutions, the driver code will print 1 if your answer is correct, otherwise, it will return 0.
+In case there's no profit the driver code will print the string "No Profit" for a correct solution.
+
+1) Question : pick all the green candles or bull in the graph whenever there is a spike and keep adding it to maximize profit and ignore all the dips in the graphs.
+TC : O(N)  SC : O(1)
+*/
+
+1) public:
+    //Function to find the days of buying and selling stock for max profit.
+    vector<vector<int> > stockBuySell(vector<int> A, int n){
+        vector<vector<int>>res;
+        int buy=0,sell=0;  //indexes
+        for(int i=0;i<n-1;i++){  //we can't buy and sell on the last day : so skipping it.
+            if(A[i+1] > A[i])    //keep going further as long as we get a higher sell value. 
+                sell++;
+            else{  //once we reach a dip 
+                if(buy != sell)  //check if sell has moved further
+                    res.push_back({buy,sell});  //capture that rise in graph 
+                buy = i+1;  //make them both point to the next (buy,sell) capture in the graph 
+                sell = i+1;
+            }
+        }
+        if(buy != sell)  //if loop has been exhausted : check for any last modifications to be added.
+            res.push_back({buy,sell});
+        return res;
+    }

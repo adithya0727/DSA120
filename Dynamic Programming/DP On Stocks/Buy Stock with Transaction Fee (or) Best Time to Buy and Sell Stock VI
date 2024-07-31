@@ -9,7 +9,7 @@ TC : O(N*2) SC : O(N*2) + O(N)
 TC : O(N*2) SC : O(N*2) 
 3) Space Optimization :
 TC : O(N*2) SC : O(2) 
-
+4) Using 4 variables only : 
 */
 
 1) private:
@@ -69,3 +69,14 @@ TC : O(N*2) SC : O(2)
         return dp[1];
     }
 
+4) public:
+    long long maximumProfit(vector<long long>&prices, int n, int fee) {
+        long long aheadbuy=0,aheadnotbuy=0,currnotbuy,currbuy;
+        for(int i=n-1;i>=0;i--){
+            currbuy = max(-prices[i] + aheadnotbuy, 0 + aheadbuy);
+            currnotbuy = max(prices[i] + aheadbuy - fee, 0 + aheadnotbuy);
+            aheadbuy = currbuy;
+            aheadnotbuy = currnotbuy;
+        }
+        return aheadbuy;
+    }

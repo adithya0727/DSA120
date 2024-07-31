@@ -1,5 +1,36 @@
 /* Approach:
+You are given an array prices where prices[i] is the price of a given stock on the ith day, and an integer fee representing a transaction fee.
+Find the maximum profit you can achieve. You may complete as many transactions as you like, but you need to pay the transaction fee for each transaction.
+Note: You may not engage in multiple transactions simultaneously (i.e., you must sell the stock before you buy again).
 
-1)
+1) Memoization :
+TC : O(N*2) SC : O(N*2) + O(N)
+2) Tabulation :
+TC : O(N*2) SC : O(N*2) 
+3) Space Optimization :
+TC : O(N*2) SC : O(2) 
 
 */
+
+1) private:
+        long long cal(int idx,int buy, int &n, vector<long long>&prices,
+                vector<vector<long long>>&dp, int &fee){
+            if(idx == n)    return 0;
+            if(dp[idx][buy]!= -1)   return dp[idx][buy];
+            int price = 0;
+            if(buy == 1)
+                price = max(-prices[idx] + cal(idx+1,0,n,prices,dp,fee), 0 + cal(idx+1,1,n,prices,dp,fee));
+            else
+                price = max(prices[idx] + cal(idx+1,1,n,prices,dp,fee) - fee , 0 + cal(idx+1,0,n,prices,dp,fee));
+            return dp[idx][buy] = price;
+        }
+    
+    
+    public:
+    long long maximumProfit(vector<long long>&prices, int n, int fee) {
+        vector<vector<long long>>dp(n,vector<long long>(2,-1));
+        return cal(0,1,n,prices,dp,fee);
+    }
+
+
+2) 

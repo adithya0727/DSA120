@@ -1,0 +1,35 @@
+/* Approach:
+In daily share trading, a buyer buys shares in the morning and sells them on the same day. If the trader is allowed to make at most 2 transactions in a day,
+the second transaction can only start after the first one is complete (buy->sell->buy->sell).
+The stock prices throughout the day are represented in the form of an array of prices. 
+Given an array price of size n, find out the maximum profit that a share trader could have made.
+
+1) Memoization : 
+TC : O(N*2*3)  SC : O(N*2*3) + O(N)
+2) Tabulation :
+TC : O(N*2*3)  SC : O(N*2*3) 
+3) Space Optimization :
+TC : O(N*2*3)  SC : O(N*2*3) 
+*/
+
+1) private:
+        int cal(int idx, int buy, int capacity, vector<int>&price,int &n, vector<vector<vector<int>>>&dp){
+            if(capacity == 0)   return 0;
+            if(idx == n)    return 0;
+            if(dp[idx][buy][capacity] != -1)    return dp[idx][buy][capacity];
+            int value = 0;
+            if(buy == 1)
+                value = max(-price[idx] + cal(idx+1,0,capacity,price,n,dp) , 0 + cal(idx+1,1,capacity,price,n,dp));
+            else
+                value = max(price[idx] + cal(idx+1,1,capacity-1,price,n,dp), 0 + cal(idx+1,0,capacity,price,n,dp));
+            return dp[idx][buy][capacity] = value;
+        }
+    
+    public:
+        //User function Template for C++
+        
+        int maxProfit(vector<int>&price){
+            int n = price.size();
+            vector<vector<vector<int>>>dp(n,vector<vector<int>>(2,vector<int>(3,-1)));
+            return cal(0,1,2,price,n,dp);
+        }

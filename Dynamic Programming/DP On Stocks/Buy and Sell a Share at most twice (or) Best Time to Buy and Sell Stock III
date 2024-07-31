@@ -9,7 +9,7 @@ TC : O(N*2*3)  SC : O(N*2*3) + O(N)
 2) Tabulation :
 TC : O(N*2*3)  SC : O(N*2*3) 
 3) Space Optimization :
-TC : O(N*2*3)  SC : O(N*2*3) 
+TC : O(N*2*3)  SC : O(2*3) 
 */
 
 1) private:
@@ -65,4 +65,33 @@ TC : O(N*2*3)  SC : O(N*2*3)
             return dp[0][1][2];
         }
 
-3) 
+3) public:
+        //User function Template for C++
+        
+        int maxProfit(vector<int>&price){
+            int n = price.size();
+            vector<vector<int>>dp(2,vector<int>(3,0));
+            for(int b=0;b<2;b++){
+                for(int c=0;c<3;c++){
+                    dp[b][c] = 0;
+                }
+            }
+            for(int b=0;b<2;b++){
+                dp[b][0] = 0;
+            }
+            for(int idx=n-1;idx>=0;idx--){
+                vector<vector<int>>temp(2,vector<int>(3,0));
+                for(int buy=0;buy<2;buy++){
+                    for(int capacity=1;capacity<3;capacity++){
+                        int value = 0;
+                        if(buy == 1)
+                            value = max(-price[idx] + dp[0][capacity] , 0 + dp[1][capacity]);
+                        else
+                            value = max(price[idx] + dp[1][capacity-1] , 0 + dp[0][capacity]);
+                        temp[buy][capacity] = value;
+                    }
+                }
+                dp = temp;
+            }
+            return dp[1][2];
+        }

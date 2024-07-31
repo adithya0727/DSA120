@@ -10,7 +10,7 @@ TC : O(N*2) SC : O(N*2) + O(N)
 2) Tabulation :
 TC : O(N*2) SC : O(N*2) 
 3) Space Optimization :
-TC : O(N*2) SC : O(2) 
+TC : O(N*2) SC : O(6) 
 
 */
 

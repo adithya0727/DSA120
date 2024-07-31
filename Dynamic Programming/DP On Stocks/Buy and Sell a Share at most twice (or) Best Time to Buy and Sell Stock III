@@ -33,3 +33,36 @@ TC : O(N*2*3)  SC : O(N*2*3)
             vector<vector<vector<int>>>dp(n,vector<vector<int>>(2,vector<int>(3,-1)));
             return cal(0,1,2,price,n,dp);
         }
+
+2) public:
+        //User function Template for C++
+        
+        int maxProfit(vector<int>&price){
+            int n = price.size();
+            vector<vector<vector<int>>>dp(n+1,vector<vector<int>>(2,vector<int>(3,0)));
+            for(int b=0;b<2;b++){
+                for(int c=0;c<3;c++){
+                    dp[n][b][c] = 0;
+                }
+            }
+            for(int i=0;i<n;i++){
+                for(int b=0;b<2;b++){
+                    dp[i][b][0] = 0;
+                }
+            }
+            for(int idx=n-1;idx>=0;idx--){
+                for(int buy=0;buy<2;buy++){
+                    for(int capacity=1;capacity<3;capacity++){
+                        int value = 0;
+                        if(buy == 1)
+                            value = max(-price[idx] + dp[idx+1][0][capacity] , 0 + dp[idx+1][1][capacity]);
+                        else
+                            value = max(price[idx] + dp[idx+1][1][capacity-1] , 0 + dp[idx+1][0][capacity]);
+                        dp[idx][buy][capacity] = value;
+                    }
+                }
+            }
+            return dp[0][1][2];
+        }
+
+3) 

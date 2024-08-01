@@ -10,6 +10,8 @@ TC : O(N^2)  SC : O(N^2) + O(N)
 TC : O(N^2)  SC : O(N^2) 
 4) Space Optimization : 
 TC : O(N^2)  SC : O(N) 
+5) Space Optimization : 
+TC : O(N^2)  SC : O(N) 
 */
 
 1) private:
@@ -72,4 +74,38 @@ TC : O(N^2)  SC : O(N)
     }
 
 
-4) 
+4) public:
+    //Function to find length of longest increasing subsequence.
+    int longestSubsequence(int n, int a[])
+    {
+       vector<int>dp(n+1,0);
+       for(int i=0;i<=n;i++)    dp[i] = 0;
+       for(int idx=n-1;idx>=0;idx--){
+           vector<int>temp(n+1,0);
+           for(int prev = -1;prev<idx;prev++){
+               int notpick = 0 + dp[prev+1];
+                int pick = 0;
+                if(prev ==-1 || a[idx] > a[prev])
+                    pick = 1 + dp[idx+1];
+            temp[prev+1] = max(notpick,pick);
+           }
+           dp = temp;
+       }
+       return dp[0];
+    }
+
+5) public:
+    //Function to find length of longest increasing subsequence.
+    int longestSubsequence(int n, int a[])
+    {
+       vector<int>dp(n,1);
+       int ans=0;
+       for(int idx=0;idx<n;idx++){
+           for(int prev = 0;prev<idx;prev++){
+               if(a[prev] < a[idx])
+                dp[idx] = max(1 + dp[prev],dp[idx]);
+           }
+           ans = max(ans,dp[idx]);
+       }
+       return ans;
+    }

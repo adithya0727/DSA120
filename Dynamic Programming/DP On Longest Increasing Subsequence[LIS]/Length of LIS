@@ -53,18 +53,7 @@ TC : O(N^2)  SC : O(N)
     }
 
 
-3) private:
-        int cal(int idx,int prev, int &n, int a[], vector<vector<int>>&dp){
-            if(idx == n)    return 0;
-            if(dp[idx][prev+1] != -1)     return dp[idx][prev+1];
-            int notpick = 0 + cal(idx+1,prev,n,a,dp);
-            int pick = 0;
-            if(prev == -1 || a[idx] > a[prev])
-                pick = 1 + cal(idx+1,idx,n,a,dp);
-            return dp[idx][prev+1] = max(notpick,pick);
-        }
-    
-    public:
+3)   public:
     //Function to find length of longest increasing subsequence.
     int longestSubsequence(int n, int a[])
     {

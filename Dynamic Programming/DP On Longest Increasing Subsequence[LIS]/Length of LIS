@@ -1,13 +1,15 @@
 /* Approach:
+Given an array a[ ] of n integers, find the Length of the Longest Strictly Increasing Subsequence.
+A sequence of numbers is called "strictly increasing" when each term in the sequence is smaller than the term that comes after it.
 
-1)
-
-2) 
-
-3)
-
-4)
-
+1) Recursion :
+TC : O(2^N)  SC : O(N)
+2) Memoization : 
+TC : O(N^2)  SC : O(N^2) + O(N)
+3) Tabulation :
+TC : O(N^2)  SC : O(N^2) 
+4) Space Optimization : 
+TC : O(N^2)  SC : O(N) 
 */
 
 1) private:

@@ -4,7 +4,7 @@ A subsequence of array is called Bitonic if it is first strictly increasing, the
 Note : A strictly increasing or a strictly decreasing sequence should not be considered as a bitonic sequence.
 
 1) Tabulation : 
-TC :  SC : 
+TC : O(N^2)  SC : O(N)
 */
 
 1) public:

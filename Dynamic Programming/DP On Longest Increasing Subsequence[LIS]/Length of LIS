@@ -12,6 +12,7 @@ TC : O(N^2)  SC : O(N^2)
 TC : O(N^2)  SC : O(N) 
 5) Space Optimization : 
 TC : O(N^2)  SC : O(N) 
+6) V.V.V.IMP : PRINT LIS.
 */
 
 1) private:
@@ -108,4 +109,37 @@ TC : O(N^2)  SC : O(N)
            ans = max(ans,dp[idx]);
        }
        return ans;
+    }
+
+
+6) public:
+    //Function to find length of longest increasing subsequence.
+    int longestSubsequence(int n, int a[])
+    {
+       vector<int>dp(n,1), hash(n);                 //hash purpose is to connect and store all the parents to backtrack and find the find along which we got LIS.
+       for(int i=0;i<n;i++)     hash[i] = i;
+       int LIS_LEN=1,Last_idx=0;        //we capture the lis length from the dp array and last index to know from where we have to start traversing to capture the path.
+       for(int idx=0;idx<n;idx++){
+           for(int prev = 0;prev<idx;prev++){        //we only need previous until the current index value.
+               if(a[prev] < a[idx] && dp[idx] < 1 + dp[prev]){        //get a greater value 
+                       dp[idx] = 1 + dp[prev];        //update the dp array
+                       hash[idx] = prev;         //and store its parent from where its coming.
+                   }
+           }
+           if(dp[idx] > LIS_LEN){        //each time capture the info once the inner loop ends.
+            LIS_LEN = dp[idx];        //update with max length
+            Last_idx = idx;        //update the last index.
+           }
+       }
+       vector<int>LIS;        //to store all the elements of the LIS.
+       LIS.push_back(a[Last_idx]);        //start from the last.
+       while(hash[Last_idx] != Last_idx){        //until the hash vector has the element same as index we traverse : cause that's where we've modified.
+            Last_idx = hash[Last_idx];           //move the next parent in the hash using its connectivity.
+            LIS.push_back(a[Last_idx]);        //store the elements from the array.
+       }
+       reverse(LIS.begin(),LIS.end());        //reverse the whole array 
+       for(auto &var : LIS)                //printing all its elements.
+            cout<<var<<" ";
+    cout<<endl;
+    return LIS_LEN;        //return maximum length of LIS.
     }

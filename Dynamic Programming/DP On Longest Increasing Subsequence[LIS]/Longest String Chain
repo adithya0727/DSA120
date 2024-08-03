@@ -1,0 +1,46 @@
+/* Approach:          [PATTERN : 5TH Approach as Length in LIS]
+You are given an array of words where each word consists of lowercase English letters.
+wordA is a predecessor of wordB if and only if we can insert exactly one letter anywhere in wordA without changing the order of the other characters to make it equal to wordB.
+For example, "abc" is a predecessor of "abac", while "cba" is not a predecessor of "bcad".
+A word chain is a sequence of words [word1, word2, ..., wordk] with k >= 1, where word1 is a predecessor of word2, word2 is a predecessor of word3, and so on. A single word is trivially a word chain with k == 1.
+Return the length of the longest possible word chain with words chosen from the given list of words.
+
+1) 
+
+*/
+
+1) private:
+        bool compare(string &str1 , string &str2){
+            int n=str1.length(),m = str2.length(),i=0,j=0;
+            if(m - n != 1)  return false;
+            while(j<m){
+                if(str1[i] == str2[j]){
+                    i++;
+                    j++;
+                }
+                else{
+                    j++;
+                }
+            }
+            if(i==n && j==m)    return true;
+            return false;
+        }
+    
+  public:
+        static bool comp(string &str1,string &str2){
+            return str1.size() < str2.size();
+        }
+        
+    int longestChain(int n, vector<string>& words) {
+        sort(words.begin(),words.end(),comp);
+       vector<int>dp(n,1);
+       int ans=1;
+       for(int idx=0;idx<n;idx++){
+           for(int prev = 0;prev<idx;prev++){
+               if(compare(words[prev],words[idx]) == true && dp[prev] + 1 > dp[idx])
+                dp[idx] = 1 + dp[prev];
+           }
+           ans = max(ans,dp[idx]);
+       }
+       return ans;
+    }

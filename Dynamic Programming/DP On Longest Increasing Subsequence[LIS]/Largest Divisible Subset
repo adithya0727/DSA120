@@ -1,0 +1,34 @@
+/* Approach:            [Same code as 6th Approach in Length of LIS]
+
+1) 3 Steps : sort the array for ease of modulo checking and for transitive property , check for Divisibility instead of Increasing,
+return the vector<int> containing the path we traversed to get longest length.
+TC : O(N^2) + O(N) SC : O(N) 
+*/
+
+1) public:
+    vector<int> LargestSubset(int n, vector<int>& arr) {
+        sort(arr.begin(),arr.end());
+        vector<int>dp(n,1), hash(n);                 //hash purpose is to connect and store all the parents to backtrack and find the find along which we got LIS.
+       for(int i=0;i<n;i++)     hash[i] = i;
+       int LIS_LEN=1,Last_idx=0;        //we capture the lis length from the dp array and last index to know from where we have to start traversing to capture the path.
+       for(int idx=0;idx<n;idx++){
+           for(int prev = 0;prev<idx;prev++){        //we only need previous until the current index value.
+               if(arr[idx] % arr[prev] == 0 && dp[idx] < 1 + dp[prev]){        //get a Divisible constraint true. 
+                       dp[idx] = 1 + dp[prev];        //update the dp array
+                       hash[idx] = prev;         //and store its parent from where its coming.
+                   }
+           }
+           if(dp[idx] > LIS_LEN){        //each time capture the info once the inner loop ends.
+            LIS_LEN = dp[idx];        //update with max length
+            Last_idx = idx;        //update the last index.
+           }
+       }
+       vector<int>LIS;        //to store all the elements of the LIS.
+       LIS.push_back(arr[Last_idx]);        //start from the last.
+       while(hash[Last_idx] != Last_idx){        //until the hash vector has the element same as index we traverse : cause that's where we've modified.
+            Last_idx = hash[Last_idx];           //move the next parent in the hash using its connectivity.
+            LIS.push_back(arr[Last_idx]);        //store the elements from the array.
+       }
+       reverse(LIS.begin(),LIS.end());        //reverse the whole array 
+    return LIS;
+    }

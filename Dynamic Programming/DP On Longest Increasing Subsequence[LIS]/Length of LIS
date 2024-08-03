@@ -13,8 +13,10 @@ TC : O(N^2)  SC : O(N)
 5) Space Optimization : 
 TC : O(N^2)  SC : O(N) 
 6) V.V.V.IMP : PRINT LIS.
-TC : O(N^2)  SC : O(N) 
-7) 
+TC : O(N^2) + O(Len(LIS))  SC : O(N) 
+7) To Solve the Problem Using Binary Search :
+TC : O(N*(LogN)) SC : O(N)
+
 */
 
 1) private:
@@ -144,4 +146,23 @@ TC : O(N^2)  SC : O(N)
             cout<<var<<" ";
     cout<<endl;
     return LIS_LEN;        //return maximum length of LIS.
+    }
+
+
+7) public:
+    //Function to find length of longest increasing subsequence.
+    int longestSubsequence(int n, int a[])
+    {
+       vector<int>temp;
+       temp.push_back(a[0]);
+       for(int i=1;i<n;i++){
+           if(a[i] > temp.back()){
+               temp.push_back(a[i]);
+           }
+           else{
+               auto idx = lower_bound(temp.begin(), temp.end(), a[i]) - temp.begin();
+                temp[idx] = a[i];
+           }
+       }
+       return temp.size();
     }

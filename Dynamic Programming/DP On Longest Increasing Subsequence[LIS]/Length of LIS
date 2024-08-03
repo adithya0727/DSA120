@@ -13,6 +13,8 @@ TC : O(N^2)  SC : O(N)
 5) Space Optimization : 
 TC : O(N^2)  SC : O(N) 
 6) V.V.V.IMP : PRINT LIS.
+TC : O(N^2)  SC : O(N) 
+7) 
 */
 
 1) private:

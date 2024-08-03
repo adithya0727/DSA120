@@ -5,8 +5,9 @@ For example, "abc" is a predecessor of "abac", while "cba" is not a predecessor 
 A word chain is a sequence of words [word1, word2, ..., wordk] with k >= 1, where word1 is a predecessor of word2, word2 is a predecessor of word3, and so on. A single word is trivially a word chain with k == 1.
 Return the length of the longest possible word chain with words chosen from the given list of words.
 
-1) 
-
+1) Tabulation : Sort because they've basically asked in any order or subsets : so for all cases to be considered we start with the smallest length ones and go all
+the way from there, and then same as regular LIS Pattern.
+TC : O(N*(LogN) + N^2*Length of String)  SC : O(N)
 */
 
 1) private:

@@ -13,19 +13,19 @@ TC : O(N^2 + N)  SC : O(N)
        for(int idx=0;idx<n;idx++){
            for(int prev = 0;prev<idx;prev++){
                if(arr[prev] < arr[idx]){
-                    if(1 + dp[prev] > dp[idx]){
+                    if(1 + dp[prev] > dp[idx]){    //if new LIS is found greater than current : over-write with the same count as the prev which is giving maximum LIS.
                         dp[idx] = 1 + dp[prev];
                         count[idx] = count[prev];
                     }
-                    else if(1 + dp[prev] == dp[idx])
+                    else if(1 + dp[prev] == dp[idx])     //If another is found with same LIS : add it up with the count of prev with all its possibilities as well.
                         count[idx] += count[prev];
                }
            }
            if(dp[idx] > maxi)
             maxi = dp[idx];
        }
-       for(int i=0;i<n;i++){
-           if(dp[i] == maxi){
+       for(int i=0;i<n;i++){    //there could be multiple indexes with high LIS : we have to capture and take the count/possibilities from all of them
+           if(dp[i] == maxi){    //by comparing and check if their LIS is matching with the Maximum we calculated in the above nested Loop.
                LIS += count[i];
            }
        }

@@ -1,0 +1,33 @@
+/*Approach:        [PATTERN : Length of LIS : 5TH Approach]
+Given an integer array arr, return the number of longest increasing subsequences.
+Notice that the sequence has to be strictly increasing.
+
+1) Tabulation : Use a count array to hold and add up all possibilities and then return the count of the index which has the maximum LIS.
+TC : O(N^2 + N)  SC : O(N)
+*/
+
+1) public:
+    int NumberofLIS(int n, vector<int>&arr) {
+        vector<int>dp(n,1),count(n,1);
+       int LIS=0,maxi=1;
+       for(int idx=0;idx<n;idx++){
+           for(int prev = 0;prev<idx;prev++){
+               if(arr[prev] < arr[idx]){
+                    if(1 + dp[prev] > dp[idx]){
+                        dp[idx] = 1 + dp[prev];
+                        count[idx] = count[prev];
+                    }
+                    else if(1 + dp[prev] == dp[idx])
+                        count[idx] += count[prev];
+               }
+           }
+           if(dp[idx] > maxi)
+            maxi = dp[idx];
+       }
+       for(int i=0;i<n;i++){
+           if(dp[i] == maxi){
+               LIS += count[i];
+           }
+       }
+       return LIS;
+    }

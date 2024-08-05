@@ -1,0 +1,87 @@
+/* Approach:
+Given a wooden stick of length n units. The stick is labelled from 0 to n.
+Given an integer array cuts where cuts[i] denotes a position you should perform a cut at.
+You should perform the cuts in order, you can change the order of the cuts as you wish.
+The cost of one cut is the length of the stick to be cut, the total cost is the sum of costs of all cuts.
+When you cut a stick, it will be split into two smaller sticks (i.e. the sum of their lengths is the length of the stick before the cut).
+Return the minimum total cost of the cuts.
+
+1) Recursion : 
+TC : Exponential SC : O(N) 
+2) Memiozation : 
+TC : O(N^3) : state changes + for loop SC : O(N^2) + O(N) 
+3) Tabulation : 
+TC : O(N^3)  SC : O(N^2) 
+
+*/
+
+1) private:
+    int cal(int i, int j, vector<int>& cuts){
+        if(i > j)   return 0;
+        int mini = INT_MAX;
+        for(int k=i;k<=j;k++){
+            int cost = cuts[j+1] - cuts[i-1] + cal(i,k-1,cuts) + cal(k+1,j,cuts);
+            mini = min(mini,cost);
+        }
+        return mini;
+    }
+
+
+public:
+    int minCost(int n, vector<int>& cuts) {
+        int size = cuts.size();
+        cuts.push_back(n);
+        cuts.insert(cuts.begin(),0);
+        sort(cuts.begin(),cuts.end());
+        return cal(1,size,cuts);
+    }
+
+2) private:
+    int cal(int i, int j, vector<int>& cuts,vector<vector<int>>&dp){
+        if(i > j)   return 0;
+        if(dp[i][j] != -1)  return dp[i][j];
+        int mini = INT_MAX;
+        for(int k=i;k<=j;k++){
+            int cost = cuts[j+1] - cuts[i-1] + cal(i,k-1,cuts,dp) + cal(k+1,j,cuts,dp);
+            mini = min(mini,cost);
+        }
+        return dp[i][j] = mini;
+    }
+
+
+public:
+    int minCost(int n, vector<int>& cuts) {
+        int size = cuts.size();     //We take size itself : since we modify cuts and insert a 0 at the very
+        cuts.push_back(n);  //beginning : right shifting all the indexes by 1.
+        cuts.insert(cuts.begin(),0);
+        sort(cuts.begin(),cuts.end());
+        vector<vector<int>>dp(size+1,vector<int>(size+1,-1));
+        return cal(1,size,cuts,dp);
+    }
+
+
+3) public:
+    int minCost(int n, vector<int>& cuts) {
+        int size = cuts.size();     //We take size itself : since we modify cuts and insert a 0 at the very
+        cuts.push_back(n);  //beginning : right shifting all the indexes by 1.
+        cuts.insert(cuts.begin(),0);
+        sort(cuts.begin(),cuts.end());
+        vector<vector<int>>dp(size+2,vector<int>(size+2,0));
+        for(int i=0;i<=size;i++){
+            for(int j=0;j<=size;j++){
+                if(i > j)   dp[i][j] = 0;
+            }
+        }
+
+        for(int i=size;i>=1;i--){
+            for(int j=i;j<=size;j++){
+                int mini = INT_MAX;
+                for(int k=i;k<=j;k++){
+                    int cost = cuts[j+1] - cuts[i-1] + dp[i][k-1] + dp[k+1][j];
+                    mini = min(mini,cost);
+            }
+            dp[i][j] = mini;
+            }
+        }
+        return dp[1][size];
+    }

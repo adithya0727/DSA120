@@ -1,0 +1,46 @@
+/* Approach :      [PATTERN : FRONT PARTITION]
+Given an integer array arr, partition the array into (contiguous) subarrays of length at most k. After partitioning,
+each subarray has their values changed to become the maximum value of that subarray. Return the largest sum of the given array after partitioning.
+
+1) Memoization :
+TC : 
+2) Tabulation :
+
+
+*/
+
+1) private:
+        int cal(int i, int &n, int &k, vector<int>& arr, vector<int>&dp){
+            if(i == n)  return 0;
+            if(dp[i] != -1)     return dp[i];
+            int max_cost = INT_MIN,max_value = INT_MIN;
+            for(int j=i;j<min(i+k,n);j++){
+                max_value = max(max_value,arr[j]);
+                int cost = (j-i+1)*max_value + cal(j+1,n,k,arr,dp);
+                max_cost = max(max_cost,cost);
+            }
+            return dp[i] = max_cost;
+        }
+    
+    
+    public:
+    int solve(int n, int k, vector<int>& arr){
+        vector<int>dp(n,-1);
+        return cal(0,n,k,arr,dp);
+    }
+
+
+2) public:
+    int solve(int n, int k, vector<int>& arr){
+        vector<int>dp(n+1,0);
+        for(int i=n-1;i>=0;i--){
+            int max_cost = INT_MIN,max_value = INT_MIN;
+            for(int j=i;j<min(i+k,n);j++){
+                max_value = max(max_value,arr[j]);
+                int cost = (j-i+1)*max_value + dp[j+1];
+                max_cost = max(max_cost,cost);
+            }
+            dp[i] = max_cost;
+        }
+        return dp[0];
+    }

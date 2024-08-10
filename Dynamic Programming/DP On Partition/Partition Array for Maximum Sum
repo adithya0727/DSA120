@@ -3,9 +3,9 @@ Given an integer array arr, partition the array into (contiguous) subarrays of l
 each subarray has their values changed to become the maximum value of that subarray. Return the largest sum of the given array after partitioning.
 
 1) Memoization :
-TC : 
+TC : O(N*K) SC : O(N) + O(N)
 2) Tabulation :
-
+TC : O(N*K) SC : O(N)
 
 */
 

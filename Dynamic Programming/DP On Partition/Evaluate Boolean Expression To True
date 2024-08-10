@@ -1,0 +1,105 @@
+/* Approach:
+Given a boolean expression s of length n with following symbols.
+Symbols
+    'T' ---> true
+    'F' ---> false
+and following operators filled between symbols
+Operators
+    &   ---> boolean AND
+    |   ---> boolean OR
+    ^   ---> boolean XOR
+Count the number of ways we can parenthesize the expression so that the value of expression evaluates to true.
+Note: The answer can be large, so return it with modulo 1003
+
+1) Recursion :
+TC : Exponential SC : O(N)
+2) Memoization : 
+TC : O(N^3) SC : O(N^2*2) + O(N)
+*/
+
+1) private:
+    int cal(int i, int j , int isTrue,string &s){
+        if(i > j)   return 0;
+        if(i == j){
+            if(isTrue == 1)
+                return s[i] == 'T';
+            else
+                return s[i] == 'F';
+        }
+        int ways = 0;
+        for(int idx = i+1;idx<=j-1;idx+=2){
+            int LeftPartitionTrue = cal(i,idx-1,1,s);
+            int LeftPartitionFalse = cal(i,idx-1,0,s);
+            int RightPartitionTrue = cal(idx+1,j,1,s);
+            int RightPartitionFalse = cal(idx+1,j,0,s);
+            if(s[idx] == '&'){
+                if(isTrue == 1) ways += (LeftPartitionTrue * RightPartitionTrue);
+                else{
+                   ways += (LeftPartitionTrue*RightPartitionFalse + RightPartitionTrue*LeftPartitionFalse  
+                            + LeftPartitionFalse*RightPartitionFalse); 
+                }  
+            }
+            else if(s[idx] == '|'){
+                if(isTrue == 1){ ways += (LeftPartitionTrue * RightPartitionTrue + RightPartitionTrue*LeftPartitionFalse 
+                + LeftPartitionTrue*RightPartitionFalse);
+                }
+                else    ways += LeftPartitionFalse*RightPartitionFalse;
+            }
+            else{
+                if(isTrue == 1) ways += (LeftPartitionTrue*RightPartitionFalse + RightPartitionTrue*LeftPartitionFalse);
+                else    ways += (LeftPartitionTrue * RightPartitionTrue + LeftPartitionFalse*RightPartitionFalse);
+            }
+        }
+        return ways;
+    }
+    
+    
+public:
+    int countWays(int n, string s){
+        return cal(0,n-1,1,s);
+    }
+
+
+2) private:
+    int cal(int i, int j , int isTrue,string &s,vector<vector<vector<int>>>&dp){
+        if(i > j)   return 0;
+        if(i == j){
+            if(isTrue == 1)
+                return s[i] == 'T';
+            else
+                return s[i] == 'F';
+        }
+        if(dp[i][j][isTrue] != -1)  return dp[i][j][isTrue];
+        int ways = 0;
+        for(int idx = i+1;idx<=j-1;idx+=2){
+            int LeftPartitionTrue = cal(i,idx-1,1,s,dp);
+            int LeftPartitionFalse = cal(i,idx-1,0,s,dp);
+            int RightPartitionTrue = cal(idx+1,j,1,s,dp);
+            int RightPartitionFalse = cal(idx+1,j,0,s,dp);
+            if(s[idx] == '&'){
+                if(isTrue == 1) ways += (LeftPartitionTrue * RightPartitionTrue)%mod;
+                else{
+                   ways += ((LeftPartitionTrue*RightPartitionFalse)%mod + (RightPartitionTrue*LeftPartitionFalse)%mod
+                            + (LeftPartitionFalse*RightPartitionFalse)%mod)%mod; 
+                }  
+            }
+            else if(s[idx] == '|'){
+                if(isTrue == 1){ ways += ((LeftPartitionTrue * RightPartitionTrue)%mod + (RightPartitionTrue*LeftPartitionFalse)%mod 
+                + (LeftPartitionTrue*RightPartitionFalse)%mod)%mod;
+                }
+                else    ways += (LeftPartitionFalse*RightPartitionFalse)%mod;
+            }
+            else{
+                if(isTrue == 1) ways += ((LeftPartitionTrue*RightPartitionFalse)%mod + (RightPartitionTrue*LeftPartitionFalse)%mod)%mod;
+                else    ways += ((LeftPartitionTrue * RightPartitionTrue)%mod + (LeftPartitionFalse*RightPartitionFalse)%mod);
+            }
+        }
+        return dp[i][j][isTrue] = (ways)%mod;
+    }
+    
+    
+public:
+    int countWays(int n, string s){
+        vector<vector<vector<int>>>dp(n,vector<vector<int>>(n,vector<int>(2,-1)));
+        return cal(0,n-1,1,s,dp);
+    }

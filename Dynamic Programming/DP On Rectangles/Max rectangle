@@ -1,8 +1,8 @@
 /* Approach:                [REFER : https://www.youtube.com/watch?v=jC_cWLy7jSI] : Built On Largest Rectangle In Histogram Problem.
 Given a binary matrix M of size n X m. Find the maximum area of a rectangle formed only of 1s in the given matrix.
 Tagged as dp : Because of Histo Array which is keeping track of the past and keeps on solving based on its memory.
-1) 
-TC : SC : 
+1) Kind Of Tabulation : 
+TC : O(N* (M + N)) SC : O(N)
 */
 
 1) private:

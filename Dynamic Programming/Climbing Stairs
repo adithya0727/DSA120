@@ -4,7 +4,7 @@ Each time you can either climb 1 or 2 steps. In how many distinct ways can you c
 1) INTUITION : Using recursion as base we find all possibilities to climb with 1 and 2 stairs : Using memoization - each time we finish one sub problem we store its possible number of stairs in an array.
 When we encounter the same sub problem : we just know that at this n value : how many stairs can be reached : so we dont recompute [REDUNDANCY] and just return the solution from dp[of that n].
 time - O(N) - stack frame. : once we get to the depth : rest all are just O(1) : since subproblems are mostly already solved.
-space - O(N) : array.
+space - O(N) : array. 
 */
 
 1) class Solution {

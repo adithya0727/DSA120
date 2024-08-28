@@ -5,7 +5,7 @@ visited ones and we push them onto the queue and so on we take the FIFO element 
 is empty.
 time - O(V + E) : Because we visit each node exactly once and each edge also exactly once [by using the visited array] : 2E ->Brute Force , the sum of each vertex degree[neighbours].
 space - O(V) : to store all vertices in the result vector
-2) Using a 2d Matrix : same as a backtracking problem.
+2) Using a 2D Matrix : same as a backtracking problem.
 time - O(N*M)  space - O(N*M)
 */
 

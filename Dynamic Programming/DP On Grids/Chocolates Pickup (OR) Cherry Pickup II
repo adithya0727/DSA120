@@ -7,7 +7,7 @@ Return the maximum number of chocolates collection using both robots by followin
 From a cell (i, j), robots can move to cell (i + 1, j - 1), (i + 1, j), or (i + 1, j + 1).
 When any robot passes through a cell, It picks up all chocolates, and the cell becomes an empty cell.
 When both robots stay in the same cell, only one takes the chocolates.
-Both robots cannot move outside of the grid at any moment.
+Both robots cannot move outside of the grid at any moment. 
 Both robots should reach the bottom row in grid.
 
 1) Memoization : So we have to find out all possibilities to get the maximum value : we have to move both robots simulatenously since if they are in the same cell

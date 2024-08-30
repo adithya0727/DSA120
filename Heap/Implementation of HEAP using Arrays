@@ -1,7 +1,7 @@
 /* Approach:
 
 1) read comments.
-root - i.
+root - i. 
 root->left = i*2 + 1 , root->right = 2*1+2
 initialise array with max size , heapsize is the ITERATOR.
 */

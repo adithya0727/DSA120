@@ -11,7 +11,7 @@ so we sort() based on the abs() difference btw each element corresponding to the
 only upto k elements. 
 the store the remaining k elements in vector and reverse them , since the lowest abs() ones are stored at the bottom.
 we negate and re negate the arr[i] so that the max heap removes the smaller positive values when there is same abs() difference and the greater ones are provided priority
-time - O(N*LogK) space - O(K)
+time - O(N*LogK) space - O(K) 
 */
 
 1) vector<int> printKClosest(vector<int> arr, int n, int k, int x) {

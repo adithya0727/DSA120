@@ -8,7 +8,7 @@ row and col : nested loops to iterate over each element in the 2d array. Index =
 calculate area to check for repetition within same same box (3x3).
 if row or coloum or box has the same integer ticked off as true before , we return false for repetitiveness.
 if not , we go ahead and check that element in that particular : row,column and box for the future checking.   time: O(N^2) and space : O(N)
-
+ 
 */
 
 1) bool isValidSudoku(vector<vector<char>>& board) {

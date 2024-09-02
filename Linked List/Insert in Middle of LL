@@ -3,7 +3,7 @@
 learnings : start fast with head->next : because we might iterate one step further in the case when its even.
 */
 
-
+ 
 1) Node* insertInMiddle(Node* head, int x) {
   Node* slow = head;
   Node* fast = head->next;

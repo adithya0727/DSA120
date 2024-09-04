@@ -1,7 +1,7 @@
 /* Approach:      [PATTERN : SIMILAR TO BRIDGES]
 Given an undirected connected graph with V vertices and adjacency list adj.You are required to find all the vertices removing which (and edges through it)
 disconnects the graph into 2 or more components and return it in sorted manner.
-
+ 
 1) INTUITION : Similar to bridge , subtle changes : 
 a) we handle parent differently : if it has multiple children : its bound to be broken into seperated components if parent node is removed.
 b) low[it] >= timein[node] : because we are removing the whole node itself , even if we reach at the same time : it is considered as an articulation point.

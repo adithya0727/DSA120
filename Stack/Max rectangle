@@ -1,5 +1,12 @@
 /*Approach:
-
+Given a binary matrix M of size n X m. Find the maximum area of a rectangle formed only of 1s in the given matrix.
+Input:
+n = 4, m = 4
+M[][] = {{0 1 1 0},
+         {1 1 1 1},
+         {1 1 1 1},
+         {1 1 0 0}}
+Output: 8
 1) Same approach till finding the Maximum Area Histogram.
 so its a binary matrix: 
 algorithm :

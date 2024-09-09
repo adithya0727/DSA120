@@ -9,7 +9,7 @@ c) if all a lesser than arr[j] , we've used q.empty() as a stopping point for it
 5) if arr[i] is going out of the window size , we better check if that was the current maximum element , if so -> we pop q.front() and slide the window.
 
 
-
+QUEUE IS IN THE STRICTLY DECREASING ORDER.
 */
 
 

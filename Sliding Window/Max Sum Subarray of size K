@@ -1,5 +1,7 @@
 /* Approach :
 Aditya Verma :
+Given an array of integers Arr of size N and a number K. Return the maximum sum of a subarray of size K.
+
 1) two pointer : i,j=0 -> we keep adding arr[j] until we reach the same window size k , once reached -> we operate only in the else if part :
 find maximum and store it , remove arr[i] and then increment to reach the next window of the same size.
 repeat , add next j -> check for maximum -> subtract arr[i] and repeat till j reaches N.

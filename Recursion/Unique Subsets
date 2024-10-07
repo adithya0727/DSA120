@@ -3,6 +3,7 @@
 firstly , we write a solve function : two vectors to store the output and then the recursive tree , whre one gets the input[0] and then we erase and perform so on 
 until the leaf and recursively descend back until all outputs are found and we use a set to keep things unique. Sorting is essential before inserting into set.
 NOTE : PASS OUTPUT BY REFERENCE : TLE GOES AWAY.
+TC : O(2^N)
 */
 
 

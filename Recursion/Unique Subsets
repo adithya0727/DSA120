@@ -36,7 +36,31 @@ NOTE : PASS OUTPUT BY REFERENCE : TLE GOES AWAY.
 
 
 
+2) class Solution {
+    private:
+    void cal(vector<int>&nums,int start,int &n,set<vector<int>>&s,vector<int>path){
+        if(start == (n)){
+            s.insert(path);
+            return;
+        }
+        cal(nums,start+1,n,s,path);
+        path.push_back(nums[start]);
+        cal(nums,start+1,n,s,path);
+        return;
+    }
 
+public:
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+        set<vector<int>>s;
+        vector<vector<int>>ans;
+        vector<int>path;
+        int n = nums.size();
+        sort(nums.begin(),nums.end());
+        cal(nums,0,n,s,path);
+        for(auto &st : s)   ans.push_back(st);
+        return ans;
+    }
+};
 
 
 
